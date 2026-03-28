@@ -2,26 +2,26 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Mail, Lock, ArrowLeft } from "lucide-react";
+import { Mail, Lock, User, ArrowLeft } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../../lib/firebase";
 import { useRouter } from "next/navigation";
 
-export default function LoginPage() {
+export default function SignupPage() {
   const router = useRouter();
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleSignup = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      alert(`Login Success ✅\nWelcome ${user.displayName}`);
+      alert(`Signup Success 🎉\nWelcome ${user.displayName}`);
       router.push("/dashboard");
 
     } catch (error) {
-      console.error("Google Login Error:", error.message);
-      alert("Login Failed ❌");
+      console.error("Google Signup Error:", error.message);
+      alert("Signup Failed ❌");
     }
   };
 
@@ -47,13 +47,13 @@ export default function LoginPage() {
           </h2>
         </div>
 
-        {/* Google Login */}
+        {/* Google Signup */}
         <button
-          onClick={handleGoogleLogin}
+          onClick={handleGoogleSignup}
           className="w-full flex items-center justify-center gap-3 border py-2.5 rounded-full hover:bg-gray-50 transition"
         >
           <FcGoogle size={20} />
-          Continue with Google
+          Sign up with Google
         </button>
 
         {/* Divider */}
@@ -65,6 +65,15 @@ export default function LoginPage() {
 
         {/* Inputs */}
         <div className="space-y-3">
+          <div className="flex items-center border rounded-full px-4 py-2.5 focus-within:border-[#B5A491]">
+            <User size={16} className="text-gray-400 mr-2" />
+            <input
+              type="text"
+              placeholder="Full Name"
+              className="w-full outline-none text-sm"
+            />
+          </div>
+
           <div className="flex items-center border rounded-full px-4 py-2.5 focus-within:border-[#B5A491]">
             <Mail size={16} className="text-gray-400 mr-2" />
             <input
@@ -84,15 +93,15 @@ export default function LoginPage() {
           </div>
 
           <button className="w-full bg-[#B5A491] text-white py-2.5 rounded-full text-sm hover:opacity-90 transition">
-            Sign In
+            Create Account
           </button>
         </div>
 
-        {/* Signup */}
+        {/* Login */}
         <p className="text-center text-xs mt-5">
-          Don’t have an account?{" "}
-          <Link href="/signup" className="text-[#B5A491] font-medium">
-            Create one
+          Already have an account?{" "}
+          <Link href="/login" className="text-[#B5A491] font-medium">
+            Login
           </Link>
         </p>
 

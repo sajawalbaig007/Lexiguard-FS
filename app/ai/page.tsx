@@ -1,169 +1,211 @@
 "use client";
 
 import React, { useState } from "react";
-import html2pdf from "html2pdf.js";
+import { contractTemplates } from "@/data/contracts";
 
-const contractTypes = ["NDA", "Employment", "Loan", "Property"];
+type ContractType = keyof typeof contractTemplates;
 
-export default function AIContractPage() {
-  const [formData, setFormData] = useState({
-    day: "",
-    month: "",
-    year: "",
-    discloser: "",
-    recipient: "",
-    purpose: "",
-    notes: "",
-    contractType: "NDA",
-  });
+const contractFields: Record<
+  ContractType,
+  { name: string; placeholder: string; type?: string; label?: string }[]
+> = {
+  Employment: [
+    { name: "date", placeholder: "Contract Date", type: "date", label: "Contract Date" },
+    { name: "companyName", placeholder: "Company Name", label: "Company Name" },
+    { name: "employeeName", placeholder: "Employee Name", label: "Employee Name" },
+    { name: "position", placeholder: "Position", label: "Position" },
+    { name: "startDate", placeholder: "Start Date", type: "date", label: "Employment Start Date" },
+    { name: "probationMonths", placeholder: "Probation Period (Months)", type: "number", label: "Probation Period" },
+    { name: "workLocation", placeholder: "Work Location", label: "Work Location" },
+    { name: "salary", placeholder: "Salary (£)", type: "number", label: "Salary" },
+    { name: "paymentFrequency", placeholder: "Payment Frequency (e.g. Monthly)", label: "Payment Frequency" },
+    { name: "holidayDays", placeholder: "Holiday Days", type: "number", label: "Holiday Days" },
+  ],
+  NDA: [
+    { name: "date", placeholder: "Contract Date", type: "date", label: "Contract Date" },
+    { name: "discloser", placeholder: "Discloser Name", label: "Discloser" },
+    { name: "recipient", placeholder: "Recipient Name", label: "Recipient" },
+    { name: "purpose", placeholder: "Purpose", label: "Purpose" },
+    { name: "ndaTerm", placeholder: "Term (Years)", type: "number", label: "Term (Years)" },
+  ],
+  Loan: [
+    { name: "date", placeholder: "Contract Date", type: "date", label: "Contract Date" },
+    { name: "lender", placeholder: "Lender Name", label: "Lender" },
+    { name: "borrower", placeholder: "Borrower Name", label: "Borrower" },
+    { name: "loanAmount", placeholder: "Loan Amount (£)", type: "number", label: "Loan Amount" },
+    { name: "repaymentStart", placeholder: "Repayment Start Date", type: "date", label: "Repayment Start Date" },
+    { name: "repaymentFrequency", placeholder: "Repayment Frequency", label: "Repayment Frequency" },
+    { name: "interestRate", placeholder: "Interest Rate (%)", type: "number", label: "Interest Rate" },
+    { name: "lateFee", placeholder: "Late Payment Fee (£)", type: "number", label: "Late Fee" },
+  ],
+  Service: [
+    { name: "date", placeholder: "Contract Date", type: "date", label: "Contract Date" },
+    { name: "provider", placeholder: "Service Provider Name", label: "Service Provider" },
+    { name: "client", placeholder: "Client Name", label: "Client" },
+    { name: "services", placeholder: "Services Description", label: "Services Description" },
+    { name: "serviceFee", placeholder: "Service Fee (£)", type: "number", label: "Service Fee" },
+    { name: "startDate", placeholder: "Start Date", type: "date", label: "Service Start Date" },
+    { name: "endDate", placeholder: "End Date", type: "date", label: "Service End Date" },
+  ],
+  Separation: [
+    { name: "date", placeholder: "Contract Date", type: "date", label: "Contract Date" },
+    { name: "employer", placeholder: "Employer Name", label: "Employer" },
+    { name: "employee", placeholder: "Employee Name", label: "Employee" },
+    { name: "reason", placeholder: "Reason for Separation", label: "Reason for Separation" },
+    { name: "noticePeriod", placeholder: "Notice Period", label: "Notice Period" },
+    { name: "finalPay", placeholder: "Final Pay (£)", type: "number", label: "Final Pay" },
+  ],
+};
 
-  const [generatedContract, setGeneratedContract] = useState("");
+export default function Page() {
+  const [type, setType] = useState<ContractType>("Employment");
+  const [data, setData] = useState<Record<string, string>>({});
+  const [contract, setContract] = useState("");
+  const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  const handleGenerate = async () => {
-    setLoading(true);
-    setGeneratedContract("");
+  const generate = () => {
+    let template = contractTemplates[type];
 
-    const res = await fetch("/api/generateContract", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+    contractFields[type].forEach((field) => {
+      template = template.replaceAll(`{{${field.name}}}`, data[field.name] || "");
     });
 
-    const data = await res.json();
-    setGeneratedContract(data.contract || "Failed to generate contract.");
-    setLoading(false);
+    // Bold top fields
+    const topFields = ["date", "companyName", "employeeName", "lender", "borrower", "provider", "client", "employer"];
+    topFields.forEach((key) => {
+      if (data[key]) {
+        const regex = new RegExp(`(${data[key]})`, "g");
+        template = template.replace(regex, `<strong style="font-size:20px;">$1</strong>`);
+      }
+    });
+
+    setContract(template);
+    setStep(2);
   };
 
-  const handleDownload = () => {
-    if (!generatedContract) return;
-    const element = document.getElementById("contractText");
+  const downloadPDF = async () => {
+    setLoading(true);
+    const element = document.getElementById("contract");
+    const html2pdf = (await import("html2pdf.js")).default;
+
     if (!element) return;
 
-    html2pdf().from(element).save(`${formData.contractType}_Contract.pdf`);
+    html2pdf()
+      .set({
+        margin: 10,
+        filename: `${type}_Contract.pdf`,
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "mm", format: "a4" },
+      })
+      .from(element)
+      .save()
+      .finally(() => setLoading(false));
+  };
+
+  const handleBack = () => {
+    if (step === 2) {
+      setStep(1);
+      setContract("");
+    } else {
+      // Optional: if you want a "Back" even on step 1, you can clear data or navigate away
+      setData({});
+    }
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">AI Contract Generator</h1>
+    <div className="min-h-screen bg-[#f5f5f5] p-6">
+      <h1 className="text-4xl font-bold text-center mb-10">LexiGuard Contracts ⚖️</h1>
 
-      <form className="space-y-4 mb-8">
-        <div>
-          <label className="block font-semibold mb-1">Contract Type</label>
+      {step === 1 && (
+        <div className="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-xl">
+          <div className="flex justify-between mb-4">
+            <button
+              onClick={handleBack}
+              className="text-sm text-gray-600 hover:underline"
+            >
+              ← Back
+            </button>
+            <span className="text-gray-600">Step 1 / 2</span>
+          </div>
+
+          <h2 className="text-2xl font-semibold mb-6 text-center">Generate Your Contract</h2>
+
           <select
-            name="contractType"
-            value={formData.contractType}
-            onChange={handleChange}
-            className="border px-3 py-2 rounded w-full"
+            className="border p-3 rounded w-full mb-6"
+            value={type}
+            onChange={(e) => { setType(e.target.value as ContractType); setData({}); }}
           >
-            {contractTypes.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
+            {Object.keys(contractTemplates).map((ct) => (
+              <option key={ct}>{ct}</option>
             ))}
           </select>
-        </div>
 
-        <div>
-          <label className="block font-semibold mb-1">Effective Date</label>
-          <div className="flex gap-2">
-            <input
-              name="day"
-              placeholder="DD"
-              value={formData.day}
-              onChange={handleChange}
-              className="border px-3 py-2 rounded w-20"
-            />
-            <input
-              name="month"
-              placeholder="MM"
-              value={formData.month}
-              onChange={handleChange}
-              className="border px-3 py-2 rounded w-32"
-            />
-            <input
-              name="year"
-              placeholder="YYYY"
-              value={formData.year}
-              onChange={handleChange}
-              className="border px-3 py-2 rounded w-20"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="block font-semibold mb-1">Discloser</label>
-          <input
-            name="discloser"
-            placeholder="Discloser Name"
-            value={formData.discloser}
-            onChange={handleChange}
-            className="border px-3 py-2 rounded w-full"
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold mb-1">Recipient</label>
-          <input
-            name="recipient"
-            placeholder="Recipient Name"
-            value={formData.recipient}
-            onChange={handleChange}
-            className="border px-3 py-2 rounded w-full"
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold mb-1">Purpose</label>
-          <input
-            name="purpose"
-            placeholder="Purpose (e.g., business relationship)"
-            value={formData.purpose}
-            onChange={handleChange}
-            className="border px-3 py-2 rounded w-full"
-          />
-        </div>
-
-        <div>
-          <label className="block font-semibold mb-1">Additional Notes</label>
-          <textarea
-            name="notes"
-            placeholder="Any extra instructions"
-            value={formData.notes}
-            onChange={handleChange}
-            className="border px-3 py-2 rounded w-full h-20"
-          />
-        </div>
-      </form>
-
-      <button
-        onClick={handleGenerate}
-        className="bg-[#B5A491] text-white px-6 py-3 rounded hover:opacity-90 transition mb-4"
-      >
-        {loading ? "Generating..." : "Generate Contract"}
-      </button>
-
-      {generatedContract && (
-        <>
-          <div
-            id="contractText"
-            className="border p-6 rounded bg-white shadow max-h-[80vh] overflow-y-auto mt-6 whitespace-pre-line"
-          >
-            {generatedContract}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {contractFields[type].map((field) => (
+              <div key={field.name} className="flex flex-col">
+                <label className="text-sm font-semibold mb-1">{field.label}</label>
+                {["services", "purpose", "reason"].includes(field.name) ? (
+                  <textarea
+                    name={field.name}
+                    placeholder={field.placeholder}
+                    value={data[field.name] || ""}
+                    onChange={handleChange}
+                    className="border p-3 rounded h-24 resize-none col-span-1 md:col-span-2"
+                  />
+                ) : (
+                  <input
+                    type={field.type || "text"}
+                    name={field.name}
+                    placeholder={field.placeholder}
+                    value={data[field.name] || ""}
+                    onChange={handleChange}
+                    className="border p-3 rounded"
+                  />
+                )}
+              </div>
+            ))}
           </div>
 
           <button
-            onClick={handleDownload}
-            className="bg-green-600 text-white px-6 py-3 rounded mt-4 hover:opacity-90 transition"
+            onClick={generate}
+            className="mt-6 w-full bg-black text-white py-3 rounded-lg hover:opacity-90"
           >
-            Download PDF
+            Generate Contract 🚀
           </button>
-        </>
+        </div>
       )}
+
+      {step === 2 && (
+  <div className="max-w-4xl mx-auto">
+    <div className="flex justify-between mb-4">
+      <button
+        onClick={handleBack}
+        className="text-sm text-gray-600 hover:underline"
+      >
+        ← Back
+      </button>
+      <button
+        onClick={downloadPDF}
+        className="bg-green-600 text-white px-5 py-2 rounded hover:opacity-90"
+      >
+        {loading ? "Downloading..." : "Download PDF"}
+      </button>
+    </div>
+
+    <div className="bg-white shadow-xl rounded-lg p-6 border border-gray-300 max-w-3xl mx-auto">
+      <div
+        id="contract"
+        className="p-6 border border-gray-200 rounded-lg overflow-x-auto text-gray-800"
+        dangerouslySetInnerHTML={{ __html: contract }}
+      />
+    </div>
+  </div>
+)}
     </div>
   );
 }
