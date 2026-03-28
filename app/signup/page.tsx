@@ -20,7 +20,6 @@ export default function SignupPage() {
       router.push("/dashboard");
 
     } catch (error: unknown) {
-      // Type-safe error handling
       if (error instanceof Error) {
         console.error("Google Signup Error:", error.message);
         alert(`Signup Failed ❌\n${error.message}`);
@@ -32,18 +31,18 @@ export default function SignupPage() {
   };
 
   return (
-    <section className="min-h-screen flex items-center justify-center bg-[#FAF9F7] px-4 relative">
+    <section className="min-h-screen flex items-center justify-center px-4 relative bg-[#FAF9F7] dark:bg-gray-900">
 
       {/* 🔙 Back Button */}
       <button
-        onClick={() => router.push("/")} // Go home instead of router.back()
-        className="absolute top-6 left-6 flex items-center gap-2 text-gray-600 hover:text-[#B5A491] transition"
+        onClick={() => router.push("/")}
+        className="absolute top-6 left-6 flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-[#B5A491] transition"
       >
         <ArrowLeft size={20} />
         <span className="text-sm font-medium">Back</span>
       </button>
 
-      <div className="w-full max-w-sm bg-white p-7 rounded-2xl shadow-lg border border-gray-100">
+      <div className="w-full max-w-sm bg-white dark:bg-gray-800 p-7 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700">
 
         {/* Logo */}
         <div className="flex flex-col items-center mb-6">
@@ -56,7 +55,7 @@ export default function SignupPage() {
         {/* Google Signup */}
         <button
           onClick={handleGoogleSignup}
-          className="w-full flex items-center justify-center gap-3 border py-2.5 rounded-full hover:bg-gray-50 transition"
+          className="w-full flex items-center justify-center gap-3 border dark:border-gray-600 py-2.5 rounded-full hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm dark:text-gray-200"
         >
           <FcGoogle size={20} />
           Sign up with Google
@@ -64,37 +63,37 @@ export default function SignupPage() {
 
         {/* Divider */}
         <div className="flex items-center my-5">
-          <div className="flex-1 h-px bg-gray-200" />
-          <span className="px-3 text-gray-400 text-sm">or</span>
-          <div className="flex-1 h-px bg-gray-200" />
+          <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
+          <span className="px-3 text-gray-400 dark:text-gray-400 text-sm">or</span>
+          <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
         </div>
 
         {/* Inputs */}
         <div className="space-y-3">
-          <div className="flex items-center border rounded-full px-4 py-2.5 focus-within:border-[#B5A491]">
-            <User size={16} className="text-gray-400 mr-2" />
+          <div className="flex items-center border rounded-full px-4 py-2.5 focus-within:border-[#B5A491] border-gray-300 dark:border-gray-600 dark:bg-gray-700">
+            <User size={16} className="text-gray-400 dark:text-gray-300 mr-2" />
             <input
               type="text"
               placeholder="Full Name"
-              className="w-full outline-none text-sm"
+              className="w-full outline-none text-sm dark:bg-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-400"
             />
           </div>
 
-          <div className="flex items-center border rounded-full px-4 py-2.5 focus-within:border-[#B5A491]">
-            <Mail size={16} className="text-gray-400 mr-2" />
+          <div className="flex items-center border rounded-full px-4 py-2.5 focus-within:border-[#B5A491] border-gray-300 dark:border-gray-600 dark:bg-gray-700">
+            <Mail size={16} className="text-gray-400 dark:text-gray-300 mr-2" />
             <input
               type="email"
               placeholder="Email"
-              className="w-full outline-none text-sm"
+              className="w-full outline-none text-sm dark:bg-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-400"
             />
           </div>
 
-          <div className="flex items-center border rounded-full px-4 py-2.5 focus-within:border-[#B5A491]">
-            <Lock size={16} className="text-gray-400 mr-2" />
+          <div className="flex items-center border rounded-full px-4 py-2.5 focus-within:border-[#B5A491] border-gray-300 dark:border-gray-600 dark:bg-gray-700">
+            <Lock size={16} className="text-gray-400 dark:text-gray-300 mr-2" />
             <input
               type="password"
               placeholder="Password"
-              className="w-full outline-none text-sm"
+              className="w-full outline-none text-sm dark:bg-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-400"
             />
           </div>
 
@@ -104,7 +103,7 @@ export default function SignupPage() {
         </div>
 
         {/* Login */}
-        <p className="text-center text-xs mt-5">
+        <p className="text-center text-xs mt-5 dark:text-gray-300">
           Already have an account?{" "}
           <Link href="/login" className="text-[#B5A491] font-medium">
             Login

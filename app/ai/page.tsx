@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { contractTemplates } from "@/data/contracts";
+import { useRouter } from "next/navigation";
 
 type ContractType = keyof typeof contractTemplates;
 
@@ -64,6 +65,8 @@ export default function Page() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
 
+  const router = useRouter();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
@@ -112,31 +115,30 @@ export default function Page() {
       setStep(1);
       setContract("");
     } else {
-      // Optional: if you want a "Back" even on step 1, you can clear data or navigate away
-      setData({});
+      router.push("/");
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f5f5] p-6">
-      <h1 className="text-4xl font-bold text-center mb-10">LexiGuard Contracts ⚖️</h1>
+    <div className="min-h-screen bg-[#f5f5f5] dark:bg-gray-900 p-6">
+      <h1 className="text-4xl font-bold text-center mb-10 text-gray-900 dark:text-gray-100">LexiGuard Contracts ⚖️</h1>
 
+      {/* Step 1 */}
       {step === 1 && (
-        <div className="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-xl">
-          <div className="flex justify-between mb-4">
-            <button
-              onClick={handleBack}
-              className="text-sm text-gray-600 hover:underline"
-            >
-              ← Back
-            </button>
-            <span className="text-gray-600">Step 1 / 2</span>
-          </div>
+        <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 relative">
+          <button
+            onClick={handleBack}
+            className="absolute top-4 left-4 text-gray-600 dark:text-gray-300 hover:text-[#B5A491] flex items-center gap-1"
+          >
+            ← Back
+          </button>
 
-          <h2 className="text-2xl font-semibold mb-6 text-center">Generate Your Contract</h2>
+          <span className="absolute top-4 right-4 text-gray-600 dark:text-gray-300 text-sm">Step 1 / 2</span>
+
+          <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800 dark:text-gray-200">Generate Your Contract</h2>
 
           <select
-            className="border p-3 rounded w-full mb-6"
+            className="border p-3 rounded w-full mb-6 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 border-gray-300 dark:border-gray-600"
             value={type}
             onChange={(e) => { setType(e.target.value as ContractType); setData({}); }}
           >
@@ -148,14 +150,14 @@ export default function Page() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {contractFields[type].map((field) => (
               <div key={field.name} className="flex flex-col">
-                <label className="text-sm font-semibold mb-1">{field.label}</label>
+                <label className="text-sm font-semibold mb-1 text-gray-700 dark:text-gray-300">{field.label}</label>
                 {["services", "purpose", "reason"].includes(field.name) ? (
                   <textarea
                     name={field.name}
                     placeholder={field.placeholder}
                     value={data[field.name] || ""}
                     onChange={handleChange}
-                    className="border p-3 rounded h-24 resize-none col-span-1 md:col-span-2"
+                    className="border p-3 rounded h-24 resize-none col-span-1 md:col-span-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-400"
                   />
                 ) : (
                   <input
@@ -164,7 +166,7 @@ export default function Page() {
                     placeholder={field.placeholder}
                     value={data[field.name] || ""}
                     onChange={handleChange}
-                    className="border p-3 rounded"
+                    className="border p-3 rounded border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-400"
                   />
                 )}
               </div>
@@ -173,39 +175,40 @@ export default function Page() {
 
           <button
             onClick={generate}
-            className="mt-6 w-full bg-black text-white py-3 rounded-lg hover:opacity-90"
+            className="mt-6 w-full bg-black dark:bg-[#B5A491] text-white py-3 rounded-lg hover:opacity-90 transition"
           >
             Generate Contract 🚀
           </button>
         </div>
       )}
 
+      {/* Step 2 */}
       {step === 2 && (
-  <div className="max-w-4xl mx-auto">
-    <div className="flex justify-between mb-4">
-      <button
-        onClick={handleBack}
-        className="text-sm text-gray-600 hover:underline"
-      >
-        ← Back
-      </button>
-      <button
-        onClick={downloadPDF}
-        className="bg-green-600 text-white px-5 py-2 rounded hover:opacity-90"
-      >
-        {loading ? "Downloading..." : "Download PDF"}
-      </button>
-    </div>
+        <div className="max-w-4xl mx-auto">
+          <div className="flex justify-between mb-4">
+            <button
+              onClick={handleBack}
+              className="text-sm text-gray-600 dark:text-gray-300 hover:underline flex items-center gap-1"
+            >
+              ← Back
+            </button>
+            <button
+              onClick={downloadPDF}
+              className="bg-green-600 text-white px-5 py-2 rounded hover:opacity-90"
+            >
+              {loading ? "Downloading..." : "Download PDF"}
+            </button>
+          </div>
 
-    <div className="bg-white shadow-xl rounded-lg p-6 border border-gray-300 max-w-3xl mx-auto">
-      <div
-        id="contract"
-        className="p-6 border border-gray-200 rounded-lg overflow-x-auto text-gray-800"
-        dangerouslySetInnerHTML={{ __html: contract }}
-      />
-    </div>
-  </div>
-)}
+          <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg p-6 border border-gray-300 dark:border-gray-700 max-w-3xl mx-auto">
+            <div
+              id="contract"
+              className="p-6 border border-gray-200 dark:border-gray-600 rounded-lg overflow-x-auto text-gray-800 dark:text-gray-200"
+              dangerouslySetInnerHTML={{ __html: contract }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
