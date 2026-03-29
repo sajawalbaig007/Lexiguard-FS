@@ -7,7 +7,7 @@ import { jsPDF } from "jspdf";
 
 type ContractType = keyof typeof contractTemplates;
 
-// ✅ Dynamic Fields (MATCH TEMPLATE)
+// ✅ Dynamic Fields
 const contractFields: Record<
   ContractType,
   { name: string; label: string; type?: string }[]
@@ -23,7 +23,6 @@ const contractFields: Record<
     { name: "holidayDays", label: "Holiday Days", type: "number" },
     { name: "probationMonths", label: "Probation (Months)", type: "number" },
   ],
-
   NDA: [
     { name: "date", label: "Date", type: "date" },
     { name: "discloser", label: "Discloser" },
@@ -31,7 +30,6 @@ const contractFields: Record<
     { name: "purpose", label: "Purpose" },
     { name: "ndaTerm", label: "Term (Years)", type: "number" },
   ],
-
   Loan: [
     { name: "date", label: "Date", type: "date" },
     { name: "lender", label: "Lender" },
@@ -41,7 +39,6 @@ const contractFields: Record<
     { name: "repaymentFrequency", label: "Repayment Frequency" },
     { name: "interestRate", label: "Interest Rate (%)", type: "number" },
   ],
-
   Service: [
     { name: "date", label: "Date", type: "date" },
     { name: "provider", label: "Service Provider" },
@@ -49,7 +46,6 @@ const contractFields: Record<
     { name: "services", label: "Services" },
     { name: "payment", label: "Payment", type: "number" },
   ],
-
   Separation: [
     { name: "date", label: "Date", type: "date" },
     { name: "employee", label: "Employee" },
@@ -74,19 +70,15 @@ export default function Page() {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  // ✅ Generate Contract
   const generate = () => {
     let template = contractTemplates[type];
-
     Object.keys(data).forEach((key) => {
       template = template.replaceAll(`{{${key}}}`, data[key] || "");
     });
-
     setContract(template);
     setStep(2);
   };
 
-  // ✅ Download PDF (KEEP DESIGN)
   const downloadContract = async () => {
     const element = document.getElementById("contract-preview");
     if (!element) return;
@@ -113,28 +105,25 @@ export default function Page() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6">
-      <h1 className="text-4xl font-bold text-center mb-8 text-gray-900 dark:text-gray-100">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 p-6 text-gray-900 dark:text-gray-100 transition-colors">
+      <h1 className="text-4xl font-bold text-center mb-8">
         LexiGuard Contracts ⚖️
       </h1>
 
       {/* STEP 1 */}
       {step === 1 && (
-        <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
+        <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-xl shadow transition-colors">
           <button
             onClick={handleBack}
-            className="text-gray-700 dark:text-gray-200 mb-4"
+            className="mb-4 text-blue-500 hover:underline"
           >
             ← Back
           </button>
 
-          <h2 className="text-2xl text-center mb-6 text-gray-900 dark:text-gray-100">
-            Generate Your Contract
-          </h2>
+          <h2 className="text-2xl text-center mb-6">Generate Your Contract</h2>
 
-          {/* Contract Type */}
           <select
-            className="border p-3 rounded w-full mb-6 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+            className="border p-3 rounded w-full mb-6 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
             value={type}
             onChange={(e) => {
               setType(e.target.value as ContractType);
@@ -146,26 +135,22 @@ export default function Page() {
             ))}
           </select>
 
-          {/* Dynamic Fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {contractFields[type].map((field) => (
               <div key={field.name} className="flex flex-col">
-                <label className="text-sm font-semibold mb-1 text-gray-900 dark:text-gray-200">
-                  {field.label}
-                </label>
-
+                <label className="text-sm font-semibold mb-1">{field.label}</label>
                 {["services", "purpose"].includes(field.name) ? (
                   <textarea
                     name={field.name}
                     onChange={handleChange}
-                    className="border p-2 rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    className="border p-2 rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
                   />
                 ) : (
                   <input
                     type={field.type || "text"}
                     name={field.name}
                     onChange={handleChange}
-                    className="border p-2 rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    className="border p-2 rounded bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
                   />
                 )}
               </div>
@@ -174,7 +159,7 @@ export default function Page() {
 
           <button
             onClick={generate}
-            className="mt-6 w-full bg-black dark:bg-amber-500 text-white py-3 rounded hover:opacity-90 transition"
+            className="mt-6 w-full bg-black dark:bg-gray-100 dark:text-gray-900 text-white py-3 rounded"
           >
             Generate Contract 🚀
           </button>
@@ -187,34 +172,39 @@ export default function Page() {
           <div className="flex gap-4 mb-4">
             <button
               onClick={handleBack}
-              className="text-gray-700 dark:text-gray-200"
+              className="text-blue-500 hover:underline"
             >
               ← Back
             </button>
 
             <button
               onClick={downloadContract}
-              className="bg-green-600 text-white px-4 py-2 rounded hover:opacity-90 transition"
+              className="bg-green-600 dark:bg-green-500 text-white px-4 py-2 rounded"
             >
               Download PDF
             </button>
           </div>
 
-          {/* CONTRACT PREVIEW */}
           <div className="flex justify-center">
             <div
               id="contract-preview"
-              className="bg-white dark:bg-gray-800 p-10 shadow-lg"
+              className="bg-white dark:bg-gray-900 p-10 shadow-lg transition-colors dark:text-gray-100"
               style={{
                 width: "210mm",
                 minHeight: "297mm",
-                color: "#111", // fallback text color
               }}
               dangerouslySetInnerHTML={{ __html: contract }}
             />
           </div>
         </div>
       )}
+
+      {/* Optional CSS override for inline styles in dark mode */}
+      <style jsx global>{`
+        .dark #contract-preview * {
+          color: #f3f4f6 !important;
+        }
+      `}</style>
     </div>
   );
 }
