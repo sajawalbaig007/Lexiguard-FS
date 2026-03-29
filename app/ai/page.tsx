@@ -7,7 +7,7 @@ import { jsPDF } from "jspdf";
 
 type ContractType = keyof typeof contractTemplates;
 
-// ✅ Dynamic Fields (MATCH TEMPLATE)
+// ✅ Dynamic Fields
 const contractFields: Record<
   ContractType,
   { name: string; label: string; type?: string }[]
@@ -23,7 +23,6 @@ const contractFields: Record<
     { name: "holidayDays", label: "Holiday Days", type: "number" },
     { name: "probationMonths", label: "Probation (Months)", type: "number" },
   ],
-
   NDA: [
     { name: "date", label: "Date", type: "date" },
     { name: "discloser", label: "Discloser" },
@@ -31,7 +30,6 @@ const contractFields: Record<
     { name: "purpose", label: "Purpose" },
     { name: "ndaTerm", label: "Term (Years)", type: "number" },
   ],
-
   Loan: [
     { name: "date", label: "Date", type: "date" },
     { name: "lender", label: "Lender" },
@@ -41,7 +39,6 @@ const contractFields: Record<
     { name: "repaymentFrequency", label: "Repayment Frequency" },
     { name: "interestRate", label: "Interest Rate (%)", type: "number" },
   ],
-
   Service: [
     { name: "date", label: "Date", type: "date" },
     { name: "provider", label: "Service Provider" },
@@ -49,7 +46,6 @@ const contractFields: Record<
     { name: "services", label: "Services" },
     { name: "payment", label: "Payment", type: "number" },
   ],
-
   Separation: [
     { name: "date", label: "Date", type: "date" },
     { name: "employee", label: "Employee" },
@@ -74,7 +70,6 @@ export default function Page() {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  // ✅ Generate Contract
   const generate = () => {
     let template = contractTemplates[type];
 
@@ -86,16 +81,14 @@ export default function Page() {
     setStep(2);
   };
 
-  // ✅ Download PDF (force light mode for PDF)
+  // ✅ PDF (light mode fix)
   const downloadContract = async () => {
     const element = document.getElementById("contract-preview");
     if (!element) return;
 
-    // Save original dark mode styles
     const originalBg = element.style.backgroundColor;
     const originalColor = element.style.color;
 
-    // Force light background & dark text for PDF
     element.style.backgroundColor = "#ffffff";
     element.style.color = "#000000";
 
@@ -110,7 +103,6 @@ export default function Page() {
 
     pdf.save(`${type}_Contract.pdf`);
 
-    // Restore dark mode styles
     element.style.backgroundColor = originalBg;
     element.style.color = originalColor;
   };
@@ -144,7 +136,6 @@ export default function Page() {
             Generate Your Contract
           </h2>
 
-          {/* Contract Type */}
           <select
             className="border p-3 rounded w-full mb-6 bg-gray-700 text-gray-100"
             value={type}
@@ -158,7 +149,6 @@ export default function Page() {
             ))}
           </select>
 
-          {/* Dynamic Fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {contractFields[type].map((field) => (
               <div key={field.name} className="flex flex-col">
@@ -212,20 +202,71 @@ export default function Page() {
             </button>
           </div>
 
-          {/* CONTRACT PREVIEW */}
-          <div className="flex justify-center">
+          {/* PROFESSIONAL CONTRACT */}
+          <div className="flex justify-center bg-gray-900 py-10">
             <div
               id="contract-preview"
-              className="bg-gray-800 p-10 shadow-lg text-gray-100"
+              className="shadow-xl"
               style={{
                 width: "210mm",
                 minHeight: "297mm",
+                backgroundColor: "#ffffff",
+                color: "#111",
+                padding: "70px 80px",
+                fontFamily: "Georgia, 'Times New Roman', serif",
+                lineHeight: "1.9",
+                fontSize: "17px",
+                border: "1px solid #e5e5e5",
               }}
               dangerouslySetInnerHTML={{ __html: contract }}
             />
           </div>
         </div>
       )}
+
+      {/* 🔥 PROFESSIONAL LEGAL STYLING */}
+      <style jsx global>{`
+        #contract-preview h1 {
+          text-align: center;
+          font-size: 32px;
+          font-weight: 700;
+          margin-bottom: 50px;
+          letter-spacing: 1px;
+        }
+
+        #contract-preview h2 {
+          font-size: 20px;
+          font-weight: 700;
+          margin-top: 35px;
+          margin-bottom: 12px;
+          text-transform: uppercase;
+        }
+
+        #contract-preview h3 {
+          font-size: 18px;
+          font-weight: 600;
+          margin-top: 25px;
+          margin-bottom: 8px;
+        }
+
+        #contract-preview p {
+          margin-bottom: 14px;
+          text-align: justify;
+        }
+
+        #contract-preview strong {
+          font-weight: 700;
+        }
+
+        #contract-preview ul {
+          margin-left: 20px;
+          margin-bottom: 15px;
+        }
+
+        #contract-preview li {
+          margin-bottom: 6px;
+        }
+      `}</style>
     </div>
   );
 }
