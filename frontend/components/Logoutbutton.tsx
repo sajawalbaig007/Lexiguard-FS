@@ -11,18 +11,12 @@ export default function LogoutButton() {
   const handleLogout = async () => {
     setLoading(true);
     try {
-      await auth.signOut(); // Logs out the user
+      await auth.signOut(); // logs out user + removes token
       alert("You have been logged out ✅");
-      router.push("/login"); // Redirect to login page
-    } catch (error: unknown) {
-      // Use a type-safe check
-      if (error instanceof Error) {
-        console.error("Logout Error:", error.message);
-        alert("Logout Failed ❌");
-      } else {
-        console.error("Logout Error:", error);
-        alert("Logout Failed ❌");
-      }
+      router.push("/login"); // redirect to login
+    } catch (error: any) {
+      console.error("Logout Error:", error.message);
+      alert("Logout Failed ❌");
     } finally {
       setLoading(false);
     }
@@ -31,7 +25,7 @@ export default function LogoutButton() {
   return (
     <button
       onClick={handleLogout}
-      className="bg-[#B5A491] text-white px-4 py-2 rounded hover:opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+      className="bg-[#B5A491] text-white px-4 py-2 rounded hover:opacity-90 transition"
       disabled={loading}
     >
       {loading ? "Logging out..." : "Logout"}

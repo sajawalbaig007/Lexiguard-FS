@@ -1,13 +1,11 @@
 "use client";
-
-import { Lora } from "next/font/google"; // ✅ updated import
+import { Lora } from "@next/font/google";
 
 const lora = Lora({ subsets: ["latin"], weight: ["400", "700"] });
 
 export default function HeroSection() {
   return (
-    <section
-      className="relative h-screen w-full flex flex-col items-center justify-center text-center px-6 md:px-12 
+    <section className="relative h-screen w-full flex flex-col items-center justify-center text-center px-6 md:px-12 
       bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: "url('/images/banner.png')" }}
     >
@@ -27,12 +25,12 @@ export default function HeroSection() {
           business documents effortlessly. LexiGuard makes legal easy and
           professional for your business.
         </p>
-        <div className="flex flex-col sm:flex-row justify-center gap-6 -mt-6">
+        <div className="flex flex-col sm:flex-row justify-center gap-6 -mt-6 mb-">
           <a
             href="#get-started"
             className="bg-[#B5A491] hover:bg-[#9e8f74] text-white font-semibold px-10 py-4 rounded-full shadow-lg transition text-lg md:text-xl"
           >
-            Get Started
+           Get Started
           </a>
           <a
             href="#learn-more"
