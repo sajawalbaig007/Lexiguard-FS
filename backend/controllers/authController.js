@@ -121,7 +121,7 @@ export const sendVerificationCode = async (req, res) => {
     await VerificationCode.findOneAndUpdate(
       { email },
       { code, expiresAt: codeExpiry },
-      { upsert: true, new: true }
+      { upsert: true, returnDocument: 'after'}
     );
 
     const transporter = nodemailer.createTransport({
