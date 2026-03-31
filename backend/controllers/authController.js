@@ -104,10 +104,7 @@ import User from "../models/User.js";
 import VerificationCode from "../models/VerificationCode.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import * as Brevo from '@getbrevo/brevo';
-// Initialize Brevo HTTP API client
-const brevoClient = new Brevo.TransactionalEmailsApi();
-brevoClient.setApiKey(Brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY);
+import nodemailer from "nodemailer";
 
 // -------------------- SEND VERIFICATION CODE --------------------
 export const sendVerificationCode = async (req, res) => {
@@ -124,45 +121,26 @@ export const sendVerificationCode = async (req, res) => {
     await VerificationCode.findOneAndUpdate(
       { email },
       { code, expiresAt: codeExpiry },
-      { upsert: true, returnDocument: 'after' }
+      { upsert: true, new: true }
     );
 
-    // Send email via Brevo HTTP API (port 443 - allowed on Render)
-    const sendSmtpEmail = new Brevo.SendSmtpEmail();
-    sendSmtpEmail.subject = "Your Verification Code";
-    sendSmtpEmail.to = [{ email: email }];
-    sendSmtpEmail.htmlContent = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e8dccb; border-radius: 12px;">
-        <div style="text-align: center; border-bottom: 2px solid #B5A491; padding-bottom: 20px; margin-bottom: 20px;">
-          <h1 style="color: #B5A491; margin: 0;">LEXIGUARD</h1>
-          <p style="color: #8a7a64; margin: 5px 0 0;">Simplify Your Legal Documents</p>
-        </div>
-        
-        <div style="text-align: center;">
-          <p style="color: #3e2f1c; font-size: 16px;">Your verification code is:</p>
-          <div style="background: #f5efe6; padding: 15px; border-radius: 8px; margin: 20px 0;">
-            <h2 style="font-size: 32px; letter-spacing: 8px; color: #2D4C8C; margin: 0;">${code}</h2>
-          </div>
-          <p style="color: #666;">This code will expire in <strong>5 minutes</strong>.</p>
-          <p style="color: #999; font-size: 12px; margin-top: 30px;">If you didn't request this, please ignore this email.</p>
-        </div>
-        
-        <div style="border-top: 1px solid #e8dccb; margin-top: 30px; padding-top: 20px; text-align: center; color: #a89a86; font-size: 12px;">
-          <p>LexiGuard - Professional Legal Documents</p>
-        </div>
-      </div>
-    `;
-    sendSmtpEmail.sender = { 
-      name: "LexiGuard", 
-      email: process.env.EMAIL_FROM || "noreply@lexiguard.com" 
-    };
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+      logger: true,
+  debug: true,
+    });
 
-    await brevoClient.sendTransacEmail(sendSmtpEmail);
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Your Verification Code",
+      text: `Your verification code is ${code}. It will expire in 5 minutes.`,
+    });
 
-    console.log('Email sent to:', email, 'Code:', code);
     res.status(200).json({ message: "Verification code sent" });
   } catch (err) {
-    console.error('Send verification error:', err);
+    console.error(err);
     res.status(500).json({ message: "Failed to send code" });
   }
 };
@@ -210,7 +188,7 @@ export const verifyRegister = async (req, res) => {
 
 // -------------------- LOGIN USER --------------------
 export const loginUser = async (req, res) => {
-  const { login, password } = req.body;
+  const { login, password } = req.body; // login = email or username
 
   if (!login || !password) return res.status(400).json({ message: "All fields are required" });
 
@@ -251,8 +229,9 @@ export const googleAuth = async (req, res) => {
     let user = await User.findOne({ email });
 
     if (!user) {
+      // Generate unique username automatically
       const baseUsername = fullName.replace(/\s+/g, "").toLowerCase();
-      const uniqueUsername = baseUsername + Date.now();
+      const uniqueUsername = baseUsername + Date.now(); // ensures uniqueness
 
       user = new User({
         email,
@@ -260,7 +239,7 @@ export const googleAuth = async (req, res) => {
         firebaseId: googleId,
         profilePic,
         username: uniqueUsername,
-        isVerified: true,
+        isVerified: true, // Google users are verified
       });
 
       await user.save();
