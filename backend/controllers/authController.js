@@ -127,26 +127,33 @@ export const sendVerificationCode = async (req, res) => {
     );
 
     // ----------- ETHEREAL TRANSPORTER -----------
-    const testAccount = await nodemailer.createTestAccount();
-    const transporter = nodemailer.createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
-      secure: false,
-      auth: {
-        user: testAccount.user,
-        pass: testAccount.pass,
-      },
-    });
+    console.log("STEP 1: Request received");
 
-    const info = await transporter.sendMail({
-      from: `"Lexiguard" <no-reply@example.com>`,
-      to: email,
-      subject: "Your Verification Code",
-      text: `Your verification code is ${code}. It will expire in 5 minutes.`,
-    });
+const testAccount = await nodemailer.createTestAccount();
+console.log("STEP 2: Ethereal account created");
 
-    console.log("Preview URL:", nodemailer.getTestMessageUrl(info)); // Check email in browser
-    res.status(200).json({ message: "Verification code sent", preview: nodemailer.getTestMessageUrl(info) });
+const transporter = nodemailer.createTransport({
+  host: "smtp.ethereal.email",
+  port: 587,
+  secure: false,
+  auth: {
+    user: testAccount.user,
+    pass: testAccount.pass,
+  },
+});
+
+console.log("STEP 3: Transporter ready");
+
+const info = await transporter.sendMail({
+  from: `"Lexiguard" <no-reply@example.com>`,
+  to: email,
+  subject: "Your Verification Code",
+  text: `Your verification code is ${code}`,
+});
+
+console.log("STEP 4: Email sent");
+
+console.log("Preview URL:", nodemailer.getTestMessageUrl(info));
   } catch (err) {
     console.error("Failed to send verification code:", err);
     res.status(500).json({ message: "Failed to send code" });
