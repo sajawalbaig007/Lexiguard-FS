@@ -118,21 +118,28 @@ export const sendVerificationCode = async (req, res) => {
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     const codeExpiry = new Date(Date.now() + 5 * 60 * 1000);
 
+    // Mongoose updated option
     const verification = await VerificationCode.findOneAndUpdate(
       { email },
       { code, expiresAt: codeExpiry },
-      { upsert: true, returnDocument: 'after' } // Mongoose updated option
+      { upsert: true, returnDocument: 'after' }
     );
 
-    // Nodemailer transport with IPv4 forced
+    // Nodemailer transport (Render-safe)
     const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+      host: "smtp.gmail.com",
+      port: 587,             // TLS port
+      secure: false,         // false for TLS
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      },
       logger: true,
       debug: true,
-      dns: { family: 4 },          // Force IPv4 for Render
-      connectionTimeout: 10000,    // 10s timeout
-      socketTimeout: 10000
+      dns: { family: 4 },    // Force IPv4
+      connectionTimeout: 10000,
+      socketTimeout: 10000,
+      tls: { rejectUnauthorized: false } // needed for Render sometimes
     });
 
     await transporter.sendMail({
