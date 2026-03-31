@@ -159,7 +159,7 @@ const LoginPage: React.FC = () => {
   // EMAIL/USERNAME LOGIN
   const handleLogin = async () => {
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", {
+      const res = await axios.post("https://lexiguard-fs.onrender.com/api/auth/login", {
         login: login.trim(),
         password: password.trim(),
       });
@@ -181,7 +181,7 @@ const LoginPage: React.FC = () => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      await axios.post("http://localhost:5000/api/auth/google", {
+      await axios.post("https://lexiguard-fs.onrender.com/api/auth/google", {
         fullName: user.displayName,
         email: user.email,
         googleId: user.uid,

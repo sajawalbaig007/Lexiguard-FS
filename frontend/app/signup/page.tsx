@@ -241,7 +241,7 @@ export default function SignupPage() {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      await axios.post("http://localhost:5000/api/auth/google", {
+      await axios.post("https://lexiguard-fs.onrender.com/api/auth/google", {
         fullName: user.displayName,
         email: user.email,
         googleId: user.uid,
@@ -277,7 +277,7 @@ export default function SignupPage() {
 
     try {
       setLoading(true);
-      await axios.post("http://localhost:5000/api/auth/send-code", { email });
+      await axios.post("https://lexiguard-fs.onrender.com/api/auth/send-code", { email });
       setCodeSent(true);
       setMessage("Verification code sent! It will expire in 5 minutes.");
     } catch (err: unknown) {
@@ -306,7 +306,7 @@ export default function SignupPage() {
 
     try {
       setLoading(true);
-      await axios.post("http://localhost:5000/api/auth/verify-register", {
+      await axios.post("https://lexiguard-fs.onrender.com/api/auth/verify-register", {
         fullName,
         username,
         email,
