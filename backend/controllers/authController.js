@@ -104,8 +104,7 @@ import User from "../models/User.js";
 import VerificationCode from "../models/VerificationCode.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import Brevo from '@getbrevo/brevo';
-
+import * as Brevo from '@getbrevo/brevo';
 // Initialize Brevo HTTP API client
 const brevoClient = new Brevo.TransactionalEmailsApi();
 brevoClient.setApiKey(Brevo.TransactionalEmailsApiApiKeys.apiKey, process.env.BREVO_API_KEY);
