@@ -118,17 +118,21 @@ export const sendVerificationCode = async (req, res) => {
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     const codeExpiry = new Date(Date.now() + 5 * 60 * 1000);
 
-    await VerificationCode.findOneAndUpdate(
+    const verification = await VerificationCode.findOneAndUpdate(
       { email },
       { code, expiresAt: codeExpiry },
-      { upsert: true, returnDocument: 'after'}
+      { upsert: true, returnDocument: 'after' } // Mongoose updated option
     );
 
+    // Nodemailer transport with IPv4 forced
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
       logger: true,
-  debug: true,
+      debug: true,
+      dns: { family: 4 },          // Force IPv4 for Render
+      connectionTimeout: 10000,    // 10s timeout
+      socketTimeout: 10000
     });
 
     await transporter.sendMail({
@@ -138,9 +142,10 @@ export const sendVerificationCode = async (req, res) => {
       text: `Your verification code is ${code}. It will expire in 5 minutes.`,
     });
 
+    console.log("Verification code sent:", verification.code);
     res.status(200).json({ message: "Verification code sent" });
   } catch (err) {
-    console.error(err);
+    console.error("Failed to send verification code:", err);
     res.status(500).json({ message: "Failed to send code" });
   }
 };
@@ -159,10 +164,7 @@ export const verifyRegister = async (req, res) => {
 
     const verification = await VerificationCode.findOne({ email, code });
     if (!verification) return res.status(400).json({ message: "Invalid verification code" });
-
-    if (verification.expiresAt < new Date()) {
-      return res.status(400).json({ message: "Verification code expired" });
-    }
+    if (verification.expiresAt < new Date()) return res.status(400).json({ message: "Verification code expired" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -178,17 +180,16 @@ export const verifyRegister = async (req, res) => {
     await VerificationCode.deleteOne({ email });
 
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
-
     res.status(201).json({ token });
   } catch (err) {
-    console.error(err);
+    console.error("Error registering user:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
 
 // -------------------- LOGIN USER --------------------
 export const loginUser = async (req, res) => {
-  const { login, password } = req.body; // login = email or username
+  const { login, password } = req.body;
 
   if (!login || !password) return res.status(400).json({ message: "All fields are required" });
 
@@ -204,10 +205,7 @@ export const loginUser = async (req, res) => {
     });
 
     if (!user) return res.status(400).json({ message: "Invalid email/username or password" });
-
-    if (!user.password) {
-      return res.status(400).json({ message: "This account uses Google login. Use Google sign-in." });
-    }
+    if (!user.password) return res.status(400).json({ message: "This account uses Google login. Use Google sign-in." });
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: "Invalid email/username or password" });
@@ -215,7 +213,7 @@ export const loginUser = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
     res.status(200).json({ token });
   } catch (err) {
-    console.error(err);
+    console.error("Error logging in user:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -229,9 +227,8 @@ export const googleAuth = async (req, res) => {
     let user = await User.findOne({ email });
 
     if (!user) {
-      // Generate unique username automatically
       const baseUsername = fullName.replace(/\s+/g, "").toLowerCase();
-      const uniqueUsername = baseUsername + Date.now(); // ensures uniqueness
+      const uniqueUsername = baseUsername + Date.now();
 
       user = new User({
         email,
@@ -239,7 +236,7 @@ export const googleAuth = async (req, res) => {
         firebaseId: googleId,
         profilePic,
         username: uniqueUsername,
-        isVerified: true, // Google users are verified
+        isVerified: true,
       });
 
       await user.save();
@@ -248,7 +245,7 @@ export const googleAuth = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
     res.status(200).json({ token });
   } catch (err) {
-    console.error(err);
+    console.error("Google auth error:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
