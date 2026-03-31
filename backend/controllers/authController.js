@@ -100,11 +100,15 @@
 
 
 // controllers/authController.js
+// controllers/authController.js
 import User from "../models/User.js";
 import VerificationCode from "../models/VerificationCode.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import nodemailer from "nodemailer";
+import { Resend } from 'resend';
+
+// Initialize Resend with API key from environment
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // -------------------- SEND VERIFICATION CODE --------------------
 export const sendVerificationCode = async (req, res) => {
@@ -121,28 +125,46 @@ export const sendVerificationCode = async (req, res) => {
     await VerificationCode.findOneAndUpdate(
       { email },
       { code, expiresAt: codeExpiry },
-      { upsert: true, new: true }
+      { upsert: true, returnDocument: 'after' }
     );
 
-    const transporter = nodemailer.createTransport({
-      host: "smtp-relay.brevo.com",
-  port: 587,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
+    // Send email using Resend
+    const { data, error } = await resend.emails.send({
+      from: process.env.EMAIL_FROM || 'LexiGuard <onboarding@resend.dev>',
+      to: [email],
+      subject: 'Your Verification Code',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e8dccb; border-radius: 12px;">
+          <div style="text-align: center; border-bottom: 2px solid #B5A491; padding-bottom: 20px; margin-bottom: 20px;">
+            <h1 style="color: #B5A491; margin: 0;">LEXIGUARD</h1>
+            <p style="color: #8a7a64; margin: 5px 0 0;">Simplify Your Legal Documents</p>
+          </div>
+          
+          <div style="text-align: center;">
+            <p style="color: #3e2f1c; font-size: 16px;">Your verification code is:</p>
+            <div style="background: #f5efe6; padding: 15px; border-radius: 8px; margin: 20px 0;">
+              <h2 style="font-size: 32px; letter-spacing: 8px; color: #2D4C8C; margin: 0;">${code}</h2>
+            </div>
+            <p style="color: #666;">This code will expire in <strong>5 minutes</strong>.</p>
+            <p style="color: #999; font-size: 12px; margin-top: 30px;">If you didn't request this, please ignore this email.</p>
+          </div>
+          
+          <div style="border-top: 1px solid #e8dccb; margin-top: 30px; padding-top: 20px; text-align: center; color: #a89a86; font-size: 12px;">
+            <p>LexiGuard - Professional Legal Documents</p>
+          </div>
+        </div>
+      `,
     });
 
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "Your Verification Code",
-      text: `Your verification code is ${code}. It will expire in 5 minutes.`,
-    });
+    if (error) {
+      console.error('Resend error:', error);
+      throw error;
+    }
 
+    console.log('Email sent to:', email, 'Code:', code);
     res.status(200).json({ message: "Verification code sent" });
   } catch (err) {
-    console.error(err);
+    console.error('Send verification error:', err);
     res.status(500).json({ message: "Failed to send code" });
   }
 };
