@@ -229,10 +229,8 @@ export default function SignupPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const [codeSent, setCodeSent] = useState(false);
 
   // ------------------ GOOGLE SIGNUP ------------------
   const handleGoogleSignup = async () => {
@@ -252,53 +250,18 @@ export default function SignupPage() {
       setTimeout(() => router.push("/login"), 1500);
     } catch (err: unknown) {
       const error = err as AxiosError<{ message: string }>;
-      if (error.response?.data?.message) {
-        setMessage(error.response.data.message);
-      } else {
-        setMessage("Google signup failed. Please try again.");
-      }
+      setMessage(error.response?.data?.message || "Google signup failed.");
     } finally {
       setLoading(false);
     }
   };
 
-  // ------------------ SEND VERIFICATION CODE ------------------
-  const handleSendCode = async () => {
-    if (!email) {
-      setMessage("Please enter your email first.");
+  // ------------------ EMAIL/PASSWORD SIGNUP ------------------
+  const handleSignup = async () => {
+    if (!fullName || !username || !email || !password) {
+      setMessage("All fields are required.");
       return;
     }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setMessage("Please enter a valid email address.");
-      return;
-    }
-
-    try {
-      setLoading(true);
-      await axios.post("https://lexiguard-fs.onrender.com/api/auth/send-code", { email });
-      setCodeSent(true);
-      setMessage("Verification code sent! It will expire in 5 minutes.");
-    } catch (err: unknown) {
-      const error = err as AxiosError<{ message: string }>;
-      if (error.response?.data?.message) {
-        setMessage(error.response.data.message);
-      } else {
-        setMessage("Failed to send verification code. Try again.");
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // ------------------ VERIFY CODE & SIGNUP ------------------
-  const handleVerifyAndSignup = async () => {
-    if (!fullName || !username || !email || !password || !code) {
-      setMessage("All fields including the code are required.");
-      return;
-    }
-
     if (password.length < 6) {
       setMessage("Password must be at least 6 characters.");
       return;
@@ -306,23 +269,18 @@ export default function SignupPage() {
 
     try {
       setLoading(true);
-      await axios.post("https://lexiguard-fs.onrender.com/api/auth/verify-register", {
+      await axios.post("https://lexiguard-fs.onrender.com/api/auth/register", {
         fullName,
         username,
         email,
         password,
-        code,
       });
 
-      setMessage("Account created successfully! Redirecting to login...");
+      setMessage("Account created! Redirecting to login...");
       setTimeout(() => router.push("/login"), 1500);
     } catch (err: unknown) {
       const error = err as AxiosError<{ message: string }>;
-      if (error.response?.data?.message) {
-        setMessage(error.response.data.message);
-      } else {
-        setMessage("Signup failed. Please try again.");
-      }
+      setMessage(error.response?.data?.message || "Signup failed.");
     } finally {
       setLoading(false);
     }
@@ -334,12 +292,10 @@ export default function SignupPage() {
         onClick={() => router.push("/")}
         className="absolute top-6 left-6 flex items-center gap-2 text-gray-600 hover:text-[#B5A491]"
       >
-        <ArrowLeft size={20} />
-        Back
+        <ArrowLeft size={20} /> Back
       </button>
 
       <div className="w-full max-w-sm bg-white dark:bg-gray-800 p-7 rounded-2xl shadow-lg">
-        {/* cspell:ignore LEXIGUARD */}
         <div className="flex flex-col items-center mb-6">
           <Image src="/images/logo2.png" alt="logo" width={42} height={42} />
           <h2 className="text-lg font-semibold text-[#B5A491] mt-2">LEXIGUARD</h2>
@@ -349,8 +305,7 @@ export default function SignupPage() {
           onClick={handleGoogleSignup}
           className="w-full flex items-center justify-center gap-3 border py-2.5 rounded-full text-sm"
         >
-          <FcGoogle size={20} />
-          Continue with Google
+          <FcGoogle size={20} /> Continue with Google
         </button>
 
         <div className="flex items-center my-5">
@@ -360,7 +315,6 @@ export default function SignupPage() {
         </div>
 
         <div className="space-y-3">
-          {/* Full Name */}
           <div className="flex items-center border rounded-full px-4 py-2.5">
             <User size={16} className="text-gray-400 mr-2" />
             <input
@@ -372,7 +326,6 @@ export default function SignupPage() {
             />
           </div>
 
-          {/* Username */}
           <div className="flex items-center border rounded-full px-4 py-2.5">
             <AtSign size={16} className="text-gray-400 mr-2" />
             <input
@@ -384,7 +337,6 @@ export default function SignupPage() {
             />
           </div>
 
-          {/* Email */}
           <div className="flex items-center border rounded-full px-4 py-2.5">
             <Mail size={16} className="text-gray-400 mr-2" />
             <input
@@ -393,11 +345,9 @@ export default function SignupPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full outline-none text-sm bg-transparent"
-              disabled={codeSent}
             />
           </div>
 
-          {/* Password */}
           <div className="flex items-center border rounded-full px-4 py-2.5">
             <Lock size={16} className="text-gray-400 mr-2" />
             <input
@@ -409,41 +359,15 @@ export default function SignupPage() {
             />
           </div>
 
-          {/* Verification Code Input */}
-          {codeSent && (
-            <div className="flex items-center border rounded-full px-4 py-2.5">
-              <Lock size={16} className="text-gray-400 mr-2" />
-              <input
-                type="text"
-                placeholder="Enter Verification Code"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                className="w-full outline-none text-sm bg-transparent"
-              />
-            </div>
-          )}
-
-          {/* Message */}
           {message && <p className="text-center text-sm text-red-500">{message}</p>}
 
-          {/* Button */}
-          {!codeSent ? (
-            <button
-              onClick={handleSendCode}
-              disabled={loading}
-              className="w-full bg-[#B5A491] text-white py-2.5 rounded-full text-sm"
-            >
-              {loading ? "Sending..." : "Send Verification Code"}
-            </button>
-          ) : (
-            <button
-              onClick={handleVerifyAndSignup}
-              disabled={loading}
-              className="w-full bg-[#B5A491] text-white py-2.5 rounded-full text-sm"
-            >
-              {loading ? "Creating..." : "Verify & Create Account"}
-            </button>
-          )}
+          <button
+            onClick={handleSignup}
+            disabled={loading}
+            className="w-full bg-[#B5A491] text-white py-2.5 rounded-full text-sm"
+          >
+            {loading ? "Creating..." : "Create Account"}
+          </button>
         </div>
 
         <p className="text-center text-xs mt-5">
