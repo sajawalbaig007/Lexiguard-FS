@@ -2,9 +2,18 @@
 import { useState, useEffect } from "react";
 import { Pencil } from "lucide-react";
 
+// Define types
+type Document = {
+  id: number;
+  title: string;
+  time: string;
+  content: string;
+  createdAt: string;
+};
+
 export default function SavedDocuments() {
-  const [savedDocs, setSavedDocs] = useState<any[]>([]);
-  const [selectedDoc, setSelectedDoc] = useState<any>(null);
+  const [savedDocs, setSavedDocs] = useState<Document[]>([]);
+  const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
 
   useEffect(() => {
     const stored = JSON.parse(
@@ -13,9 +22,9 @@ export default function SavedDocuments() {
     setSavedDocs(stored);
   }, []);
 
-  // PDF Download
+  // PDF Download - FIXED
   const handleDownloadPDF = async () => {
-    const element = document.querySelector(".print-document");
+    const element = document.querySelector(".print-document") as HTMLElement | null;
     if (!element) return;
 
     const html2pdf = (await import("html2pdf.js")).default;
@@ -23,9 +32,9 @@ export default function SavedDocuments() {
     const opt = {
       margin: 0.5,
       filename: `${selectedDoc?.title || "document"}.pdf`,
-      image: { type: "jpeg", quality: 0.98 },
+      image: { type: "jpeg" as const, quality: 0.98 },
       html2canvas: { scale: 2 },
-      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+      jsPDF: { unit: "in" as const, format: "letter" as const, orientation: "portrait" as const },
     };
 
     html2pdf().set(opt).from(element).save();
@@ -34,8 +43,8 @@ export default function SavedDocuments() {
   // Preview Mode
   if (selectedDoc) {
     return (
-      <div className="fixed inset-0 z-[99999] bg-[#f8f6f1] flex flex-col overflow-hidden">
-        <div className="sticky top-0 z-[1000] bg-white/80 backdrop-blur border-b border-[#e6dccf] px-8 py-4 flex items-center justify-between shadow-sm">
+      <div className="fixed inset-0 z-99999 bg-[#f8f6f1] flex flex-col overflow-hidden">
+        <div className="sticky top-0 z-1000 bg-white/80 backdrop-blur border-b border-[#e6dccf] px-8 py-4 flex items-center justify-between shadow-sm">
           <div>
             <h1 className="text-lg font-semibold text-[#3e2f1c] tracking-wide">
               {selectedDoc.title}
@@ -63,7 +72,7 @@ export default function SavedDocuments() {
         </div>
 
         <div className="flex-1 overflow-y-auto flex justify-center px-6 py-10">
-          <div className="w-full max-w-[900px]">
+          <div className="w-full max-w-225">
             <div className="print-document bg-[#fffdf9] shadow-[0_20px_60px_rgba(0,0,0,0.08)] border border-[#e8dccb] rounded-sm px-20 py-16">
               <div className="border-b border-[#d6c7b0] pb-6 mb-10 text-center">
                 <h1 className="text-3xl font-semibold tracking-widest font-serif text-[#3e2f1c]">
@@ -92,7 +101,7 @@ export default function SavedDocuments() {
 
   // Saved Documents List
   return (
-    <div className="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm min-h-[600px]">
+    <div className="bg-white rounded-2xl p-8 border border-gray-200 shadow-sm min-h-150">
       <h2 className="text-2xl font-semibold text-gray-900 mb-6">
         Saved Documents
       </h2>

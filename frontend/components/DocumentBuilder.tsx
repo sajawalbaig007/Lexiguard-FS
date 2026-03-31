@@ -1,18 +1,38 @@
- "use client";
+"use client";
 
 import { useState } from "react";
 import getTemplateQuestions from "../modules/getTemplateQuestions";
 import getHelpContent from "../modules/getHelpContent";
 import generateDocument from "../modules/generateDocument";
 
+// Define types for better TypeScript support
+type Field = {
+  name: string;
+  label: string;
+  type: string;
+};
+
+type Step = {
+  step: string;
+  fields: Field[];
+};
+
+type FormData = {
+  [key: string]: string;
+};
+
+type Errors = {
+  [key: string]: boolean;
+};
+
 export default function DocumentBuilder({ template }: { template: string }) {
-  const steps = getTemplateQuestions(template);
+  const steps: Step[] = getTemplateQuestions(template);
 
   const [currentStep, setCurrentStep] = useState(0);
-  const [formData, setFormData] = useState<any>({});
+  const [formData, setFormData] = useState<FormData>({});
   const [previewMode, setPreviewMode] = useState<null | "sidebar" | "final">(null);
 
-  const [errors, setErrors] = useState<any>({});
+  const [errors, setErrors] = useState<Errors>({});
   const [animateError, setAnimateError] = useState(false);
 
   // Skip feature states
@@ -27,9 +47,9 @@ export default function DocumentBuilder({ template }: { template: string }) {
 
   const nextStep = () => {
     const fields = steps[currentStep]?.fields || [];
-    let newErrors: any = {};
+    const newErrors: Errors = {};
 
-    fields.forEach((field: any) => {
+    fields.forEach((field: Field) => {
       if (!formData[field.name] && !skippedFields.includes(field.name)) {
         newErrors[field.name] = true;
       }
@@ -60,7 +80,7 @@ export default function DocumentBuilder({ template }: { template: string }) {
   // Skip entire step fields
   const confirmSkipStep = () => {
     const fields = steps[currentStep]?.fields || [];
-    const fieldNames = fields.map((f: any) => f.name);
+    const fieldNames = fields.map((f: Field) => f.name);
 
     setSkippedFields([...skippedFields, ...fieldNames]);
     setShowSkipPopup(false);
@@ -70,46 +90,44 @@ export default function DocumentBuilder({ template }: { template: string }) {
     }
   };
 
-  // ----------- NEW FUNCTION 1 -----------
- // ----------- NEW FUNCTION 1 (UPDATED) -----------
-const handleSaveDocument = () => {
-  try {
-    let documentText = generateDocument(template, formData);
+  // Save Document Function
+  const handleSaveDocument = () => {
+    try {
+      let documentText = generateDocument(template, formData);
 
-    // Remove skipped fields (same logic as preview)
-    skippedFields.forEach((field) => {
-      const regex = new RegExp(`.*{{${field}}}.*\\n?`, "g");
-      documentText = documentText.replace(regex, "");
-    });
+      // Remove skipped fields
+      skippedFields.forEach((field) => {
+        const regex = new RegExp(`.*{{${field}}}.*\\n?`, "g");
+        documentText = documentText.replace(regex, "");
+      });
 
-    // Clean placeholders
-    documentText = documentText.replace(/\{\{(.*?)\}\}/g, "");
+      // Clean placeholders
+      documentText = documentText.replace(/\{\{(.*?)\}\}/g, "");
 
-    const newDoc = {
-      id: Date.now(),
-      title: template,
-      time: "Just now",
-      content: documentText,
-      createdAt: new Date().toISOString(),
-    };
+      const newDoc = {
+        id: Date.now(),
+        title: template,
+        time: "Just now",
+        content: documentText,
+        createdAt: new Date().toISOString(),
+      };
 
-    const existing =
-      JSON.parse(localStorage.getItem("recentDocuments") || "[]");
+      const existing = JSON.parse(localStorage.getItem("recentDocuments") || "[]");
 
-    const updated = [newDoc, ...existing];
+      const updated = [newDoc, ...existing];
 
-    localStorage.setItem("recentDocuments", JSON.stringify(updated));
+      localStorage.setItem("recentDocuments", JSON.stringify(updated));
 
-    alert("Document saved successfully");
-  } catch (err) {
-    console.error(err);
-    alert("Error saving document");
-  }
-};
+      alert("Document saved successfully");
+    } catch (err) {
+      console.error(err);
+      alert("Error saving document");
+    }
+  };
 
-  // ----------- NEW FUNCTION 2 -----------
+  // Download PDF Function - FIXED
   const handleDownloadPDF = async () => {
-    const element = document.querySelector(".print-document");
+    const element = document.querySelector(".print-document") as HTMLElement | null;
     if (!element) return;
 
     const html2pdf = (await import("html2pdf.js")).default;
@@ -117,9 +135,9 @@ const handleSaveDocument = () => {
     const opt = {
       margin: 0.5,
       filename: `${template}.pdf`,
-      image: { type: "jpeg", quality: 0.98 },
+      image: { type: "jpeg" as const, quality: 0.98 },
       html2canvas: { scale: 2 },
-      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+      jsPDF: { unit: "in" as const, format: "letter" as const, orientation: "portrait" as const },
     };
 
     html2pdf().set(opt).from(element).save();
@@ -144,13 +162,9 @@ const handleSaveDocument = () => {
       documentText = documentText.replace(/\{\{(.*?)\}\}/g, "");
     }
 
-    const handlePrint = () => {
-      window.print();
-    };
-
     if (previewMode === "sidebar") {
       return (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[12000]">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-12000">
           <div className="bg-white w-[800px] h-[90vh] shadow-2xl border relative p-16 overflow-y-auto">
             <button
               onClick={() => setPreviewMode(null)}
@@ -181,77 +195,67 @@ const handleSaveDocument = () => {
       );
     }
 
-   
-  return (
-  <div className="w-screen h-screen bg-[#f5efe6] overflow-y-auto relative">
+    return (
+      <div className="w-screen h-screen bg-[#f5efe6] overflow-y-auto relative">
+        <div className="flex justify-center py-16">
+          <div className="print-document bg-[#fffdf9] w-[850px] min-h-[1150px] shadow-2xl border border-[#e8dccb] px-24 py-20 mb-32 print:shadow-none print:border-none">
+            <div className="border-b border-[#d6c7b0] pb-8 mb-12 text-center">
+              <h1 className="text-4xl font-semibold tracking-widest font-serif text-[#3e2f1c]">
+                {template.toUpperCase()}
+              </h1>
+              <p className="text-sm text-[#8a7a64] mt-3 tracking-wide">
+                Legal Agreement Document
+              </p>
+            </div>
 
-    <div className="flex justify-center py-16">
-       <div className="print-document bg-[#fffdf9] w-[850px] min-h-[1150px] shadow-2xl border border-[#e8dccb] px-24 py-20 mb-32 print:shadow-none print:border-none">
+            <div
+              className="text-[16px] text-[#2f2a24] font-serif text-justify"
+              style={{
+                lineHeight: "2",
+                wordSpacing: "1.5px",
+              }}
+              dangerouslySetInnerHTML={{ __html: documentText }}
+            />
 
-        {/* Header */}
-        <div className="border-b border-[#d6c7b0] pb-8 mb-12 text-center">
-          <h1 className="text-4xl font-semibold tracking-widest font-serif text-[#3e2f1c]">
-            {template.toUpperCase()}
-          </h1>
-          <p className="text-sm text-[#8a7a64] mt-3 tracking-wide">
-            Legal Agreement Document
-          </p>
+            <div className="mt-24 text-xs text-center text-[#a89a86] tracking-wide">
+              Generated Document — Verified Legal Template
+            </div>
+          </div>
         </div>
 
-        {/* Document Body */}
-        <div
-          className="text-[16px] text-[#2f2a24] font-serif text-justify"
-          style={{
-            lineHeight: "2",
-            wordSpacing: "1.5px",
-          }}
-          dangerouslySetInnerHTML={{ __html: documentText }}
-        />
+        <div className="fixed bottom-0 left-0 w-full bg-[#3e2f1c] text-white flex justify-center py-4 shadow-2xl z-12000">
+          <div className="flex gap-8">
+            <button
+              onClick={handleSaveDocument}
+              className="px-6 py-2 bg-[#5a4630] rounded-md hover:bg-[#6b543a] transition"
+            >
+              Save Document
+            </button>
 
-        {/* Footer */}
-        <div className="mt-24 text-xs text-center text-[#a89a86] tracking-wide">
-          Generated Document — Verified Legal Template
+            <button
+              onClick={handleDownloadPDF}
+              className="px-6 py-2 bg-[#7a5c3a] rounded-md hover:bg-[#8b6a45] transition"
+            >
+              Download PDF
+            </button>
+
+            <button
+              onClick={() => setPreviewMode(null)}
+              className="px-6 py-2 bg-black rounded-md hover:bg-gray-800 transition"
+            >
+              Return to Edit
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-
-    {/* Fixed Bottom Navbar */}
-    <div className="fixed bottom-0 left-0 w-full bg-[#3e2f1c] text-white flex justify-center py-4 shadow-2xl z-[12000]">
-      <div className="flex gap-8">
-
-        <button
-          onClick={handleSaveDocument}
-          className="px-6 py-2 bg-[#5a4630] rounded-md hover:bg-[#6b543a] transition"
-        >
-          Save Document
-        </button>
-
-        <button
-          onClick={handleDownloadPDF}
-          className="px-6 py-2 bg-[#7a5c3a] rounded-md hover:bg-[#8b6a45] transition"
-        >
-          Download PDF
-        </button>
-
-        <button
-          onClick={() => setPreviewMode(null)}
-          className="px-6 py-2 bg-black rounded-md hover:bg-gray-800 transition"
-        >
-          Return to Edit
-        </button>
-
-      </div>
-    </div>
-
-  </div>
-);
+    );
   }
+
   return (
     <div className="flex w-screen h-screen bg-white overflow-hidden">
-
       {/* Skip Confirmation Popup */}
       {showSkipPopup && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[13000]">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-13000">
           <div className="bg-white p-6 rounded-xl shadow-xl w-[400px]">
             <h2 className="text-lg font-semibold mb-4">
               Do you want to skip this step?
@@ -297,7 +301,7 @@ const handleSaveDocument = () => {
         </div>
 
         <div className="space-y-2 flex-1 overflow-y-auto">
-          {steps.map((s: any, i: number) => (
+          {steps.map((s: Step, i: number) => (
             <div
               key={i}
               className={`p-2 rounded-md text-sm flex items-center gap-2
@@ -332,7 +336,7 @@ const handleSaveDocument = () => {
           </div>
 
           <div className="bg-gray-50 border rounded-xl p-6">
-            {steps[currentStep]?.fields.map((field: any) => (
+            {steps[currentStep]?.fields.map((field: Field) => (
               <div
                 key={field.name}
                 className={`mb-5 transition-transform duration-200 ease-out ${
