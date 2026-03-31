@@ -100,15 +100,11 @@
 
 
 // controllers/authController.js
-// controllers/authController.js
 import User from "../models/User.js";
 import VerificationCode from "../models/VerificationCode.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { Resend } from 'resend';
-
-// Initialize Resend with API key from environment
-const resend = new Resend(process.env.RESEND_API_KEY);
+import nodemailer from "nodemailer";
 
 // -------------------- SEND VERIFICATION CODE --------------------
 export const sendVerificationCode = async (req, res) => {
@@ -128,11 +124,20 @@ export const sendVerificationCode = async (req, res) => {
       { upsert: true, returnDocument: 'after' }
     );
 
-    // Send email using Resend
-    const { data, error } = await resend.emails.send({
-      from: process.env.EMAIL_FROM || 'LexiGuard <onboarding@resend.dev>',
-      to: [email],
-      subject: 'Your Verification Code',
+    // Brevo SMTP Transporter
+    const transporter = nodemailer.createTransport({
+      host: "smtp-relay.brevo.com",
+      port: 587,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_FROM || 'LexiGuard <noreply@lexiguard.com>',
+      to: email,
+      subject: "Your Verification Code",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e8dccb; border-radius: 12px;">
           <div style="text-align: center; border-bottom: 2px solid #B5A491; padding-bottom: 20px; margin-bottom: 20px;">
@@ -155,11 +160,6 @@ export const sendVerificationCode = async (req, res) => {
         </div>
       `,
     });
-
-    if (error) {
-      console.error('Resend error:', error);
-      throw error;
-    }
 
     console.log('Email sent to:', email, 'Code:', code);
     res.status(200).json({ message: "Verification code sent" });
@@ -212,7 +212,7 @@ export const verifyRegister = async (req, res) => {
 
 // -------------------- LOGIN USER --------------------
 export const loginUser = async (req, res) => {
-  const { login, password } = req.body; // login = email or username
+  const { login, password } = req.body;
 
   if (!login || !password) return res.status(400).json({ message: "All fields are required" });
 
@@ -253,9 +253,8 @@ export const googleAuth = async (req, res) => {
     let user = await User.findOne({ email });
 
     if (!user) {
-      // Generate unique username automatically
       const baseUsername = fullName.replace(/\s+/g, "").toLowerCase();
-      const uniqueUsername = baseUsername + Date.now(); // ensures uniqueness
+      const uniqueUsername = baseUsername + Date.now();
 
       user = new User({
         email,
@@ -263,7 +262,7 @@ export const googleAuth = async (req, res) => {
         firebaseId: googleId,
         profilePic,
         username: uniqueUsername,
-        isVerified: true, // Google users are verified
+        isVerified: true,
       });
 
       await user.save();
