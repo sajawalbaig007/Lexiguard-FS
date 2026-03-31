@@ -113,20 +113,30 @@ export const sendVerificationCode = async (req, res) => {
 
   try {
     const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ message: "Email already registered" });
+    if (existingUser)
+      return res.status(400).json({ message: "Email already registered" });
 
     const code = Math.floor(100000 + Math.random() * 900000).toString();
-    const codeExpiry = new Date(Date.now() + 5 * 60 * 1000);
+    const codeExpiry = new Date(Date.now() + 5 * 60 * 1000); // 5 min
 
+    // Save or update verification code (Mongoose 7 syntax)
     await VerificationCode.findOneAndUpdate(
       { email },
       { code, expiresAt: codeExpiry },
-      { upsert: true, new: true }
+      { upsert: true, returnDocument: "after" }
     );
 
+    // Nodemailer transporter (force IPv4)
     const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+      family: 4, // Force IPv4 to fix ENETUNREACH
+      connectionTimeout: 10000,
     });
 
     await transporter.sendMail({
@@ -138,7 +148,7 @@ export const sendVerificationCode = async (req, res) => {
 
     res.status(200).json({ message: "Verification code sent" });
   } catch (err) {
-    console.error(err);
+    console.error("Send verification error:", err);
     res.status(500).json({ message: "Failed to send code" });
   }
 };
@@ -147,20 +157,20 @@ export const sendVerificationCode = async (req, res) => {
 export const verifyRegister = async (req, res) => {
   const { fullName, username, email, password, code } = req.body;
 
-  if (!fullName || !username || !email || !password || !code) {
+  if (!fullName || !username || !email || !password || !code)
     return res.status(400).json({ message: "All fields are required" });
-  }
 
   try {
     const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-    if (existingUser) return res.status(400).json({ message: "Email or username already exists" });
+    if (existingUser)
+      return res.status(400).json({ message: "Email or username already exists" });
 
     const verification = await VerificationCode.findOne({ email, code });
-    if (!verification) return res.status(400).json({ message: "Invalid verification code" });
+    if (!verification)
+      return res.status(400).json({ message: "Invalid verification code" });
 
-    if (verification.expiresAt < new Date()) {
+    if (verification.expiresAt < new Date())
       return res.status(400).json({ message: "Verification code expired" });
-    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -175,20 +185,23 @@ export const verifyRegister = async (req, res) => {
     await newUser.save();
     await VerificationCode.deleteOne({ email });
 
-    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
 
     res.status(201).json({ token });
   } catch (err) {
-    console.error(err);
+    console.error("Verify register error:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
 
 // -------------------- LOGIN USER --------------------
 export const loginUser = async (req, res) => {
-  const { login, password } = req.body; // login = email or username
+  const { login, password } = req.body;
 
-  if (!login || !password) return res.status(400).json({ message: "All fields are required" });
+  if (!login || !password)
+    return res.status(400).json({ message: "All fields are required" });
 
   try {
     const trimmedLogin = login.trim();
@@ -196,24 +209,29 @@ export const loginUser = async (req, res) => {
     const user = await User.findOne({
       $or: [
         { email: { $regex: `^${trimmedLogin}$`, $options: "i" } },
-        { username: { $regex: `^${trimmedLogin}$`, $options: "i" } }
+        { username: { $regex: `^${trimmedLogin}$`, $options: "i" } },
       ],
-      isVerified: true
+      isVerified: true,
     });
 
-    if (!user) return res.status(400).json({ message: "Invalid email/username or password" });
+    if (!user)
+      return res.status(400).json({ message: "Invalid email/username or password" });
 
-    if (!user.password) {
-      return res.status(400).json({ message: "This account uses Google login. Use Google sign-in." });
-    }
+    if (!user.password)
+      return res
+        .status(400)
+        .json({ message: "This account uses Google login. Use Google sign-in." });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid email/username or password" });
+    if (!isMatch)
+      return res.status(400).json({ message: "Invalid email/username or password" });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
     res.status(200).json({ token });
   } catch (err) {
-    console.error(err);
+    console.error("Login error:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -243,10 +261,12 @@ export const googleAuth = async (req, res) => {
       await user.save();
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
     res.status(200).json({ token });
   } catch (err) {
-    console.error(err);
+    console.error("Google auth error:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
