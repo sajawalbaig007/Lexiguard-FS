@@ -105,7 +105,10 @@ import User from "../models/User.js";
 import VerificationCode from "../models/VerificationCode.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
+
+// ✅ INIT RESEND
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // -------------------- SEND VERIFICATION CODE --------------------
 export const sendVerificationCode = async (req, res) => {
@@ -126,36 +129,22 @@ export const sendVerificationCode = async (req, res) => {
       { upsert: true, returnDocument: "after" }
     );
 
-    // ----------- ETHEREAL TRANSPORTER -----------
-    console.log("STEP 1: Request received");
+    // ✅ SEND EMAIL USING RESEND
+    await resend.emails.send({
+      from: "onboarding@resend.dev", // works without domain
+      to: email,
+      subject: "Your Verification Code",
+      html: `
+        <h2>Lexiguard Verification</h2>
+        <p>Your verification code is:</p>
+        <h1>${code}</h1>
+        <p>This code will expire in 5 minutes.</p>
+      `,
+    });
 
-const testAccount = await nodemailer.createTestAccount();
-console.log("STEP 2: Ethereal account created");
-
-const transporter = nodemailer.createTransport({
-  host: "smtp.ethereal.email",
-  port: 587,
-  secure: false,
-  auth: {
-    user: testAccount.user,
-    pass: testAccount.pass,
-  },
-});
-
-console.log("STEP 3: Transporter ready");
-
-const info = await transporter.sendMail({
-  from: `"Lexiguard" <no-reply@example.com>`,
-  to: email,
-  subject: "Your Verification Code",
-  text: `Your verification code is ${code}`,
-});
-
-console.log("STEP 4: Email sent");
-
-console.log("Preview URL:", nodemailer.getTestMessageUrl(info));
+    res.status(200).json({ message: "Verification code sent" });
   } catch (err) {
-    console.error("Failed to send verification code:", err);
+    console.error("EMAIL ERROR:", err);
     res.status(500).json({ message: "Failed to send code" });
   }
 };
@@ -169,11 +158,15 @@ export const verifyRegister = async (req, res) => {
   }
 
   try {
-    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-    if (existingUser) return res.status(400).json({ message: "Email or username already exists" });
+    const existingUser = await User.findOne({
+      $or: [{ email }, { username }],
+    });
+    if (existingUser)
+      return res.status(400).json({ message: "Email or username already exists" });
 
     const verification = await VerificationCode.findOne({ email, code });
-    if (!verification) return res.status(400).json({ message: "Invalid verification code" });
+    if (!verification)
+      return res.status(400).json({ message: "Invalid verification code" });
 
     if (verification.expiresAt < new Date()) {
       return res.status(400).json({ message: "Verification code expired" });
@@ -192,7 +185,12 @@ export const verifyRegister = async (req, res) => {
     await newUser.save();
     await VerificationCode.deleteOne({ email });
 
-    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign(
+      { id: newUser._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
     res.status(201).json({ token });
   } catch (err) {
     console.error(err);
@@ -204,7 +202,8 @@ export const verifyRegister = async (req, res) => {
 export const loginUser = async (req, res) => {
   const { login, password } = req.body;
 
-  if (!login || !password) return res.status(400).json({ message: "All fields are required" });
+  if (!login || !password)
+    return res.status(400).json({ message: "All fields are required" });
 
   try {
     const trimmedLogin = login.trim();
@@ -212,21 +211,34 @@ export const loginUser = async (req, res) => {
     const user = await User.findOne({
       $or: [
         { email: { $regex: `^${trimmedLogin}$`, $options: "i" } },
-        { username: { $regex: `^${trimmedLogin}$`, $options: "i" } }
+        { username: { $regex: `^${trimmedLogin}$`, $options: "i" } },
       ],
-      isVerified: true
+      isVerified: true,
     });
 
-    if (!user) return res.status(400).json({ message: "Invalid email/username or password" });
+    if (!user)
+      return res
+        .status(400)
+        .json({ message: "Invalid email/username or password" });
 
     if (!user.password) {
-      return res.status(400).json({ message: "This account uses Google login. Use Google sign-in." });
+      return res.status(400).json({
+        message: "This account uses Google login. Use Google sign-in.",
+      });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid email/username or password" });
+    if (!isMatch)
+      return res
+        .status(400)
+        .json({ message: "Invalid email/username or password" });
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
     res.status(200).json({ token });
   } catch (err) {
     console.error(err);
@@ -237,7 +249,8 @@ export const loginUser = async (req, res) => {
 // -------------------- GOOGLE / FIREBASE AUTH --------------------
 export const googleAuth = async (req, res) => {
   const { email, fullName, googleId, profilePic } = req.body;
-  if (!email || !googleId) return res.status(400).json({ message: "Invalid data" });
+  if (!email || !googleId)
+    return res.status(400).json({ message: "Invalid data" });
 
   try {
     let user = await User.findOne({ email });
@@ -258,7 +271,12 @@ export const googleAuth = async (req, res) => {
       await user.save();
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
     res.status(200).json({ token });
   } catch (err) {
     console.error(err);
