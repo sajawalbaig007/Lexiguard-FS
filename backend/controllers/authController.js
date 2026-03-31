@@ -100,6 +100,7 @@
 
 
 // controllers/authController.js
+// controllers/authController.js
 import User from "../models/User.js";
 import VerificationCode from "../models/VerificationCode.js";
 import jwt from "jsonwebtoken";
@@ -113,44 +114,39 @@ export const sendVerificationCode = async (req, res) => {
 
   try {
     const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ message: "Email already registered" });
+    if (existingUser)
+      return res.status(400).json({ message: "Email already registered" });
 
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     const codeExpiry = new Date(Date.now() + 5 * 60 * 1000);
 
-    // Mongoose updated option
-    const verification = await VerificationCode.findOneAndUpdate(
+    await VerificationCode.findOneAndUpdate(
       { email },
       { code, expiresAt: codeExpiry },
-      { upsert: true, returnDocument: 'after' }
+      { upsert: true, returnDocument: "after" }
     );
 
-    // Nodemailer transport (Render-safe)
+    // ----------- ETHEREAL TRANSPORTER -----------
+    const testAccount = await nodemailer.createTestAccount();
     const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,             // TLS port
-      secure: false,         // false for TLS
+      host: "smtp.ethereal.email",
+      port: 587,
+      secure: false,
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
+        user: testAccount.user,
+        pass: testAccount.pass,
       },
-      logger: true,
-      debug: true,
-      dns: { family: 4 },    // Force IPv4
-      connectionTimeout: 10000,
-      socketTimeout: 10000,
-      tls: { rejectUnauthorized: false } // needed for Render sometimes
     });
 
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+    const info = await transporter.sendMail({
+      from: `"Lexiguard" <no-reply@example.com>`,
       to: email,
       subject: "Your Verification Code",
       text: `Your verification code is ${code}. It will expire in 5 minutes.`,
     });
 
-    console.log("Verification code sent:", verification.code);
-    res.status(200).json({ message: "Verification code sent" });
+    console.log("Preview URL:", nodemailer.getTestMessageUrl(info)); // Check email in browser
+    res.status(200).json({ message: "Verification code sent", preview: nodemailer.getTestMessageUrl(info) });
   } catch (err) {
     console.error("Failed to send verification code:", err);
     res.status(500).json({ message: "Failed to send code" });
@@ -171,7 +167,10 @@ export const verifyRegister = async (req, res) => {
 
     const verification = await VerificationCode.findOne({ email, code });
     if (!verification) return res.status(400).json({ message: "Invalid verification code" });
-    if (verification.expiresAt < new Date()) return res.status(400).json({ message: "Verification code expired" });
+
+    if (verification.expiresAt < new Date()) {
+      return res.status(400).json({ message: "Verification code expired" });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -189,7 +188,7 @@ export const verifyRegister = async (req, res) => {
     const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
     res.status(201).json({ token });
   } catch (err) {
-    console.error("Error registering user:", err);
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -212,7 +211,10 @@ export const loginUser = async (req, res) => {
     });
 
     if (!user) return res.status(400).json({ message: "Invalid email/username or password" });
-    if (!user.password) return res.status(400).json({ message: "This account uses Google login. Use Google sign-in." });
+
+    if (!user.password) {
+      return res.status(400).json({ message: "This account uses Google login. Use Google sign-in." });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: "Invalid email/username or password" });
@@ -220,7 +222,7 @@ export const loginUser = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
     res.status(200).json({ token });
   } catch (err) {
-    console.error("Error logging in user:", err);
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -252,7 +254,7 @@ export const googleAuth = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "7d" });
     res.status(200).json({ token });
   } catch (err) {
-    console.error("Google auth error:", err);
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };
