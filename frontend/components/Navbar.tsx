@@ -20,7 +20,7 @@ export default function Navbar() {
             alt="LexiGuard"
             width={60}
             height={22}
-            className="object-contain h-14 m:h-22 transition-transform duration-300 ease-in-out hover:scale-110"
+            className="object-contain h-15 m:h-24 transition-transform duration-300 ease-in-out hover:scale-110"
             priority
           />
         </Link>
