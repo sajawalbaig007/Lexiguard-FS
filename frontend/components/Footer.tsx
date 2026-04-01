@@ -75,8 +75,6 @@ export default function Footer() {
         <div className="flex flex-col gap-3">
           <h3 className="font-semibold text-gray-900 mb-2">Contact Us</h3>
           <p className="text-gray-600 text-sm">support@lexiguard.com</p>
-          <p className="text-gray-600 text-sm">+1 (555) 123-4567</p>
-          <p className="text-gray-600 text-sm">123 Legal St, Business City, USA</p>
         </div>
       </div>
 

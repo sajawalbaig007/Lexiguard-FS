@@ -15,17 +15,17 @@ export default function HeroSection() {
       {/* Content */}
       <div className={`relative z-10 max-w-4xl text-white mt-40`}>
         <h1
-          className={`text-5xl md:text-7xl font-bold md:leading-tight mb-8 drop-shadow-lg ${lora.className}`}
+          className={`text-5xl md:text-6xl font-bold md:leading-tight mb-8 drop-shadow-lg ${lora.className}`}
         >
           Simplify Your{" "}
           <span className="text-white drop-shadow-xl">Legal Documents</span>
         </h1>
-        <p className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto font-light drop-shadow-md">
+        <p className="text-xl md:text-xl mb-12 max-w-3xl mx-auto font-light drop-shadow-md">
           Generate, review, and understand contracts, agreements, and other
           business documents effortlessly. LexiGuard makes legal easy and
           professional for your business.
         </p>
-        <div className="flex flex-col sm:flex-row justify-center gap-6 -mt-6 mb-">
+        <div className="flex flex-col sm:flex-row justify-center gap-6 -mt-6 mb-3">
           <a
             href="/signup"
             className="bg-[#B5A491] hover:bg-[#9e8f74] text-white font-semibold px-10 py-4 rounded-full shadow-lg transition text-lg md:text-xl"

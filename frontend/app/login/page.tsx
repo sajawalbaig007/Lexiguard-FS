@@ -212,10 +212,8 @@ const LoginPage: React.FC = () => {
         
         {/* Logo */}
         <div className="flex flex-col items-center mb-6">
-          <Image src="/images/logo2.png" alt="logo" width={42} height={42} />
-          <h2 className="text-lg font-semibold text-[#B5A491] mt-2 tracking-wide">
-            LEXIGUARD
-          </h2>
+          <Image src="/images/logo3.png" alt="logo" width={52} height={52} />
+          
         </div>
 
         {/* Google Button */}

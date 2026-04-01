@@ -1,67 +1,61 @@
-"use client";
+import { FaUserCircle } from "react-icons/fa";
 
-import { motion } from "framer-motion";
-import Image from "next/image";
-
-const testimonials = [
+const team = [
   {
-    name: "Sarah Johnson",
-    role: "Founder, BrightTech",
-    feedback:
-      "LexiGuard simplified our legal process tremendously. We can now generate contracts quickly without worrying about missing clauses.",
-    avatar: "/images/testimonial1.png",
+    name: "",
+    role: "Project & Operations Lead",
+    description:
+      "Oversees project execution and ensures smooth operational workflows across the platform.",
   },
   {
-    name: "Michael Lee",
-    role: "CEO, FinServe Inc.",
-    feedback:
-      "The guided workflows and risk detection saved us a lot of time. Highly recommended for SMEs!",
-    avatar: "/images/testimonial1.png",
-  },
-  {
-    name: "Priya Sharma",
-    role: "Operations Manager, LegalEase",
-    feedback:
-      "LexiGuard’s platform is intuitive and professional. Our team loves using it for everyday contracts.",
-    avatar: "/images/testimonial1.png",
+    name: "",
+    role: "Legal & Business Lead",
+    description:
+      "Handles legal strategy and business development, ensuring compliance and growth.",
   },
 ];
 
-export default function TestimonialsSection() {
+export default function TeamSection() {
   return (
     <section className="py-24 bg-gray-50 px-6 md:px-12">
       <div className="max-w-7xl mx-auto text-center mb-16">
         <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-          What Our Users Say
+          Meet Our Team
         </h2>
         <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-          Hear from businesses that have streamlined their legal workflow with LexiGuard.
+          The people behind LexiGuard making legal workflows simple and efficient.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
-        {testimonials.map((t, idx) => (
-          <motion.div
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 max-w-4xl mx-auto">
+        {team.map((member, idx) => (
+          <div
             key={idx}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: idx * 0.2, duration: 0.6 }}
-            className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition flex flex-col items-center text-center"
+            className="group bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition duration-300 flex flex-col items-center text-center border border-gray-100"
           >
-            <div className="w-20 h-20 rounded-full overflow-hidden mb-4">
-              <Image
-                src={t.avatar}
-                alt={t.name}
-                width={80}
-                height={80}
-                className="object-cover"
-              />
+            {/* Avatar */}
+            <div className="w-24 h-24 flex items-center justify-center rounded-full bg-[#9E8F74]/10 text-[#9E8F74] mb-5 group-hover:bg-[#9E8F74]/20 transition">
+              <FaUserCircle size={70} />
             </div>
-            <p className="text-gray-700 mb-4">{t.feedback}</p>
-            <h3 className="text-gray-900 font-semibold">{t.name}</h3>
-            <p className="text-gray-500 text-sm">{t.role}</p>
-          </motion.div>
+
+            {/* Name */}
+            <h3 className="text-gray-900 font-semibold text-xl">
+              {member.name}
+            </h3>
+
+            {/* Role */}
+            <p className="text-[#9E8F74] text-sm font-medium mb-3">
+              {member.role}
+            </p>
+
+            {/* Divider */}
+            <div className="w-10 h-1 bg-[#9E8F74] rounded-full mb-4 opacity-70"></div>
+
+            {/* Description */}
+            <p className="text-gray-600 text-sm leading-relaxed">
+              {member.description}
+            </p>
+          </div>
         ))}
       </div>
     </section>
