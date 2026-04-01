@@ -8,7 +8,7 @@ import {
   Layers,
   Trash2,
 } from "lucide-react";
-import PricingPlans from "@/components/PricingPlans";
+import PricingPlans from "@/components/PricingModal";
 
 // ---------------- TYPES ----------------
 type DocumentType = "doc" | "esign" | "notary";

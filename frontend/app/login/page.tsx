@@ -136,8 +136,7 @@
 
 
 
-
-"use client";
+ "use client";
 
 import React, { useState } from "react";
 import Image from "next/image";
@@ -155,23 +154,44 @@ const LoginPage: React.FC = () => {
   const [login, setLogin] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // EMAIL/USERNAME LOGIN
   const handleLogin = async () => {
     try {
-      const res = await axios.post("https://lexiguard-fs.onrender.com/api/auth/login", {
-        login: login.trim(),
-        password: password.trim(),
-      });
-      localStorage.setItem("token", res.data.token);
+      setLoading(true);
       setErrorMessage("");
-      router.push("/dashboard");
+      setSuccessMessage("");
+
+      const res = await axios.post(
+        "https://lexiguard-fs.onrender.com/api/auth/login",
+        {
+          login: login.trim(),
+          password: password.trim(),
+        }
+      );
+
+      localStorage.setItem("token", res.data.token);
+
+      // Show success message
+      setSuccessMessage("Logged in successfully... please wait...");
+
+      // Delay redirect so user sees message
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 1200);
+
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err.response) {
-        setErrorMessage(err.response.data?.message || "Something went wrong. Please try again.");
+        setErrorMessage(
+          err.response.data?.message || "Something went wrong. Please try again."
+        );
       } else {
         setErrorMessage("Something went wrong. Please try again.");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -213,7 +233,6 @@ const LoginPage: React.FC = () => {
         {/* Logo */}
         <div className="flex flex-col items-center mb-6">
           <Image src="/images/logo3.png" alt="logo" width={52} height={52} />
-          
         </div>
 
         {/* Google Button */}
@@ -264,12 +283,20 @@ const LoginPage: React.FC = () => {
             </p>
           )}
 
+          {/* Success */}
+          {successMessage && (
+            <p className="text-green-600 text-sm text-center mb-2 font-medium">
+              {successMessage}
+            </p>
+          )}
+
           {/* Button */}
           <button
             onClick={handleLogin}
-            className="w-full bg-[#B5A491] text-white py-2.5 rounded-full text-sm hover:opacity-90 transition"
+            disabled={loading}
+            className="w-full bg-[#B5A491] text-white py-2.5 rounded-full text-sm hover:opacity-90 transition disabled:opacity-50"
           >
-            Sign In
+            {loading ? "Signing in..." : "Sign In"}
           </button>
         </div>
 
