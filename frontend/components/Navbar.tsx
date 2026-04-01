@@ -19,8 +19,8 @@ export default function Navbar() {
             src="/images/logo3.png"
             alt="LexiGuard"
             width={60}
-            height={20}
-            className="object-contain transition-transform duration-300 ease-in-out hover:scale-110"
+            height={22}
+            className="object-contain h-14 m:h-22 transition-transform duration-300 ease-in-out hover:scale-110"
             priority
           />
         </Link>
