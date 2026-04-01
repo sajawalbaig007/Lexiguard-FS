@@ -11,7 +11,7 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-4 w-full z-50 px-4 md:px-20 pt-4">
-      <div className="max-w-7xl mx-auto bg-white dark:bg-gray-900 backdrop-blur-md border border-gray-200 dark:border-gray-700 shadow-md rounded-2xl px-6 md:px-8 h-20 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto bg-white backdrop-blur-md border border-gray-200 dark:border-gray-700 shadow-md rounded-2xl px-6 md:px-8 h-20 flex items-center justify-between">
         
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3">
