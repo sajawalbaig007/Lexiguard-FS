@@ -11,7 +11,7 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-4 w-full z-50 px-4 md:px-20 pt-4">
-      <div className="max-w-7xl mx-auto bg-white backdrop-blur-md border border-gray-200 shadow-md rounded-2xl px-6 md:px-8 h-20 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto bg-white dark:bg-gray-900 backdrop-blur-md border border-gray-200 dark:border-gray-700 shadow-md rounded-2xl px-6 md:px-8 h-20 flex items-center justify-between">
         
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3">
@@ -26,7 +26,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-10 text-[15px] font-medium text-gray-700">
+        <div className="hidden md:flex items-center gap-10 text-[15px] font-medium text-gray-700 dark:text-gray-200">
           
           {/* Features */}
           <div
@@ -39,28 +39,27 @@ export default function Navbar() {
             </div>
 
             {featureOpen && (
-              <div className="absolute top-10 left-0 w-72 bg-white border rounded-xl shadow-xl p-5 space-y-4 animate-fadeIn">
-                <div className="hover:bg-gray-50 p-2 rounded">
+              <div className="absolute top-10 left-0 w-72 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl shadow-xl p-5 space-y-4">
+                <div className="hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded">
                   <p className="font-semibold text-sm">Document Generator</p>
-                  <p className="text-xs text-gray-500">Create legal docs with guided flow</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Create legal docs with guided flow</p>
                 </div>
-                <div className="hover:bg-gray-50 p-2 rounded">
+                <div className="hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded">
                   <p className="font-semibold text-sm">Risk Detection</p>
-                  <p className="text-xs text-gray-500">Identify missing clauses</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Identify missing clauses</p>
                 </div>
-                <div className="hover:bg-gray-50 p-2 rounded">
+                <div className="hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded">
                   <p className="font-semibold text-sm">Clause Library</p>
-                  <p className="text-xs text-gray-500">Pre-built legal clauses</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Pre-built legal clauses</p>
                 </div>
-                <div className="hover:bg-gray-50 p-2 rounded">
+                <div className="hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded">
                   <p className="font-semibold text-sm">Plain English</p>
-                  <p className="text-xs text-gray-500">Easy explanations</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Easy explanations</p>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Pricing */}
           <Link href="#" className="hover:text-[#B5A491]">Pricing</Link>
 
           {/* Resources */}
@@ -74,29 +73,28 @@ export default function Navbar() {
             </div>
 
             {resourceOpen && (
-              <div className="absolute top-10 left-0 w-64 bg-white border rounded-xl shadow-xl p-5 space-y-4">
-                <div className="hover:bg-gray-50 p-2 rounded">
+              <div className="absolute top-10 left-0 w-64 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl shadow-xl p-5 space-y-4">
+                <div className="hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded">
                   <p className="font-semibold text-sm">Blog</p>
-                  <p className="text-xs text-gray-500">Legal guides & updates</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Legal guides & updates</p>
                 </div>
-                <div className="hover:bg-gray-50 p-2 rounded">
+                <div className="hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded">
                   <p className="font-semibold text-sm">FAQs</p>
-                  <p className="text-xs text-gray-500">Common questions</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Common questions</p>
                 </div>
-                <div className="hover:bg-gray-50 p-2 rounded">
+                <div className="hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded">
                   <p className="font-semibold text-sm">Help Center</p>
-                  <p className="text-xs text-gray-500">Support & tutorials</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Support & tutorials</p>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Contact */}
           <Link href="#" className="hover:text-[#B5A491]">Contact</Link>
         </div>
 
-        {/* Desktop Right Side */}
-        <div className="hidden md:flex items-center gap-5">
+        {/* Desktop Right */}
+        <div className="hidden md:flex items-center gap-5 text-gray-700 dark:text-gray-200">
           <Link href="/login" className="hover:text-[#B5A491]">Login</Link>
           <Link
             href="/signup"
@@ -107,7 +105,7 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Hamburger */}
-        <div className="md:hidden flex items-center">
+        <div className="md:hidden flex items-center text-gray-700 dark:text-gray-200">
           <button onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -116,13 +114,12 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200 shadow-md rounded-b-2xl mt-2 p-5 space-y-4">
+        <div className="md:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 shadow-md rounded-b-2xl mt-2 p-5 space-y-4 text-gray-700 dark:text-gray-200">
           <div className="flex flex-col gap-3">
 
-            {/* Features */}
             <div>
               <button
-                className="flex items-center justify-between w-full text-gray-700 hover:text-[#B5A491]"
+                className="flex items-center justify-between w-full hover:text-[#B5A491]"
                 onClick={() => setFeatureOpen(!featureOpen)}
               >
                 Features <ChevronDown size={16} />
@@ -137,13 +134,11 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* Pricing */}
             <Link href="#" className="hover:text-[#B5A491]">Pricing</Link>
 
-            {/* Resources */}
             <div>
               <button
-                className="flex items-center justify-between w-full text-gray-700 hover:text-[#B5A491]"
+                className="flex items-center justify-between w-full hover:text-[#B5A491]"
                 onClick={() => setResourceOpen(!resourceOpen)}
               >
                 Resources <ChevronDown size={16} />
@@ -157,11 +152,9 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* Contact */}
             <Link href="#" className="hover:text-[#B5A491]">Contact</Link>
-
-            {/* Login & Signup */}
             <Link href="/login" className="hover:text-[#B5A491]">Login</Link>
+
             <Link
               href="/signup"
               className="bg-[#B5A491] text-white px-5 py-2 rounded-full hover:opacity-90 transition text-center"
