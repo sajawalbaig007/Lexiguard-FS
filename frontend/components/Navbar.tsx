@@ -26,7 +26,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-10 text-[15px] font-medium text-gray-700 dark:text-gray-200">
+        <div className="hidden md:flex items-center gap-10 text-[15px] font-medium text-gray-700">
           
           {/* Features */}
           <div
