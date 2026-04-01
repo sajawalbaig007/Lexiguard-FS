@@ -19,7 +19,7 @@ export default function Navbar() {
             src="/images/logo3.png"
             alt="LexiGuard"
             width={60}
-            height={22}
+            height={20}
             className="object-contain transition-transform duration-300 ease-in-out hover:scale-110"
             priority
           />
@@ -105,7 +105,7 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Hamburger */}
-        <div className="md:hidden flex items-center text-gray-700 dark:text-gray-200">
+        <div className="md:hidden flex items-center text-gray-700">
           <button onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
