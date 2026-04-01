@@ -1,8 +1,7 @@
- "use client";
+"use client";
 
 import Navbar from "@/components/DashboardNavbar";
-import Sidebar from "@/components/Sidebar"; 
-import SavedDocuments from "@/components/SavedDocuments";
+import Sidebar from "@/components/Sidebar";
 
 export default function DashboardLayout({
   children,
@@ -12,28 +11,24 @@ export default function DashboardLayout({
   return (
     <div className="h-screen flex flex-col bg-[#f6f2ed]">
       
-      {/* ✅ Navbar (Full Width - fixed height) */}
-      <div className="h-[64px] shrink-0">
+      {/* Navbar */}
+      <div className="h-[64px] flex-shrink-0 w-full">
         <Navbar />
       </div>
 
-      {/* ✅ Bottom Section */}
+      {/* Body */}
       <div className="flex flex-1 overflow-hidden">
         
-        {/* ✅ Sidebar (Fixed / Sticky) */}
-        <div className="w-[17%] min-w-[240px] bg-white border-r">
-          <div className="h-full sticky top-0 overflow-y-hidden">
-            <Sidebar />
-          </div>
+        {/* Sidebar */}
+        <div className="w-[15%] md:w-auto">
+          <Sidebar />
         </div>
 
-        {/* ✅ Main Content (Scrollable ONLY) */}
-        <div className="w-[83%] h-full overflow-y-auto p-6">
+        {/* Page Content */}
+        <div className="w-[85%] md:flex-1 overflow-y-auto">
           {children}
         </div>
- 
 
-  
       </div>
     </div>
   );
