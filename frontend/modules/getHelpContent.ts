@@ -1,8 +1,18 @@
-import helpContent from "../data/helpContent";
+ import helpContent from "../data/helpContent";
 
 export default function getHelpContent(
   template: string,
-  step: string
+  section: string
 ) {
-  return helpContent?.[template]?.[step] || null;
+  const content = helpContent?.[template]?.[section];
+
+  if (!content) {
+    return {
+      title: "Help",
+      description: "No help content available for this section.",
+      points: [],
+    };
+  }
+
+  return content;
 }

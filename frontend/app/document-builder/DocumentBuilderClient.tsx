@@ -1,4 +1,4 @@
-"use client";
+ "use client";
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -14,7 +14,7 @@ type Field = {
 };
 
 type Step = {
-  step: string;
+  section: string;
   fields: Field[];
 };
 
@@ -31,7 +31,7 @@ export default function DocumentBuilderPage() {
   const searchParams = useSearchParams();
   const template = searchParams.get("template") || "Document";
 
-  const steps: Step[] = getTemplateQuestions(template);
+  const steps: Step[] = getTemplateQuestions(template) || [];
 
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<FormData>({});
@@ -48,8 +48,12 @@ export default function DocumentBuilderPage() {
   const totalSteps = steps.length || 1;
   const progress = Math.round(((currentStep + 1) / totalSteps) * 100);
 
-  const stepName = steps[currentStep]?.step;
+  // Help content connection
+  const stepName = steps[currentStep]?.section || "";
   const help = getHelpContent(template, stepName);
+
+  console.log("Template:", template);
+  console.log("Step Name:", stepName);
 
   const nextStep = () => {
     const fields = steps[currentStep]?.fields || [];
@@ -186,29 +190,19 @@ export default function DocumentBuilderPage() {
           </div>
         </div>
 
-        {/* Bottom Nav */}
         {previewMode === "final" && (
           <div className="fixed bottom-0 left-0 w-full bg-white border-t shadow-lg p-3 flex justify-center gap-6">
-            <button
-              onClick={handleSaveDocument}
-              className="flex flex-col items-center text-gray-700 hover:text-black"
-            >
+            <button onClick={handleSaveDocument} className="flex flex-col items-center text-gray-700 hover:text-black">
               <Save />
               <span className="text-xs">Save</span>
             </button>
 
-            <button
-              onClick={handleDownloadPDF}
-              className="flex flex-col items-center text-gray-700 hover:text-black"
-            >
+            <button onClick={handleDownloadPDF} className="flex flex-col items-center text-gray-700 hover:text-black">
               <Download />
               <span className="text-xs">Download</span>
             </button>
 
-            <button
-              onClick={() => setPreviewMode(null)}
-              className="flex flex-col items-center text-gray-700 hover:text-black"
-            >
+            <button onClick={() => setPreviewMode(null)} className="flex flex-col items-center text-gray-700 hover:text-black">
               <ArrowLeft />
               <span className="text-xs">Edit</span>
             </button>
@@ -218,7 +212,7 @@ export default function DocumentBuilderPage() {
     );
   }
 
-    return (
+  return (
     <div className="flex w-screen h-screen bg-white overflow-hidden relative">
 
       {/* Mobile Top Bar */}
@@ -293,7 +287,7 @@ export default function DocumentBuilderPage() {
           {steps.map((s: Step, i: number) => (
             <div
               key={i}
-              className={`p-2 rounded-md text-sm flex items-center gap-2 justify-center lg:justify-start
+              className={`p-2 rounded-md text-sm flex items-center gap-2 justify-start
               ${
                 i === currentStep
                   ? "bg-gray-200 font-semibold text-gray-900"
@@ -303,7 +297,7 @@ export default function DocumentBuilderPage() {
               }`}
             >
               <span className="text-xs">{i + 1}</span>
-              <span className="hidden lg:block">{s.step}</span>
+              <span className="text-xs lg:text-sm">{s.section}</span>
             </div>
           ))}
         </div>
@@ -324,11 +318,11 @@ export default function DocumentBuilderPage() {
       </div>
 
       {/* Main */}
-      <div className="flex-1 flex pt-[80px] lg:pt-0">
+      <div className="flex-1 flex pt-[80px] lg:pt-0 ">
         <div className="flex-1 p-5 lg:p-10 flex flex-col overflow-y-auto">
           <div className="mb-6">
             <h1 className="text-xl lg:text-2xl font-semibold text-gray-900">
-              {steps[currentStep]?.step}
+              {steps[currentStep]?.section}
             </h1>
           </div>
 

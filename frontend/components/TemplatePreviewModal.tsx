@@ -16,6 +16,8 @@ export default function TemplatePreviewModal({
   onClose,
   onUseTemplate,
 }: TemplatePreviewProps) {
+  const [showCreatePopup, setShowCreatePopup] = useState(false);
+
   return (
     <>
       {/* Main Modal */}
@@ -50,14 +52,56 @@ export default function TemplatePreviewModal({
             </p>
 
             <button
-              onClick={() => onUseTemplate?.()}
+              onClick={() => setShowCreatePopup(true)}
               className="bg-[#2F4EA1] text-white px-5 py-2.5 md:px-6 md:py-3 rounded-lg w-full md:w-[200px] hover:bg-[#243d82] transition"
             >
               Create document
             </button>
           </div>
-        </div>
+        </div> 
       </div>
+
+      {/* Create Popup */}
+      {showCreatePopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-[11000]">
+          <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-10 w-[90%] md:w-[380px] text-center">
+            
+            <h2 className="text-xl md:text-2xl font-semibold mb-2 text-[#1F2A44]">
+              Create Document
+            </h2>
+
+            <p className="text-gray-500 text-sm md:text-base mb-6 md:mb-8">
+              Choose how you want to create your document
+            </p>
+
+            <div className="flex gap-3 md:gap-5 justify-center">
+              
+              {/* Manual */}
+              <button
+                onClick={() => {
+                  onUseTemplate?.();
+                }}
+                className="px-4 py-2 md:px-6 md:py-3 rounded-xl border border-gray-300 text-gray-700 text-sm md:text-base font-medium hover:bg-gray-100 transition"
+              >
+                Manually
+              </button>
+
+              {/* AI */}
+              <button className="px-4 py-2 md:px-6 md:py-3 rounded-xl text-white text-sm md:text-base font-medium bg-gradient-to-r from-[#2F4EA1] to-[#4F6EDB] transition shadow-md">
+                Use AI
+              </button>
+
+            </div>
+
+            <button
+              onClick={() => setShowCreatePopup(false)}
+              className="mt-6 md:mt-8 text-xs md:text-sm text-gray-400 hover:text-gray-600"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
-}
+}  

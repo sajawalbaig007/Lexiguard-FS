@@ -1,28 +1,52 @@
  import documentTemplates from "../data/documentTemplates";
 
 export default function generateDocument(template: string, formData: any) {
-  let templateString = (documentTemplates as any)[template];
+  let templateString = (documentTemplates as Record<string, string>)[template];
 
   if (!templateString) {
     return "Template not found.";
   }
 
-  // Replace {{variables}} with form data
+  // ================= REPLACE {{variables}} =================
   Object.keys(formData).forEach((key) => {
-    const value = formData[key] || "";
-    const regex = new RegExp(`{{${key}}}`, "g");
+    const rawValue = formData[key];
+    let value = "";
+
+    // Handle checkbox values
+    if (typeof rawValue === "boolean") {
+      value = rawValue ? "✔" : "";
+    }
+    // Handle dates
+    else if (isDate(rawValue)) {
+      value = formatDate(rawValue);
+    }
+    // Handle numbers
+    else if (typeof rawValue === "number") {
+      value = rawValue.toString();
+    }
+    // Handle normal text
+    else {
+      value = rawValue ?? "";
+    }
+
+    const regex = new RegExp(`{{${escapeRegExp(key)}}}`, "g");
     templateString = templateString.replace(regex, value);
   });
+
+  // Remove unreplaced variables like {{something}}
+  templateString = templateString.replace(/{{(.*?)}}/g, "");
 
   // ================= PROFESSIONAL DOCUMENT WRAPPER =================
   return `
     <div style="
-      max-width: 650px;
-      margin: 0 auto;
-      font-family: serif;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 40px;
+      font-family: 'Times New Roman', serif;
       font-size: 15px;
-      line-height: 1.7;
+      line-height: 1.8;
       color: #111;
+      background: white;
     ">
       ${formatDocument(templateString)}
     </div>
@@ -31,19 +55,32 @@ export default function generateDocument(template: string, formData: any) {
 
 // ================= FORMAT FUNCTION =================
 function formatDocument(content: string) {
-  // Split by line breaks to structure paragraphs
   const lines = content.split("\n").filter((line) => line.trim() !== "");
 
   return lines
     .map((line) => {
       const trimmed = line.trim();
 
-      // Detect numbered headings like "1. RENT"
+      // Headings starting with #
+      if (trimmed.startsWith("#")) {
+        const text = trimmed.replace(/^#+\s*/, "");
+        return `
+          <h2 style="
+            text-align: center;
+            margin-top: 24px;
+            margin-bottom: 16px;
+          ">
+            ${text}
+          </h2>
+        `;
+      }
+
+      // Numbered sections
       if (/^\d+\./.test(trimmed)) {
         return `
           <p style="
-            font-weight: 600;
-            margin-top: 16px;
+            font-weight: bold;
+            margin-top: 18px;
             margin-bottom: 8px;
           ">
             ${trimmed}
@@ -51,22 +88,7 @@ function formatDocument(content: string) {
         `;
       }
 
-      // Detect ALL CAPS headings (short ones)
-      if (trimmed === trimmed.toUpperCase() && trimmed.length < 80) {
-        return `
-          <p style="
-            text-align: center;
-            font-weight: 600;
-            margin-top: 16px;
-            margin-bottom: 16px;
-            letter-spacing: 1px;
-          ">
-            ${trimmed}
-          </p>
-        `;
-      }
-
-      // Detect signature lines
+      // Signature / Date lines
       if (trimmed.includes("Signature") || trimmed.includes("Date")) {
         return `
           <div style="
@@ -74,10 +96,7 @@ function formatDocument(content: string) {
             display: flex;
             justify-content: space-between;
           ">
-            <div>
-               <br/>
-              ${trimmed}
-            </div>
+            <div>${trimmed}</div>
           </div>
         `;
       }
@@ -93,4 +112,23 @@ function formatDocument(content: string) {
       `;
     })
     .join("");
+}
+
+// ================= HELPERS =================
+function escapeRegExp(string: string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function isDate(value: any) {
+  if (typeof value !== "string") return false;
+  return !isNaN(Date.parse(value));
+}
+
+function formatDate(dateString: string) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 }

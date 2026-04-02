@@ -120,7 +120,6 @@ export default function TemplatesModal({ onClose }: { onClose: () => void }) {
   const [category, setCategory] = useState<Category>("Popular");
   const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [showBuilder, setShowBuilder] = useState(false);
 
   const filteredTemplates = templates[category].filter(
     (t) =>
@@ -130,80 +129,78 @@ export default function TemplatesModal({ onClose }: { onClose: () => void }) {
 
   return (
     <>
-      {!showBuilder && (
-        <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-9999">
-          {/* Modal */}
-          <div className="bg-white w-full h-full md:w-[80vw] md:h-[90vh] md:rounded-xl shadow-lg flex flex-col md:flex-row relative text-gray-900">
-            
-            {/* Close Button */}
-            <button
-              onClick={onClose}
-              className="absolute top-3 right-4 text-gray-600 hover:text-gray-900 text-2xl md:text-xl font-bold z-10"
-            >
-              ×
-            </button>
+      <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-9999">
+        {/* Modal */}
+        <div className="bg-white w-full h-full md:w-[80vw] md:h-[90vh] md:rounded-xl shadow-lg flex flex-col md:flex-row relative text-gray-900">
+          
+          {/* Close Button */}
+          <button
+            onClick={onClose}
+            className="absolute top-3 right-4 text-gray-600 hover:text-gray-900 text-2xl md:text-xl font-bold z-10"
+          >
+            ×
+          </button>
 
-            {/* Sidebar / Categories */}
-            <div className="md:w-65 border-b md:border-b-0 md:border-r border-gray-300 p-3 md:p-4">
-              <input
-                placeholder="Search Documents"
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 mb-4 md:mb-6 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+          {/* Sidebar / Categories */}
+          <div className="md:w-65 border-b md:border-b-0 md:border-r border-gray-300 p-3 md:p-4">
+            <input
+              placeholder="Search Documents"
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 mb-4 md:mb-6 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
 
-              {/* Categories */}
-              <div className="flex md:block gap-2 overflow-x-auto md:space-y-3">
-                {(Object.keys(templates) as Category[]).map((cat) => (
-                  <div
-                    key={cat}
-                    onClick={() => setCategory(cat)}
-                    className={`cursor-pointer px-3 py-2 rounded-lg whitespace-nowrap transition ${
-                      category === cat
-                        ? "bg-gray-200 font-semibold text-gray-900"
-                        : "hover:bg-gray-100 text-gray-800"
-                    }`}
-                  >
-                    {cat}
-                  </div>
-                ))}
-              </div>
+            {/* Categories */}
+            <div className="flex md:block gap-2 overflow-x-auto md:space-y-3">
+              {(Object.keys(templates) as Category[]).map((cat) => (
+                <div
+                  key={cat}
+                  onClick={() => setCategory(cat)}
+                  className={`cursor-pointer px-3 py-2 rounded-lg whitespace-nowrap transition ${
+                    category === cat
+                      ? "bg-gray-200 font-semibold text-gray-900"
+                      : "hover:bg-gray-100 text-gray-800"
+                  }`}
+                >
+                  {cat}
+                </div>
+              ))}
             </div>
+          </div>
 
-            {/* Content */}
-            <div className="flex-1 p-4 md:p-8 overflow-y-auto">
-              <h1 className="text-lg md:text-2xl font-semibold mb-4 md:mb-6 text-gray-900">
-                {category} Templates
-              </h1>
+          {/* Content */}
+          <div className="flex-1 p-4 md:p-8 overflow-y-auto">
+            <h1 className="text-lg md:text-2xl font-semibold mb-4 md:mb-6 text-gray-900">
+              {category} Templates
+            </h1>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                {filteredTemplates.map((item, i) => (
-                  <div
-                    key={i}
-                    onClick={() => setSelectedTemplate(item)}
-                    className="group flex items-start gap-3 md:gap-4 p-3 md:p-4 border border-gray-300 rounded-xl bg-[#F9FAFB] hover:bg-white hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
-                  >
-                    <div className="w-12 h-12 md:w-25 md:h-12 flex items-center justify-center rounded-lg bg-[#B5A491]/20 text-xl md:text-2xl group-hover:scale-110 transition">
-                      {item.emoji}
-                    </div>
-                    <div>
-                      <h2 className="font-semibold text-gray-900 text-sm md:text-base group-hover:text-[#B5A491] transition">
-                        {item.title}
-                      </h2>
-                      <p className="text-gray-700 text-xs md:text-sm">
-                        {item.desc}
-                      </p>
-                    </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+              {filteredTemplates.map((item, i) => (
+                <div
+                  key={i}
+                  onClick={() => setSelectedTemplate(item)}
+                  className="group flex items-start gap-3 md:gap-4 p-3 md:p-4 border border-gray-300 rounded-xl bg-[#F9FAFB] hover:bg-white hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
+                >
+                  <div className="w-12 h-12 md:w-25 md:h-12 flex items-center justify-center rounded-lg bg-[#B5A491]/20 text-xl md:text-2xl group-hover:scale-110 transition">
+                    {item.emoji}
                   </div>
-                ))}
-              </div>
+                  <div>
+                    <h2 className="font-semibold text-gray-900 text-sm md:text-base group-hover:text-[#B5A491] transition">
+                      {item.title}
+                    </h2>
+                    <p className="text-gray-700 text-xs md:text-sm">
+                      {item.desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
-      )}
+      </div>
 
       {/* Preview Modal */}
-      {!showBuilder && selectedTemplate && (
+      {selectedTemplate && (
         <TemplatePreviewModal
           title={selectedTemplate.title}
           description={selectedTemplate.desc}

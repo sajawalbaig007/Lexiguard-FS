@@ -1,5 +1,14 @@
-import templateQuestions from "../data/templateQuestions";
+ import templateQuestions from "../data/templateQuestions";
 
 export default function getTemplateQuestions(templateName: string) {
-  return templateQuestions[templateName as keyof typeof templateQuestions] || [];
+  if (!templateName) return [];
+
+  const questions = templateQuestions[templateName];
+
+  if (!questions) {
+    console.warn(`No questions found for template: ${templateName}`);
+    return [];
+  }
+
+  return questions;
 }

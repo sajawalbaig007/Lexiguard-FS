@@ -1,6 +1,6 @@
  type HelpContentType = {
   [template: string]: {
-    [step: string]: {
+    [section: string]: {
       title: string;
       description: string;
       points: string[];
@@ -11,48 +11,100 @@
 const helpContent: HelpContentType = {
   // ================= Lease Agreement =================
   "Lease/Rental Agreement": {
-    "Lease Term": {
-      title: "💡 Lease Term",
-      description: "This section defines how long the lease will last and when it begins and ends.",
-      points: [
-        "Fixed leases end on a specific date",
-        "Month-to-month renew automatically",
-        "Always ensure dates are correct",
-      ],
-    },
-    "Property Info": {
-      title: "🏠 Property Information",
-      description: "Enter the full address and location of the rental property.",
-      points: [
-        "Include street address",
-        "Add city, state, and zip",
-      ],
-    },
-    "Rent Details": {
-      title: "💵 Rent Details",
-      description: "Specify rent amount, due date, and late fees.",
-      points: [
-        "Monthly rent should be clearly defined",
-        "Late fee applies after due date",
-      ],
-    },
-    "Deposit": {
-      title: "🔒 Security Deposit",
-      description: "Security deposit protects landlord against damages.",
-      points: [
-        "Usually equals one month's rent",
-        "Refunded after lease ends",
-      ],
-    },
-    "Landlord & Tenant": {
-      title: "👥 Parties Information",
-      description: "Enter landlord and tenant contact details.",
-      points: [
-        "Use full legal names",
-        "Phone number is important",
-      ],
-    },
+  "Agreement Details": {
+    title: "📅 Agreement Details",
+    description: "This section defines the type of tenancy and the duration of the lease agreement.",
+    points: [
+      "Agreement date is when the contract is signed",
+      "Fixed term ends on a specific date",
+      "Periodic leases renew automatically",
+      "Ensure start and end dates are correct",
+    ],
   },
+
+  "Landlord Information": {
+    title: "👤 Landlord Information",
+    description: "Enter the landlord’s full legal name and contact details.",
+    points: [
+      "Use full legal name",
+      "Address should be official correspondence address",
+      "Phone and email are used for notices",
+    ],
+  },
+
+  "Tenant Information": {
+    title: "🧍 Tenant Information",
+    description: "Enter the tenant details who will occupy the property.",
+    points: [
+      "Include full legal name",
+      "Add contact details",
+      "Include additional tenants if applicable",
+    ],
+  },
+
+  "Property Information": {
+    title: "🏠 Property Information",
+    description: "Provide full details of the rental property.",
+    points: [
+      "Include full address",
+      "Specify property type (house, flat, room)",
+      "Enter number of bedrooms",
+      "Specify if furnished or unfurnished",
+    ],
+  },
+
+  "Rent Details": {
+    title: "💵 Rent Details",
+    description: "Specify rent amount, due date, late fees, and payment method.",
+    points: [
+      "Monthly rent should be clearly defined",
+      "Rent is usually paid monthly in advance",
+      "Late fee applies after due date",
+      "Include bank details for payments",
+    ],
+  },
+
+  "Deposit Information": {
+    title: "🔒 Security Deposit",
+    description: "Security deposit protects the landlord against damages or unpaid rent.",
+    points: [
+      "Usually equal to one month's rent",
+      "Must be protected in a deposit scheme",
+      "Returned after tenancy ends if no damages",
+    ],
+  },
+
+  "Utilities & Bills": {
+    title: "💡 Utilities & Bills",
+    description: "Specify who is responsible for utility payments.",
+    points: [
+      "Electricity, water, gas may be landlord or tenant",
+      "Council tax usually paid by tenant",
+      "Clearly define responsibilities",
+    ],
+  },
+
+  "Other Terms": {
+    title: "📜 Additional Terms",
+    description: "Define extra rules and special conditions for the property.",
+    points: [
+      "Specify if pets are allowed",
+      "Specify smoking rules",
+      "Mention parking availability",
+      "Add any special conditions",
+    ],
+  },
+
+  "Signatures": {
+    title: "✍️ Signatures",
+    description: "Final section where parties sign the agreement.",
+    points: [
+      "Landlord must sign",
+      "Tenant must sign",
+      "Witness is recommended",
+    ],
+  },
+},
 
   // ================= Room Rental =================
   "Room Rental Agreement": {
@@ -72,7 +124,7 @@ const helpContent: HelpContentType = {
         "Phone number for contact",
       ],
     },
-    "Rent": {
+    Rent: {
       title: "💵 Rent",
       description: "Enter monthly rent and due date.",
       points: [
@@ -80,7 +132,7 @@ const helpContent: HelpContentType = {
         "Due date is day of month",
       ],
     },
-    "Deposit": {
+    Deposit: {
       title: "🔒 Deposit",
       description: "Security deposit for room rental.",
       points: [
@@ -246,29 +298,151 @@ const helpContent: HelpContentType = {
   },
 
   // ================= Divorce Agreement =================
-  "Divorce Agreement": {
-    "Spouse Info": {
-      title: "👫 Spouse Information",
-      description: "Husband and wife details.",
-      points: [
-        "Use legal names",
-      ],
-    },
-    Marriage: {
-      title: "💍 Marriage",
-      description: "Marriage and separation dates.",
-      points: [
-        "Important for legal record",
-      ],
-    },
-    Children: {
-      title: "👶 Children",
-      description: "Children and custody arrangement.",
-      points: [
-        "List all children",
-      ],
-    },
+   "Divorce Agreement": {
+  "Court Information": {
+    title: "⚖️ Court Information",
+    description: "Enter official court case details for filing.",
+    points: [
+      "Case number is assigned by the court",
+      "Division is usually 'Family'",
+    ],
   },
+
+  "Spouse Information": {
+    title: "👫 Spouse Information",
+    description: "Details of both parties involved in the divorce.",
+    points: [
+      "Use full legal names (no abbreviations)",
+      "Respondent address is required for summons",
+    ],
+  },
+
+  "Residency": {
+    title: "📍 Residency",
+    description: "Confirms legal eligibility to file in Florida.",
+    points: [
+      "At least one party must live in Florida for 6 months",
+      "Mention respondent residency if different",
+    ],
+  },
+
+  "Marriage History": {
+    title: "💍 Marriage History",
+    description: "Basic details about the marriage timeline.",
+    points: [
+      "Include exact marriage and separation dates",
+      "Place of marriage must be accurate",
+    ],
+  },
+
+  "Minor Children": {
+    title: "👶 Minor Children",
+    description: "Information about children from the marriage.",
+    points: [
+      "Select only one: No Children or Has Children",
+      "Provide child name and date of birth if applicable",
+    ],
+  },
+
+  "Parental Responsibility & Time-Sharing": {
+    title: "🧑‍⚖️ Parental Responsibility",
+    description: "Defines custody and parenting arrangements.",
+    points: [
+      "Shared responsibility is most common",
+      "Attach or plan to file a parenting plan",
+    ],
+  },
+
+  "Marital Assets": {
+    title: "💰 Marital Assets",
+    description: "List all shared assets acquired during marriage.",
+    points: [
+      "Include property, bank accounts, vehicles",
+      "Be transparent for fair distribution",
+    ],
+  },
+
+  "Liabilities": {
+    title: "📉 Liabilities",
+    description: "List debts and financial obligations.",
+    points: [
+      "Include mortgages, credit cards, and loans",
+      "Ensure accuracy to avoid disputes",
+    ],
+  },
+
+  "Alimony": {
+    title: "💵 Alimony",
+    description: "Specify spousal support requests.",
+    points: [
+      "Select applicable type(s) of alimony",
+      "Choose 'No Alimony' if none requested",
+    ],
+  },
+
+  "Former Name Restoration": {
+    title: "🔤 Former Name Restoration",
+    description: "Option to restore a previous legal name.",
+    points: [
+      "Provide exact former name if restoring",
+      "Leave unchecked if not applicable",
+    ],
+  },
+
+  "Financial Information": {
+    title: "📊 Financial Information",
+    description: "Summary of income, expenses, assets, and debts.",
+    points: [
+      "Use monthly values for income and expenses",
+      "Ensure numbers are realistic and complete",
+    ],
+  },
+
+  "Contact Information": {
+    title: "📞 Contact Information",
+    description: "Petitioner’s contact and verification details.",
+    points: [
+      "Provide full mailing address and phone",
+      "Dates must match document signing",
+    ],
+  },
+
+  "Summons": {
+    title: "📜 Summons",
+    description: "Official notice sent to the respondent.",
+    points: [
+      "Summons date is usually filing date",
+      "Respondent has 20 days to reply",
+    ],
+  },
+
+  "Social Security Information": {
+    title: "🔒 Social Security Information",
+    description: "Confidential identification details.",
+    points: [
+      "Only last 4 digits are required",
+      "Ensure accuracy for legal records",
+    ],
+  },
+
+  "Service": {
+    title: "📬 Service",
+    description: "How the documents are delivered to respondent.",
+    points: [
+      "Choose mail or hand delivery",
+      "Service date must be recorded",
+    ],
+  },
+
+  "Parenting Plan": {
+    title: "🗓️ Parenting Plan",
+    description: "Defines child custody schedule and decisions.",
+    points: [
+      "Clearly define weekday and weekend schedules",
+      "Indicate decision-making authority",
+    ],
+  },
+},
 
   // ================= Business Contract =================
   "Business Contract": {
@@ -291,156 +465,6 @@ const helpContent: HelpContentType = {
       description: "Contract start and end dates.",
       points: [
         "Defines contract duration",
-      ],
-    },
-  },
-
-  // ================= Invoice Template =================
-  "Invoice Template": {
-    "Business Info": {
-      title: "🏢 Business Info",
-      description: "Your business details.",
-      points: [
-        "Include address",
-      ],
-    },
-    "Client Info": {
-      title: "👤 Client Info",
-      description: "Client details.",
-      points: [
-        "Client name required",
-      ],
-    },
-    Invoice: {
-      title: "🧾 Invoice",
-      description: "Invoice number, date and amount.",
-      points: [
-        "Invoice number must be unique",
-      ],
-    },
-  },
-
-  // ================= NDA =================
-  "NDA Agreement": {
-    Parties: {
-      title: "👥 Parties",
-      description: "Disclosing and receiving party.",
-      points: [
-        "Both parties must sign",
-      ],
-    },
-    Agreement: {
-      title: "📄 Agreement",
-      description: "Purpose and duration of NDA.",
-      points: [
-        "Defines confidentiality period",
-      ],
-    },
-  },
-
-  // ================= Property Management =================
-  "Property Management Agreement": {
-    Parties: {
-      title: "👥 Parties",
-      description: "Owner and manager info.",
-      points: [
-        "Include full names",
-      ],
-    },
-    Property: {
-      title: "🏠 Property",
-      description: "Property being managed.",
-      points: [
-        "Enter full address",
-      ],
-    },
-    "Management Terms": {
-      title: "📄 Management Terms",
-      description: "Management fee and start date.",
-      points: [
-        "Fee usually percentage",
-      ],
-    },
-  },
-
-  // ================= Eviction Notice =================
-  "Eviction Notice": {
-    Parties: {
-      title: "👥 Parties",
-      description: "Landlord and tenant.",
-      points: [
-        "Use legal names",
-      ],
-    },
-    Property: {
-      title: "🏠 Property",
-      description: "Property address.",
-      points: [
-        "Full address required",
-      ],
-    },
-    Eviction: {
-      title: "⚠️ Eviction",
-      description: "Reason and notice dates.",
-      points: [
-        "Provide valid reason",
-      ],
-    },
-  },
-
-  // ================= Resume =================
-  "Resume Template": {
-    "Personal Info": {
-      title: "👤 Personal Info",
-      description: "Your contact details.",
-      points: [
-        "Use professional email",
-      ],
-    },
-    Education: {
-      title: "🎓 Education",
-      description: "Your education history.",
-      points: [
-        "List latest first",
-      ],
-    },
-    Experience: {
-      title: "💼 Experience",
-      description: "Work experience.",
-      points: [
-        "Add achievements",
-      ],
-    },
-    Skills: {
-      title: "🛠 Skills",
-      description: "Your skills.",
-      points: [
-        "List relevant skills",
-      ],
-    },
-  },
-
-  // ================= Power of Attorney =================
-  "Power of Attorney": {
-    Parties: {
-      title: "👥 Parties",
-      description: "Principal and agent.",
-      points: [
-        "Agent acts on behalf of principal",
-      ],
-    },
-    Authority: {
-      title: "📄 Authority",
-      description: "Powers granted to agent.",
-      points: [
-        "Specify powers clearly",
-      ],
-    },
-    Dates: {
-      title: "📅 Dates",
-      description: "Effective and expiration dates.",
-      points: [
-        "Defines validity period",
       ],
     },
   },
