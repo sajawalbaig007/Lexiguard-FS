@@ -83,7 +83,7 @@ function AIAssistant({ onClose, templateTitle }: { onClose: () => void; template
       addMessage("ai", "📝 Generating your professional contract...");
       try {
         const requestData = { contractType: templateTitle.toLowerCase(), ...contractData };
-        const response = await fetch("http://localhost:5000/api/contracts/ai/generate", {
+        const response = await fetch("https://lexiguard-fs.onrender.com/api/contracts/ai/generate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(requestData),
