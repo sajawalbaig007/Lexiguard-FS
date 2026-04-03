@@ -38,7 +38,7 @@ function AIAssistant({ onClose, templateTitle }: { onClose: () => void; template
     { field: "partyA", question: "Enter Party A (Landlord/Employer/Discloser) full name:", placeholder: "John Doe" },
     { field: "partyB", question: "Enter Party B (Tenant/Employee/Recipient) full name:", placeholder: "Jane Smith" },
     { field: "purpose", question: "Describe the purpose/property/job role/confidential info:", placeholder: "Apartment at XYZ Street" },
-    { field: "amount", question: "Enter amount/rent/salary (if applicable):", placeholder: "PKR 50,000" },
+    { field: "amount", question: "Enter amount/rent/salary (if applicable):", placeholder: "Enter Amount" },
     { field: "duration", question: "Enter duration/term:", placeholder: "12 months" },
     { field: "specialClauses", question: "Any special clauses?", placeholder: "None" },
   ];
