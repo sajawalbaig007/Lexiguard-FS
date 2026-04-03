@@ -25,7 +25,7 @@ function AIAssistant({ onClose, templateTitle }: { onClose: () => void; template
     purpose: "",
     amount: "",
     duration: "",
-    jurisdiction: "Pakistan",
+    jurisdiction: "UK",
     specialClauses: "",
     date: new Date().toLocaleDateString(),
   });
@@ -162,7 +162,7 @@ function AIAssistant({ onClose, templateTitle }: { onClose: () => void; template
       purpose: "",
       amount: "",
       duration: "",
-      jurisdiction: "Pakistan",
+      jurisdiction: "UK",
       specialClauses: "",
       date: new Date().toLocaleDateString(),
     });

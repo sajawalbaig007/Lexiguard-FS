@@ -24,12 +24,12 @@ The Lease shall commence on ${data.date || "____"} and continue for ${data.durat
 ----------------------------------------
 3. RENT
 ----------------------------------------
-The Tenant agrees to pay a total rent of ${data.amount || "Specify rent"} payable in installments as mutually agreed.
+The Tenant agrees to pay a total rent of £ ${data.amount || "Specify rent"} payable in installments as mutually agreed.
 
 ----------------------------------------
 4. SECURITY DEPOSIT
 ----------------------------------------
-The Tenant shall pay a security deposit of ${data.amount || "Specify deposit"}, refundable upon termination subject to property conditions.
+The Tenant shall pay a security deposit of £ ${data.amount || "Specify deposit"}, refundable upon termination subject to property conditions.
 
 ----------------------------------------
 5. UTILITIES AND EXPENSES
