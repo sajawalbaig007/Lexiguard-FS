@@ -1,14 +1,17 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Trash2 } from "lucide-react";
+import DocumentPreviewModal from "./DocumentPreviewModal"; // ✅ NEW
 
 // Define types
 type Document = {
-  id: number;
+  id?: number;
+  _id?: string; // ✅ Mongo support
   title: string;
   time: string;
   content: string;
   createdAt: string;
+  templateName?: string; // ✅ Mongo
 };
 
 export default function SavedDocuments() {
@@ -16,13 +19,38 @@ export default function SavedDocuments() {
   const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
 
   useEffect(() => {
-    const stored = JSON.parse(
-      localStorage.getItem("recentDocuments") || "[]"
-    );
-    setSavedDocs(stored);
+    const loadDocuments = async () => {
+      try {
+        // 🔹 Local docs (unchanged)
+        const localDocs = JSON.parse(
+          localStorage.getItem("recentDocuments") || "[]"
+        );
+
+        // 🔹 Mongo docs
+        const res = await fetch("/api/contracts/documents");
+        const mongoDocs = await res.json();
+
+        // 🔹 Format Mongo → UI
+        const formattedMongoDocs = mongoDocs.map((doc: any) => ({
+          _id: doc._id,
+          title: doc.templateName.toUpperCase(),
+          time: new Date(doc.createdAt).toLocaleString(),
+          content: doc.content,
+          createdAt: doc.createdAt,
+          templateName: doc.templateName,
+        }));
+
+        // ✅ Merge both
+        setSavedDocs([...formattedMongoDocs, ...localDocs]);
+      } catch (error) {
+        console.error("Error loading documents:", error);
+      }
+    };
+
+    loadDocuments();
   }, []);
 
-  // PDF Download
+  // PDF Download (unchanged)
   const handleDownloadPDF = async () => {
     const element = document.querySelector(".print-document") as HTMLElement | null;
     if (!element) return;
@@ -40,7 +68,7 @@ export default function SavedDocuments() {
     html2pdf().set(opt).from(element).save();
   };
 
-  // DELETE DOCUMENT
+  // DELETE DOCUMENT (unchanged for local only)
   const handleDelete = (doc: Document, e: React.MouseEvent) => {
     e.stopPropagation();
 
@@ -50,7 +78,10 @@ export default function SavedDocuments() {
 
     if (!confirmDelete) return;
 
-    const updatedDocs = savedDocs.filter((d) => d.id !== doc.id);
+    const updatedDocs = savedDocs.filter(
+      (d) => (d.id || d._id) !== (doc.id || doc._id)
+    );
+
     setSavedDocs(updatedDocs);
     localStorage.setItem("recentDocuments", JSON.stringify(updatedDocs));
 
@@ -61,71 +92,18 @@ export default function SavedDocuments() {
     localStorage.setItem("deletedDocuments", JSON.stringify(deletedDocs));
   };
 
-  // Preview Mode
+  // ✅ NEW PREVIEW USING YOUR MODAL
   if (selectedDoc) {
     return (
-      <div className="fixed inset-0 z-99999 bg-[#f8f6f1] flex flex-col overflow-hidden">
-        
-        {/* Header */}
-        <div className="sticky top-0 z-1000 bg-white/80 backdrop-blur border-b border-[#e6dccf] px-4 md:px-8 py-3 md:py-4 flex items-center justify-between shadow-sm">
-          <div>
-            <h1 className="text-base md:text-lg font-semibold text-[#3e2f1c] tracking-wide">
-              {selectedDoc.title}
-            </h1>
-            <p className="text-[10px] md:text-xs text-[#8a7a64]">
-              Legal Agreement Document
-            </p>
-          </div>
-
-          <div className="flex gap-2 md:gap-3">
-            <button
-              onClick={handleDownloadPDF}
-              className="px-3 md:px-5 py-1.5 md:py-2 text-sm md:text-base bg-[#3e2f1c] text-white rounded-md hover:bg-[#2c2115] transition shadow"
-            >
-              Download
-            </button>
-
-            <button
-              onClick={() => setSelectedDoc(null)}
-              className="px-3 md:px-5 py-1.5 md:py-2 text-sm md:text-base border border-[#d6c7b0] rounded-md hover:bg-[#f3eee6] transition"
-            >
-              Back
-            </button>
-          </div>
-        </div>
-
-        {/* Document */}
-        <div className="flex-1 overflow-y-auto flex justify-center px-2 md:px-6 py-4 md:py-10">
-          <div className="w-full max-w-225">
-            <div className="print-document bg-[#fffdf9] shadow-[0_20px_60px_rgba(0,0,0,0.08)] border border-[#e8dccb] md:rounded-sm px-4 md:px-20 py-6 md:py-16">
-              
-              <div className="border-b border-[#d6c7b0] pb-4 md:pb-6 mb-6 md:mb-10 text-center">
-                <h1 className="text-xl md:text-3xl font-semibold tracking-widest font-serif text-[#3e2f1c]">
-                  {selectedDoc.title?.toUpperCase()}
-                </h1>
-                <p className="text-xs md:text-sm text-[#8a7a64] mt-1 md:mt-2 tracking-wide">
-                  Official Legal Agreement
-                </p>
-              </div>
-
-              <div
-                className="text-[14px] md:text-[16px] text-[#2f2a24] font-serif text-justify"
-                style={{ lineHeight: "1.9", wordSpacing: "1.2px" }}
-                dangerouslySetInnerHTML={{ __html: selectedDoc.content }}
-              />
-
-              <div className="mt-10 md:mt-20 pt-4 md:pt-6 border-t border-[#eee3d3] text-[10px] md:text-xs text-center text-[#a89a86] tracking-wide">
-                Generated Document — Verified Legal Template
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
+      <DocumentPreviewModal
+        document={selectedDoc.content}
+        templateName={selectedDoc.templateName || selectedDoc.title}
+        onClose={() => setSelectedDoc(null)}
+      />
     );
   }
 
-  // Saved Documents List
+  // Saved Documents List (UNCHANGED UI)
   return (
     <div className="bg-white  p-4 md:p-8 border border-gray-200 shadow-sm min-h-150">
       
@@ -137,7 +115,7 @@ export default function SavedDocuments() {
         {savedDocs.length > 0 ? (
           savedDocs.map((doc) => (
             <div
-              key={doc.id}
+              key={doc.id || doc._id} // ✅ FIXED
               onClick={() => setSelectedDoc(doc)}
               className="group flex justify-between items-center md:rounded-xl p-3 md:p-5 bg-[#F9FAFB] hover:bg-white border border-transparent hover:border-gray-200 hover:shadow-sm transition-all duration-200 cursor-pointer"
             >
