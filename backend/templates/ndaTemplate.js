@@ -1,65 +1,136 @@
-const ndaTemplate = (data) => {
-  return `
-<div class="contract">
-  <h1 style="text-align:center; font-weight:bold;">NON-DISCLOSURE AGREEMENT (NDA)</h1>
+const ndaTemplate = (data = {}) => {
+  const template = `
+  <div 
+    class="doc-container"
+    style="
+      font-family: Georgia, 'Times New Roman', serif; 
+      max-width: 800px; 
+      margin: auto; 
+      padding: 40px; 
+      line-height: 1.7; 
+      color: #222;
+      box-sizing: border-box;
+    "
+  >
 
-  <p>This Agreement is made on <strong>${data.date || "____"}</strong> between:</p>
-  <p><strong>Party A (Discloser):</strong> ${data.partyA}</p>
-  <p><strong>Party B (Recipient):</strong> ${data.partyB}</p>
+    <style>
+      @media (max-width: 768px) {
+        .doc-container {
+          padding: 8px !important; /* ✅ remove padding on mobile */
+        }
+        .doc-container h1 {
+          font-size: 22px !important;
+          text-align: center !important;
+        }
+        .doc-container h3 {
+          font-size: 16px !important;
+        }
+        .doc-container p {
+          font-size: 14px !important;
+        }
+        .doc-flex {
+          flex-direction: column !important;
+          gap: 30px;
+        }
+        .doc-col {
+          width: 100% !important;
+        }
+      }
+    </style>
 
-  <h2>BACKGROUND</h2>
-  <p>The parties wish to explore a business relationship for the following purpose:</p>
-  <p>${data.purpose}</p>
-  <p>In connection with this purpose, confidential information may be shared.</p>
+    <h1 style="text-align: center; font-size: 28px;">
+      NON-DISCLOSURE AGREEMENT (NDA)
+    </h1>
 
-  <h2>1. CONFIDENTIAL INFORMATION</h2>
-  <ul>
-    <li>Business strategies</li>
-    <li>Technical data</li>
-    <li>Financial information</li>
-    <li>Client data</li>
-    <li>Trade secrets</li>
-  </ul>
+    <p style="text-align: center;">Date: {{date}}</p>
 
-  <h2>2. OBLIGATIONS OF RECIPIENT</h2>
-  <ul>
-    <li>Not to disclose confidential information</li>
-    <li>Not to copy or misuse it</li>
-    <li>To protect it with reasonable care</li>
-  </ul>
+    <h3>Parties</h3>
+    <p>
+      This Agreement is made between <strong>{{discloserName}}</strong> (the "Discloser") 
+      and <strong>{{recipientName}}</strong> (the "Recipient").
+    </p>
 
-  <h2>3. EXCLUSIONS</h2>
-  <ul>
-    <li>Publicly available information</li>
-    <li>Independently developed data</li>
-  </ul>
+    <h3>1. Purpose</h3>
+    <p>{{purpose}}</p>
+    <p>
+      In connection with this purpose, confidential information may be disclosed
+      between the parties.
+    </p>
 
-  <h2>4. TERM</h2>
-  <p>This Agreement shall remain valid for: <strong>${data.duration}</strong></p>
+    <h3>2. Confidential Information</h3>
+    <p>
+      "Confidential Information" includes, but is not limited to:
+    </p>
+    <p>{{confidentialScope}}</p>
 
-  <h2>5. PAYMENT / VALUE</h2>
-  <p>Amount (if applicable): <strong>${data.amount}</strong></p>
+    <h3>3. Obligations of Recipient</h3>
+    <p>
+      The Recipient agrees to:
+    </p>
+    <p>{{obligationsSummary}}</p>
+    <p>
+      In all cases, the Recipient shall protect Confidential Information with
+      reasonable care and not disclose it to third parties without consent.
+    </p>
 
-  <h2>6. GOVERNING LAW</h2>
-  <p>This Agreement shall be governed by: <strong>${data.jurisdiction}</strong></p>
+    <h3>4. Exclusions</h3>
+    <p>
+      Confidential Information does not include information that is publicly
+      available or independently developed without breach of this Agreement.
+    </p>
 
-  <h2>7. SPECIAL CLAUSES</h2>
-  <p>${data.specialClauses || "None"}</p>
+    <h3>5. Term</h3>
+    <p>
+      This Agreement shall remain in effect for <strong>{{duration}}</strong>.
+    </p>
 
-  <h2>8. TERMINATION</h2>
-  <p>Either party may terminate with written notice.</p>
+    <h3>6. Consideration</h3>
+    <p>
+      Any applicable consideration or value exchanged under this Agreement:
+      <strong>{{consideration}}</strong>
+    </p>
 
-  <h2>9. DISCLAIMER</h2>
-  <p>This document is a general template and does not constitute legal advice. Parties are advised to consult a qualified legal professional.</p>
+    <h3>7. Governing Law</h3>
+    <p>
+      This Agreement shall be governed by the laws of {{jurisdiction}}.
+    </p>
 
-  <h2>10. SIGNATURES</h2>
-  <p>Party A: _______________________</p>
-  <p>Party B: _______________________</p>
-  <p>Date: ${data.date || "____"}</p>
+    <h3>8. Special Clauses</h3>
+    <p>{{specialClauses}}</p>
 
-  <p style="text-align:center; font-weight:bold; margin-top:20px;">END OF AGREEMENT</p>
-</div>
-`;
+    <h3>9. Termination</h3>
+    <p>
+      Either party may terminate this Agreement with written notice,
+      subject to ongoing confidentiality obligations.
+    </p>
+
+    <h3>10. Entire Agreement</h3>
+    <p>
+      This document constitutes the entire agreement between the parties.
+    </p>
+
+    <h3>Signatures</h3>
+
+    <div class="doc-flex" style="display: flex; justify-content: space-between; margin-top: 40px;">
+      <div class="doc-col">
+        <p><strong>Discloser</strong></p>
+        <div style="border-bottom:1px solid #000;height:40px;"></div>
+        <p>{{discloserName}}</p>
+      </div>
+
+      <div class="doc-col">
+        <p><strong>Recipient</strong></p>
+        <div style="border-bottom:1px solid #000;height:40px;"></div>
+        <p>{{recipientName}}</p>
+      </div>
+    </div>
+
+    <p style="margin-top: 40px;">Date: {{date}}</p>
+
+  </div>
+  `;
+
+  return template.replace(/{{(.*?)}}/g, (_, key) => data[key.trim()] ?? "");
 };
 
 export default ndaTemplate;

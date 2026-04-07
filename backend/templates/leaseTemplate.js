@@ -1,96 +1,141 @@
-const leaseTemplate = (data) => {
-  return `
-========================================
-          LEASE / RENTAL AGREEMENT
-========================================
+ const leaseTemplate = (data = {}) => {
+  const template = `
+  <div 
+    class="doc-container"
+    style="
+      font-family: Georgia, 'Times New Roman', serif; 
+      max-width: 800px; 
+      margin: auto; 
+      padding: 40px; 
+      line-height: 1.7; 
+      color: #222;
+      box-sizing: border-box;
+    "
+  >
 
-This Lease Agreement ("Agreement") is made on ${data.date || "____"} between:
+    <style>
+      @media (max-width: 768px) {
+        .doc-container {
+          padding: 8px !important; /* ✅ remove padding on mobile */
+        }
+        .doc-container h1 {
+          font-size: 22px !important;
+          text-align: center !important;
+        }
+        .doc-container h3 {
+          font-size: 16px !important;
+        }
+        .doc-container p {
+          font-size: 14px !important;
+        }
+        .doc-flex {
+          flex-direction: column !important;
+          gap: 30px;
+        }
+        .doc-col {
+          width: 100% !important;
+        }
+      }
+    </style>
 
-Landlord (Party A): ${data.partyA}  
-Tenant (Party B): ${data.partyB}  
+    <h1 style="text-align: center; font-size: 28px;">
+      LEASE AGREEMENT
+    </h1>
 
-----------------------------------------
-1. Background
-----------------------------------------
-The Landlord and the Tenant agree to lease the property at [property address] (the "Premises") for residential/commercial use. Both parties shall follow the terms of this Agreement.
+    <p style="text-align: center;">Date: {{date}}</p>
 
-${data.purpose || "Property details here."}
+    <h3>Parties</h3>
+    <p>
+      This Lease Agreement is made between <strong>{{landlordName}}</strong> (the "Landlord") 
+      and <strong>{{tenantName}}</strong> (the "Tenant").
+    </p>
 
-----------------------------------------
-2. TERM OF LEASE
-----------------------------------------
-The Lease shall commence on ${data.date || "____"} and continue for ${data.duration || "Specify duration"} unless terminated earlier in accordance with this Agreement.
+    <h3>1. Property</h3>
+    <p>
+      The Landlord hereby leases to the Tenant the property located at 
+      <strong>{{propertyAddress}}</strong> (the "Premises").
+    </p>
 
-----------------------------------------
-3. RENT
-----------------------------------------
-The Tenant agrees to pay a total rent of £ ${data.amount || "Specify rent"} payable in installments as mutually agreed.
+    <h3>2. Purpose</h3>
+    <p>{{leasePurpose}}</p>
 
-----------------------------------------
-4. SECURITY DEPOSIT
-----------------------------------------
-The Tenant shall pay a security deposit of £ ${data.amount || "Specify deposit"}, refundable upon termination subject to property conditions.
+    <h3>3. Term</h3>
+    <p>
+      This Agreement shall commence on {{date}} and continue for {{duration}},
+      unless terminated earlier in accordance with this Agreement.
+    </p>
 
-----------------------------------------
-5. UTILITIES AND EXPENSES
-----------------------------------------
-Tenant is responsible for utilities unless otherwise stated: Electricity, Water, Gas, Maintenance.
+    <h3>4. Rent</h3>
+    <p>
+      The Tenant agrees to pay rent of <strong>£ {{rentAmount}}</strong>.
+      Payment shall be made in accordance with standard rental practices.
+    </p>
 
-----------------------------------------
-6. MAINTENANCE AND REPAIRS
-----------------------------------------
-- Tenant maintains the property in good condition.  
-- Landlord handles major structural repairs.  
-- Tenant notifies Landlord of any damage.
+    <h3>5. Security Deposit</h3>
+    <p>
+      A security deposit of <strong>£ {{depositAmount}}</strong> shall be paid
+      and may be withheld for damages beyond normal wear and tear.
+    </p>
 
-----------------------------------------
-7. USE AND OCCUPANCY
-----------------------------------------
-- Premises not to be used for illegal activities.  
-- Subleasing requires written consent.  
-- Occupancy limits must be followed.
+    <h3>6. Utilities and Expenses</h3>
+    <p>
+      The Tenant shall be responsible for utilities and routine maintenance
+      unless otherwise agreed in writing.
+    </p>
 
-----------------------------------------
-8. INSURANCE
-----------------------------------------
-- Tenant should obtain renter’s insurance.  
-- Landlord maintains property insurance.
+    <h3>7. Maintenance</h3>
+    <p>
+      The Tenant shall maintain the Premises in good condition.
+      The Landlord remains responsible for structural repairs.
+    </p>
 
-----------------------------------------
-9. TERMINATION
-----------------------------------------
-- Either party may terminate with written notice.  
-- Early termination penalties, if any, must be specified.
+    <h3>8. Use of Property</h3>
+    <p>
+      The Premises shall not be used for unlawful purposes.
+      Subleasing requires prior written consent from the Landlord.
+    </p>
 
-----------------------------------------
-10. SPECIAL CLAUSES
-----------------------------------------
-${data.specialClauses || "None"}
+    <h3>9. Termination</h3>
+    <p>
+      Either party may terminate this Agreement with reasonable written notice,
+      subject to applicable laws and agreed conditions.
+    </p>
 
-----------------------------------------
-11. GOVERNING LAW
-----------------------------------------
-This Lease Agreement shall be governed by ${data.jurisdiction || "UK"} law.
+    <h3>10. Special Clauses</h3>
+    <p>{{specialClauses}}</p>
 
-----------------------------------------
-12. DISCLAIMER
-----------------------------------------
-This Lease Agreement is AI-generated for informational purposes and should be reviewed by a qualified legal professional before execution.
+    <h3>11. Governing Law</h3>
+    <p>
+      This Agreement shall be governed by the laws of {{jurisdiction}}.
+    </p>
 
-----------------------------------------
-13. SIGNATURES
-----------------------------------------
-Landlord: _______________________  
-Tenant: _______________________  
+    <h3>12. Entire Agreement</h3>
+    <p>
+      This document constitutes the entire agreement between the parties.
+    </p>
 
-Date: ${data.date || "____"}
+    <h3>Signatures</h3>
 
+    <div class="doc-flex" style="display: flex; justify-content: space-between; margin-top: 40px;">
+      <div class="doc-col">
+        <p><strong>Landlord</strong></p>
+        <div style="border-bottom:1px solid #000;height:40px;"></div>
+        <p>{{landlordName}}</p>
+      </div>
 
+      <div class="doc-col">
+        <p><strong>Tenant</strong></p>
+        <div style="border-bottom:1px solid #000;height:40px;"></div>
+        <p>{{tenantName}}</p>
+      </div>
+    </div>
 
-========================================
-END OF LEASE AGREEMENT
-========================================
-`;
+    <p style="margin-top: 40px;">Date: {{date}}</p>
+
+  </div>
+  `;
+
+  return template.replace(/{{(.*?)}}/g, (_, key) => data[key.trim()] ?? "");
 };
 
 export default leaseTemplate;

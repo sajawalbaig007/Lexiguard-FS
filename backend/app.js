@@ -2,24 +2,54 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+
 import authRoutes from "./routes/authRoutes.js";
-import contractRoutes from "./routes/contractRoutes.js"
+import contractRoutes from "./routes/contractRoutes.js";
+
 dotenv.config();
 
 const app = express();
-app.use(cors({
-  origin: [
-    'https://lexiguard-fs.vercel.app',
-    'http://localhost:3000'
-  ],
-  credentials: true
-}));
+
+// ================= CORS ================= ✅ CLEAN FIX
+app.use(
+  cors({
+    origin: "*", // allow all for now (dev)
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type"],
+  })
+);
+
+// ❌ REMOVE app.options COMPLETELY
+
+// ================= MIDDLEWARE =================
 app.use(express.json());
 
+// ================= ROUTES =================
 app.use("/api/auth", authRoutes);
 app.use("/api/contracts", contractRoutes);
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.log(err));
 
-app.listen(5000, () => console.log("Server running on port 5000"));
+// ================= HEALTH CHECK =================
+app.get("/", (req, res) => {
+  res.send("API is running...");
+});
+
+// ================= DATABASE =================
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch((err) =>
+    console.error("❌ MongoDB connection error:", err)
+  );
+
+// ================= ERROR HANDLER =================
+app.use((err, req, res, next) => {
+  console.error("❌ Server Error:", err.stack);
+  res.status(500).json({ error: "Something went wrong" });
+});
+
+// ================= SERVER =================
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+});
