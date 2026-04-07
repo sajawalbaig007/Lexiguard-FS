@@ -1,4 +1,5 @@
- const API_BASE = "http://localhost:5000/api/contracts";
+ const API_BASE = "https://lexiguard-fs.onrender.com/api/contracts";
+
 
 // ================= Fetch Questions =================
 export async function fetchQuestions(templateName: string) {

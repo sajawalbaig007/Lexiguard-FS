@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, Suspense } from "react";
 import { generateDocument, fetchQuestions } from "@/modules/api/contracts";
 import DocumentPreviewModal from "@/components/DocumentPreviewModal";
 
@@ -15,7 +15,7 @@ type Message = {
   content: string;
 };
 
-export default function AIChatPage() {
+function AIChatPage() {
   const router = useRouter();
   const params = useSearchParams();
   const rawTemplate = params.get("template");
@@ -283,5 +283,24 @@ export default function AIChatPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#F4F6FA] py-10 px-4">
+          <div className="max-w-3xl mx-auto">
+            <div className="min-h-[200px] flex flex-col items-center justify-center">
+              <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[#2F4EA1] mb-4"></div>
+              <p className="text-gray-600 text-sm">Loading...</p>
+            </div>
+          </div>
+        </div>
+      }
+    >
+      <AIChatPage />
+    </Suspense>
   );
 }

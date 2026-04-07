@@ -1,7 +1,5 @@
 "use client";
 
-import html2pdf from "html2pdf.js";
-
 type Props = {
   document: string;
   templateName: string;
@@ -40,23 +38,24 @@ export default function DocumentPreviewModal({
     }
   };
 
-  // ✅ FIXED download function (no TS errors)
-  const downloadPDF = () => {
-    const element = window.document.getElementById("print-area"); // ✅ FIX
-
+  // ✅ FIXED download function// Download PDF function
+  const downloadPDF = async () => {
+    const element = window.document.getElementById("print-area");
     if (!element) return;
 
-     const opt = {
-  margin: 0,
-  filename: `${templateName}.pdf`,
-  image: { type: "jpeg" as const, quality: 1 },
-  html2canvas: { scale: 2 },
-  jsPDF: {
-    unit: "pt",
-    format: "a4",
-    orientation: "portrait" as const, // ✅ FIX HERE
-  },
-};
+    const html2pdf = (await import("html2pdf.js")).default;
+
+    const opt = {
+      margin: 0,
+      filename: `${templateName}.pdf`,
+      image: { type: "jpeg" as const, quality: 1 },
+      html2canvas: { scale: 2 },
+      jsPDF: {
+        unit: "pt",
+        format: "a4",
+        orientation: "portrait" as const,
+      },
+    };
 
     html2pdf().set(opt).from(element).save();
   };
