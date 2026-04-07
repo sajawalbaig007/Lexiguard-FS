@@ -21,16 +21,16 @@ export default function SavedDocuments() {
   useEffect(() => {
     const loadDocuments = async () => {
       try {
-        // 🔹 Local docs (unchanged)
-        const localDocs = JSON.parse(
-          localStorage.getItem("recentDocuments") || "[]"
-        );
+        // Local docs (unchanged)
+        const localDocs = typeof window !== "undefined" 
+          ? JSON.parse(localStorage.getItem("recentDocuments") || "[]")
+          : [];
 
-        // 🔹 Mongo docs
+        // Mongo docs
         const res = await fetch("/api/contracts/documents");
         const mongoDocs = await res.json();
 
-        // 🔹 Format Mongo → UI
+        // Format Mongo → UI
         const formattedMongoDocs = mongoDocs.map((doc: any) => ({
           _id: doc._id,
           title: doc.templateName.toUpperCase(),
@@ -83,13 +83,15 @@ export default function SavedDocuments() {
     );
 
     setSavedDocs(updatedDocs);
-    localStorage.setItem("recentDocuments", JSON.stringify(updatedDocs));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("recentDocuments", JSON.stringify(updatedDocs));
 
-    const deletedDocs = JSON.parse(
-      localStorage.getItem("deletedDocuments") || "[]"
-    );
-    deletedDocs.push(doc);
-    localStorage.setItem("deletedDocuments", JSON.stringify(deletedDocs));
+      const deletedDocs = JSON.parse(
+        localStorage.getItem("deletedDocuments") || "[]"
+      );
+      deletedDocs.push(doc);
+      localStorage.setItem("deletedDocuments", JSON.stringify(deletedDocs));
+    }
   };
 
   // ✅ NEW PREVIEW USING YOUR MODAL
