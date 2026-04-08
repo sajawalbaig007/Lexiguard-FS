@@ -1,17 +1,8 @@
 import express from "express";
 import templateRegistry from "../templateRegistry.js";
-import Document from "../models/Document.js";
+import Document from "../models/Document.js"; // ✅ NEW IMPORT
 
 const router = express.Router();
-
-// Helper: Get today's date
-const getTodayDate = () => {
-  return new Date().toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-};
 
 // ================= GET ALL TEMPLATES =================
 router.get("/templates", (req, res) => {
@@ -27,6 +18,7 @@ router.get("/templates", (req, res) => {
 router.get("/questions/:templateName", (req, res) => {
   try {
     const templateName = req.params.templateName;
+
     const template = templateRegistry[templateName];
 
     if (!template) {
@@ -59,15 +51,8 @@ router.post("/generate", (req, res) => {
       return res.status(404).json({ error: "Template not found" });
     }
 
-    // ✅ AUTO-ADD TODAY'S DATE
-    const todayDate = getTodayDate();
-    const finalFormData = {
-      ...formData,
-      date: formData.date || todayDate,  // User's date if provided, else today
-    };
-
-    // Generate document
-    const document = templateEntry.template(finalFormData);
+    // ✅ Generate document
+    const document = templateEntry.template(formData);
 
     res.json({ document });
   } catch (error) {
@@ -106,10 +91,11 @@ router.post("/save-document", async (req, res) => {
   }
 });
 
-// ================= GET ALL DOCUMENTS =================
+// ================= GET ALL DOCUMENTS ================= ✅ NEW
 router.get("/documents", async (req, res) => {
   try {
     const documents = await Document.find().sort({ createdAt: -1 });
+
     res.json(documents);
   } catch (error) {
     console.error("FETCH ERROR:", error);
