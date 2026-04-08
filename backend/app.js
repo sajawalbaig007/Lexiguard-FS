@@ -10,16 +10,17 @@ dotenv.config();
 
 const app = express();
 
-// ================= CORS ================= ✅ CLEAN FIX
+// ================= CORS =================
 app.use(
   cors({
-    origin: "*", // allow all for now (dev)
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"], // ✅ ADD OPTIONS + PATCH
     allowedHeaders: ["Content-Type"],
   })
 );
 
-// ❌ REMOVE app.options COMPLETELY
+// 🔥 CRITICAL FOR RENDER (FIX DELETE + PREFLIGHT)
+app.options("*", cors());
 
 // ================= MIDDLEWARE =================
 app.use(express.json());
@@ -27,6 +28,11 @@ app.use(express.json());
 // ================= ROUTES =================
 app.use("/api/auth", authRoutes);
 app.use("/api/contracts", contractRoutes);
+
+// ================= TEST ROUTE (DEBUG) ================= 🔥
+app.delete("/api/test-delete", (req, res) => {
+  res.json({ message: "DELETE WORKING ✅" });
+});
 
 // ================= HEALTH CHECK =================
 app.get("/", (req, res) => {

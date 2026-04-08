@@ -1,11 +1,11 @@
- const contractorTemplate = (data = {}) => {
+const contractorTemplate = (data = {}) => {
   const template = `
   <div style="
       font-family: Georgia, 'Times New Roman', serif; 
-      max-width: 1000px;
+      max-width: 1500px; /* ✅ increased width */
       width: 100%;
       margin: auto; 
-      padding: 60px; 
+      padding: 10px; 
       line-height: 1.85; 
       color: #1a1a1a; 
       background: #ffffff; 
