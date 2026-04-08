@@ -5,7 +5,6 @@ type Props = {
   templateName: string;
   onClose: () => void;
   hideActions?: boolean;
-  onSaveComplete?: () => void; // ✅ NEW: Refresh saved documents after save
 };
 
 export default function DocumentPreviewModal({
@@ -13,7 +12,6 @@ export default function DocumentPreviewModal({
   templateName,
   onClose,
   hideActions = false,
-  onSaveComplete,
 }: Props) {
   // Save document
   const saveDocument = async () => {
@@ -31,10 +29,6 @@ export default function DocumentPreviewModal({
 
       if (response.ok) {
         alert("Document saved successfully!");
-        // ✅ Refresh the saved documents list
-        if (onSaveComplete) {
-          onSaveComplete();
-        }
       } else {
         alert("Failed to save document.");
       }
@@ -44,7 +38,7 @@ export default function DocumentPreviewModal({
     }
   };
 
-  // Download PDF function
+  // ✅ FIXED download function// Download PDF function
   const downloadPDF = async () => {
     const element = window.document.getElementById("print-area");
     if (!element) return;
@@ -52,16 +46,15 @@ export default function DocumentPreviewModal({
     const html2pdf = (await import("html2pdf.js")).default;
 
     const opt = {
-      margin: [0.5, 0.5, 0.5, 0.5], // ✅ Better margins for page breaks
-      filename: `${templateName.replace(/\s+/g, '_')}.pdf`,
+      margin: 0,
+      filename: `${templateName}.pdf`,
       image: { type: "jpeg" as const, quality: 1 },
-      html2canvas: { scale: 2, useCORS: true },
+      html2canvas: { scale: 2 },
       jsPDF: {
-        unit: "in",
+        unit: "pt",
         format: "a4",
         orientation: "portrait" as const,
       },
-      pagebreak: { mode: ['css', 'legacy'] }, // ✅ Enable page breaks
     };
 
     html2pdf().set(opt).from(element).save();
@@ -69,12 +62,17 @@ export default function DocumentPreviewModal({
 
   return (
     <div className="fixed inset-0 z-[9999] bg-[#f5efe6] overflow-y-auto">
+
       {/* Top Bar */}
       <div className="fixed top-0 left-0 w-full bg-white border-b shadow-sm px-6 py-3 flex justify-between items-center z-50">
         <h2 className="text-sm font-medium text-gray-800">
           📄 Document Preview
         </h2>
-        <button onClick={onClose} className="text-xl hover:scale-110 transition">
+
+        <button
+          onClick={onClose}
+          className="text-xl hover:scale-110 transition"
+        >
           ✖
         </button>
       </div>
@@ -84,11 +82,8 @@ export default function DocumentPreviewModal({
         <div
           id="print-area"
           className="print-document bg-[#fffdf9] w-[95%] lg:w-[850px] min-h-[1150px] shadow-2xl border border-[#e8dccb] px-6 lg:px-24 py-10 lg:py-20"
-          style={{ 
-            pageBreakAfter: "always", // ✅ Page break support
-            pageBreakInside: "avoid" 
-          }}
         >
+
           {/* Header */}
           <div className="border-b border-[#d6c7b0] pb-8 mb-12 text-center">
             <h1 className="text-3xl lg:text-4xl font-semibold tracking-widest font-serif text-[#3e2f1c]">
@@ -141,10 +136,12 @@ export default function DocumentPreviewModal({
           body * {
             visibility: hidden;
           }
+
           .print-document,
           .print-document * {
             visibility: visible;
           }
+
           .print-document {
             position: absolute;
             left: 0;
@@ -152,10 +149,6 @@ export default function DocumentPreviewModal({
             width: 100%;
             box-shadow: none;
             border: none;
-          }
-          /* ✅ Page break support */
-          .page-break {
-            page-break-before: always;
           }
         }
       `}</style>
