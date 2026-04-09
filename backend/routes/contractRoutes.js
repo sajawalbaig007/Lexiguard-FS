@@ -35,7 +35,10 @@ router.get("/questions/:templateName", (req, res) => {
 // ================= GENERATE + SAVE DOCUMENT =================
 router.post("/generate", async (req, res) => {
   try {
-    const { templateName, formData } = req.body;
+    let { templateName, formData } = req.body;
+
+    // ✅ DEBUG LOG (VERY IMPORTANT)
+    console.log("📩 Incoming template:", templateName);
 
     if (!templateName || !formData) {
       return res.status(400).json({
@@ -43,15 +46,30 @@ router.post("/generate", async (req, res) => {
       });
     }
 
+    // ✅ Normalize template key
+    templateName = templateName.toLowerCase().trim();
+
     const templateEntry = templateRegistry[templateName];
 
     if (!templateEntry) {
-      return res.status(404).json({ error: "Template not found" });
+      console.error("❌ Template not found:", templateName);
+      return res.status(404).json({
+        error: "Template not found",
+        received: templateName,
+        available: Object.keys(templateRegistry),
+      });
     }
 
-    // ✅ Supports both AI flow and Manual flow
-    const documentHTML =
-      formData.__manualHTML || templateEntry.template(formData);
+    // ✅ Manual OR AI
+    let documentHTML;
+
+    if (formData.__manualHTML) {
+      console.log("📝 Manual document detected");
+      documentHTML = formData.__manualHTML;
+    } else {
+      console.log("🤖 AI document generation");
+      documentHTML = templateEntry.template(formData);
+    }
 
     const newDocument = await Document.create({
       templateName,
@@ -65,7 +83,7 @@ router.post("/generate", async (req, res) => {
       saved: true,
     });
   } catch (error) {
-    console.error("Error generating document:", error);
+    console.error("🔥 Error generating document:", error);
     res.status(500).json({ error: "Failed to generate document" });
   }
 });
