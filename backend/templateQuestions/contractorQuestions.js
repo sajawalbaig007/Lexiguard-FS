@@ -1,6 +1,4 @@
 const contractorQuestions = [
-  { name: "date", question: "What is the agreement date?" },
-
   { name: "clientName", question: "What is the Client's full name or company name?" },
   { name: "clientAddress", question: "What is the Client's address?" },
 

@@ -1,4 +1,10 @@
 const contractorTemplate = (data = {}) => {
+  const today = new Date().toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+
   const template = `
   <div class="doc-container" style="
       font-family: Inter, system-ui, -apple-system, sans-serif;
@@ -60,7 +66,7 @@ const contractorTemplate = (data = {}) => {
         INDEPENDENT CONTRACTOR AGREEMENT
       </h1>
       <p style="color:#6b7280;font-size:13px;">
-        This Agreement is made on <strong>{{date}}</strong>
+        This Agreement is made on <strong>${today}</strong>
       </p>
     </div>
 
