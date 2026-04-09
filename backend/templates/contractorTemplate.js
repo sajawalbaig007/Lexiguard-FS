@@ -189,13 +189,11 @@
       <div class="doc-col">
         <p><strong>Client</strong></p>
         <div style="border-bottom:1px solid #111;height:30px;margin-top:20px;"></div>
-        <p style="margin-top:10px;">{{clientName}}</p>
       </div>
 
       <div class="doc-col">
         <p><strong>Contractor</strong></p>
         <div style="border-bottom:1px solid #111;height:30px;margin-top:20px;"></div>
-        <p style="margin-top:10px;">{{contractorName}}</p>
       </div>
     </div>
 
