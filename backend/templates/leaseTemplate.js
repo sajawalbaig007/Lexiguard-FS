@@ -6,7 +6,7 @@
       font-family: Georgia, 'Times New Roman', serif; 
       max-width: 800px; 
       margin: auto; 
-      padding: 40px; 
+      padding: 100px; 
       line-height: 1.7; 
       color: #222;
       box-sizing: border-box;

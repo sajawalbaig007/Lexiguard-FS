@@ -49,7 +49,9 @@ router.post("/generate", async (req, res) => {
       return res.status(404).json({ error: "Template not found" });
     }
 
-    const documentHTML = templateEntry.template(formData);
+    // ✅ Supports both AI flow and Manual flow
+    const documentHTML =
+      formData.__manualHTML || templateEntry.template(formData);
 
     const newDocument = await Document.create({
       templateName,
@@ -60,7 +62,7 @@ router.post("/generate", async (req, res) => {
     res.json({
       document: documentHTML,
       documentId: newDocument._id,
-      saved: true, // 🔥 helps frontend know it's stored
+      saved: true,
     });
   } catch (error) {
     console.error("Error generating document:", error);
@@ -148,7 +150,7 @@ router.delete("/documents/:id", async (req, res) => {
 
     res.json({
       message: "Document moved to bin",
-      id, // 🔥 frontend uses this to update instantly
+      id,
     });
   } catch (error) {
     console.error("SOFT DELETE ERROR:", error);
@@ -180,7 +182,7 @@ router.patch("/restore/:id", async (req, res) => {
 
     res.json({
       message: "Document restored successfully",
-      id, // 🔥 needed for frontend sync
+      id,
     });
   } catch (error) {
     console.error("RESTORE ERROR:", error);
@@ -205,7 +207,7 @@ router.delete("/bin/:id", async (req, res) => {
 
     res.json({
       message: "Document permanently deleted",
-      id, // 🔥 frontend uses this
+      id,
     });
   } catch (error) {
     console.error("PERMANENT DELETE ERROR:", error);
@@ -214,10 +216,5 @@ router.delete("/bin/:id", async (req, res) => {
     });
   }
 });
-
-// ❌ REMOVE THIS (DANGEROUS)
-// router.delete("/documents", async (req, res) => {
-//   await Document.deleteMany({});
-// });
 
 export default router;
