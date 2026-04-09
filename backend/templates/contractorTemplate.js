@@ -4,7 +4,7 @@ const contractorTemplate = (data = {}) => {
       font-family: Inter, system-ui, -apple-system, sans-serif;
       width: 100%;
       line-height: 1.8;
-      padding: 200px;
+      padding: 40px 50px;
       color: #111827;
       background: #ffffff;
     ">
