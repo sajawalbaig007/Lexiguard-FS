@@ -90,7 +90,7 @@ export async function generateDocument(
   }
 }
 
-// ================= SAVE MANUAL DOCUMENT (NEW) =================
+// ================= SAVE MANUAL DOCUMENT =================
 export async function saveManualDocument(
   templateName: string,
   documentHTML: string,
@@ -106,7 +106,7 @@ export async function saveManualDocument(
         templateName,
         formData: {
           ...formData,
-          __manualHTML: documentHTML, // 🔥 important
+          __manualHTML: documentHTML,
         },
       }),
     });
@@ -114,7 +114,7 @@ export async function saveManualDocument(
     const text = await res.text();
     const data = await safeParseJSON(text);
 
-    if (!res.ok || !data) {
+    if (!res.ok || !data?.documentId) {
       console.error("❌ Manual save failed:", data);
       return null;
     }

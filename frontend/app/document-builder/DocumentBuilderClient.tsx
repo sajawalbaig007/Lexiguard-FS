@@ -12,8 +12,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 
-import { generateDocument as saveDocumentToBackend } from "@/modules/api/contracts";
-
+import { saveManualDocument } from "@/modules/api/contracts";
 import getManualTemplateQuestions from "@/modules/manualTemplateQuestions";
 import getManualHelpContent from "@/modules/manualHelpContent";
 import manualGenerateDocument from "@/modules/manualGenerateDocument";
@@ -52,6 +51,9 @@ export default function DocumentBuilderClient() {
   const [showSkipPopup, setShowSkipPopup] = useState(false);
   const [skippedFields, setSkippedFields] = useState<string[]>([]);
   const [showHelpMobile, setShowHelpMobile] = useState(false);
+
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   const totalSteps = steps.length || 1;
   const progress = Math.round(((currentStep + 1) / totalSteps) * 100);
@@ -118,7 +120,7 @@ export default function DocumentBuilderClient() {
 
     if (mode === "sidebar") {
       documentText = documentText.replace(/\{\{(.*?)\}\}/g, (_, key) => {
-        return `<span style=\"color:#b45309; font-weight:600;\">${key}</span>`;
+        return `<span style="color:#b45309; font-weight:600;">${key}</span>`;
       });
     }
 
@@ -130,26 +132,42 @@ export default function DocumentBuilderClient() {
   };
 
   const handleSaveDocument = async () => {
-  try {
-    const cleanedFormData = { ...formData };
+    if (saving) return;
 
-    skippedFields.forEach((field) => {
-      delete cleanedFormData[field];
-    });
+    try {
+      setSaving(true);
+      setSaved(false);
 
-    const response = await saveDocumentToBackend(template, cleanedFormData);
+      const documentHTML = buildDocument("final");
 
-    if (!response) {
-      alert("Failed to save document");
-      return;
+      const cleanedFormData: Record<string, string> = {
+        ...formData,
+        generatedDocument: documentHTML,
+      };
+
+      skippedFields.forEach((field) => {
+        delete cleanedFormData[field];
+      });
+
+      const response = await saveManualDocument(template, documentHTML, cleanedFormData);
+
+      if (!response) {
+        alert("Failed to save document");
+        return;
+      }
+
+      setSaved(true);
+
+      setTimeout(() => {
+        setSaved(false);
+      }, 2000);
+    } catch (err) {
+      console.error("Save error:", err);
+      alert("Error saving document");
+    } finally {
+      setSaving(false);
     }
-
-    alert("Document saved successfully");
-  } catch (err) {
-    console.error("Save error:", err);
-    alert("Error saving document");
-  }
-};
+  };
 
   const handleDownloadPDF = async () => {
   await handleSaveDocument();
@@ -157,21 +175,51 @@ export default function DocumentBuilderClient() {
   const element = document.querySelector(".print-document") as HTMLElement | null;
   if (!element) return;
 
+  // Temporarily hide bottom action bar to remove any borders/shadows
+  const bottomBar = document.getElementById("bottomActionBar");
+  if (bottomBar) bottomBar.style.display = "none";
+
+  // Ensure element matches PDF width exactly
+  element.style.width = "7.8in";
+  element.style.maxWidth = "7.8in";
+  element.style.margin = "0 auto";
+
   const html2pdf = (await import("html2pdf.js")).default;
+ const opt = {
+  margin: [0.2, 0.2, 0.2, 0.2] as [number, number, number, number],
 
-  const opt = {
-    margin: 0.5,
-    filename: `${template}.pdf`,
-    image: { type: "jpeg" as const, quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: {
-      unit: "in" as const,
-      format: "letter" as const,
-      orientation: "portrait" as const,
-    },
-  };
+  filename: `${template}.pdf`,
 
-  html2pdf().set(opt).from(element).save();
+  image: {
+    type: "jpeg" as const,
+    quality: 0.98,
+  },
+
+  html2canvas: {
+    scale: 2,
+    useCORS: true,
+    scrollX: 0,
+    scrollY: 0,
+    logging: true,
+    backgroundColor: null, // ✅ IMPORTANT: removes unwanted white border effect
+  },
+
+  jsPDF: {
+    unit: "in" as const,
+    format: [8.5, 11] as [number, number], // Letter size
+    orientation: "portrait" as const,
+  },
+};
+
+  // Generate PDF
+  html2pdf()
+    .set(opt)
+    .from(element)
+    .save()
+    .finally(() => {
+      // Restore bottom bar after PDF is saved
+      if (bottomBar) bottomBar.style.display = "flex";
+    });
 };
 
   if (previewMode) {
@@ -180,50 +228,90 @@ export default function DocumentBuilderClient() {
     return (
       <div className="w-screen h-screen bg-[#f5efe6] overflow-y-auto relative">
         <button
-  onClick={() => setPreviewMode(null)}
-  className="fixed top-4 right-4 z-50 w-10 h-10 rounded-full bg-white shadow-md border border-gray-200 flex items-center justify-center text-gray-700 hover:bg-gray-100 hover:text-black transition"
->
-  ✕
-</button>
+          onClick={() => setPreviewMode(null)}
+          className="fixed top-4 right-4 z-50 w-10 h-10 rounded-full bg-white shadow-md border border-gray-200 flex items-center justify-center text-gray-700 hover:bg-gray-100 hover:text-black transition"
+        >
+          ✕
+        </button>
+
         <div className="flex justify-center py-8 lg:py-16">
-          <div className="print-document bg-[#fffdf9] w-[95%] lg:w-[900px] min-h-[1150px] shadow-2xl border border-[#e8dccb] px-6 lg:px-24 py-10 lg:py-20 mb-32 rounded-sm">
+          <div className="print-document bg-[#fffdf9] w-[95%] lg:w-[900px] min-h-[1150px] shadow-2xl px-6 lg:px-24 py-10 lg:py-20 mb-32 rounded-sm">
             <div dangerouslySetInnerHTML={{ __html: documentText }} />
           </div>
         </div>
 
-        {previewMode === "final" && (
-          <div className="fixed bottom-0 left-0 w-full bg-white border-t shadow-lg p-3 flex justify-center gap-6">
-            <button
-              onClick={handleSaveDocument}
-              className="flex flex-col items-center text-gray-700 hover:text-black"
-            >
-              <Save />
-              <span className="text-xs">Save</span>
-            </button>
+     {previewMode === "final" && (
+  <div
+    style={{
+      width: "7.8in",
+      maxWidth: "100%",
+      minHeight: "11in",
+      margin: "0 auto",
+      padding: "20px 40px",
+      boxSizing: "border-box",
+      backgroundColor: "#fffdf9",
+      color: "#1a1a1a",
+      fontFamily: "'Times New Roman', serif",
+      position: "relative",
+    }}
+    className="print-document"
+  >
+    {/* Your document content goes here */}
 
-            <button
-              onClick={handleDownloadPDF}
-              className="flex flex-col items-center text-gray-700 hover:text-black"
-            >
-              <Download />
-              <span className="text-xs">Download</span>
-            </button>
+    {/* Bottom Action Bar */}
+    <div
+      id="bottomActionBar"
+      style={{
+        position: "fixed",
+        bottom: 0,
+        left: 0,
+        width: "100%",
+        backgroundColor: "#fff",
+        border: "none",
+        borderTop: "none", // <-- Remove border
+        boxShadow: "none", // <-- Remove shadow
+        padding: "12px 0",
+        display: "flex",
+        justifyContent: "center",
+        gap: "1.5rem",
+      }}
+    >
+      <button
+        onClick={handleSaveDocument}
+        disabled={saving}
+        className="flex flex-col items-center text-gray-700 hover:text-black hover:bg-gray-100 px-4 py-2 rounded-lg transition disabled:opacity-50"
+      >
+        <Save />
+        <span className="text-xs">
+          {saving ? "Saving..." : saved ? "Saved" : "Save"}
+        </span>
+      </button>
 
-            <button
-              onClick={() => setPreviewMode(null)}
-              className="flex flex-col items-center text-gray-700 hover:text-black"
-            >
-              <ArrowLeft />
-              <span className="text-xs">Edit</span>
-            </button>
-          </div>
-        )}
+      <button
+        onClick={handleDownloadPDF}
+        className="flex flex-col items-center text-gray-700 hover:text-black hover:bg-gray-100 px-4 py-2 rounded-lg transition"
+      >
+        <Download />
+        <span className="text-xs">Download</span>
+      </button>
+
+      <button
+        onClick={() => setPreviewMode(null)}
+        className="flex flex-col items-center text-gray-700 hover:text-black hover:bg-gray-100 px-4 py-2 rounded-lg transition"
+      >
+        <ArrowLeft />
+        <span className="text-xs">Edit</span>
+      </button>
+    </div>
+  </div>
+)}
       </div>
     );
   }
 
   return (
     <div className="flex w-screen h-screen bg-white overflow-hidden relative">
+      {/* Mobile Top Bar */}
       <div className="lg:hidden fixed top-0 left-0 w-full bg-white z-50 border-b p-3">
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm font-medium text-black">{template}</span>
@@ -233,10 +321,14 @@ export default function DocumentBuilderClient() {
         </div>
 
         <div className="w-full bg-gray-200 h-2 rounded">
-          <div className="bg-[#2D4C8C] h-2 rounded" style={{ width: `${progress}%` }} />
+          <div
+            className="bg-[#2D4C8C] h-2 rounded"
+            style={{ width: `${progress}%` }}
+          />
         </div>
       </div>
 
+      {/* Mobile Help */}
       {showHelpMobile && (
         <div className="fixed inset-0 bg-black/40 z-50 flex justify-end">
           <div className="w-[85%] bg-white h-full p-6 overflow-y-auto relative">
@@ -259,10 +351,13 @@ export default function DocumentBuilderClient() {
         </div>
       )}
 
+      {/* Skip Popup */}
       {showSkipPopup && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-xl shadow-xl w-[400px] max-w-[90%]">
-            <h2 className="text-lg font-semibold mb-4">Do you want to skip this step?</h2>
+            <h2 className="text-lg font-semibold mb-4">
+              Do you want to skip this step?
+            </h2>
 
             <div className="flex justify-end gap-3">
               <button
@@ -282,6 +377,7 @@ export default function DocumentBuilderClient() {
         </div>
       )}
 
+      {/* Sidebar */}
       <div className="w-[70px] lg:w-[260px] bg-gray-50 border-r p-3 lg:p-5 flex flex-col pt-[80px] lg:pt-5">
         <div className="space-y-2 flex-1 overflow-y-auto">
           {steps.map((s: Step, i: number) => (
@@ -291,8 +387,8 @@ export default function DocumentBuilderClient() {
                 i === currentStep
                   ? "bg-gray-200 font-semibold text-gray-900"
                   : i < currentStep
-                    ? "text-gray-500"
-                    : "text-gray-700"
+                  ? "text-gray-500"
+                  : "text-gray-700"
               }`}
             >
               <span className="text-xs">{i + 1}</span>
@@ -316,6 +412,7 @@ export default function DocumentBuilderClient() {
         </button>
       </div>
 
+      {/* Main Form */}
       <div className="flex-1 flex pt-[80px] lg:pt-0">
         <div className="flex-1 p-5 lg:p-10 flex flex-col overflow-y-auto">
           <div className="mb-6">
@@ -352,6 +449,7 @@ export default function DocumentBuilderClient() {
             ))}
           </div>
 
+          {/* Navigation Buttons */}
           <div className="flex justify-between items-center mt-8">
             <button
               onClick={prevStep}
@@ -413,6 +511,7 @@ export default function DocumentBuilderClient() {
           </div>
         </div>
 
+        {/* Help Sidebar */}
         <div className="w-[300px] border-l p-6 bg-gray-50 hidden lg:block overflow-y-auto">
           <h3 className="font-semibold mb-3 text-gray-900">{help?.title}</h3>
           <p className="text-sm text-gray-700 mb-3">{help?.description}</p>
