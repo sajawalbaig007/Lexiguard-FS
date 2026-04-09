@@ -55,7 +55,7 @@ export async function fetchQuestions(
   }
 }
 
-// ================= Generate Document =================
+// ================= Generate Document (AI FLOW) =================
 export async function generateDocument(
   templateName: string,
   answers: Record<string, string>
@@ -86,6 +86,44 @@ export async function generateDocument(
     };
   } catch (error) {
     console.error("generateDocument error:", error);
+    return null;
+  }
+}
+
+// ================= SAVE MANUAL DOCUMENT (NEW) =================
+export async function saveManualDocument(
+  templateName: string,
+  documentHTML: string,
+  formData: Record<string, string>
+): Promise<{ documentId: string } | null> {
+  try {
+    const res = await fetch(`${API_BASE}/generate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        templateName,
+        formData: {
+          ...formData,
+          __manualHTML: documentHTML, // 🔥 important
+        },
+      }),
+    });
+
+    const text = await res.text();
+    const data = await safeParseJSON(text);
+
+    if (!res.ok || !data) {
+      console.error("❌ Manual save failed:", data);
+      return null;
+    }
+
+    return {
+      documentId: data.documentId,
+    };
+  } catch (error) {
+    console.error("saveManualDocument error:", error);
     return null;
   }
 }
