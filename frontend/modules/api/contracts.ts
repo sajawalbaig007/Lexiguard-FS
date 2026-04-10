@@ -102,22 +102,25 @@ export async function saveManualDocument(
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        templateName,
-        formData: {
-          ...formData,
-          __manualHTML: documentHTML,
-        },
-      }),
+     body: JSON.stringify({
+  templateName: templateName.toLowerCase().trim(), // 🔥 FIX
+  formData: {
+    ...formData,
+    __manualHTML: documentHTML,
+  },
+}),
     });
 
     const text = await res.text();
     const data = await safeParseJSON(text);
 
     if (!res.ok || !data?.documentId) {
-      console.error("❌ Manual save failed:", data);
-      return null;
-    }
+  console.error("❌ Manual save failed:", {
+    status: res.status,
+    data,
+  });
+  return null;
+}
 
     return {
       documentId: data.documentId,

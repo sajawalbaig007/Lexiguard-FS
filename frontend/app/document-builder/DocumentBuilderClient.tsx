@@ -149,8 +149,11 @@ export default function DocumentBuilderClient() {
         delete cleanedFormData[field];
       });
 
-      const response = await saveManualDocument(template, documentHTML, cleanedFormData);
-
+const response = await saveManualDocument(
+  template.toLowerCase().trim(), // 🔥 FIX
+  documentHTML,
+  cleanedFormData
+);
       if (!response) {
         alert("Failed to save document");
         return;
