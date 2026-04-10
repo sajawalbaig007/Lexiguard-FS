@@ -1,13 +1,12 @@
- type HelpContent = {
+export type HelpContent = {
   title: string;
   description: string;
   points: string[];
 };
 
-const manualHelpContent: Record<
-  string,
-  Record<string, HelpContent>
-> = {
+type TemplateHelpMap = Record<string, Record<string, HelpContent>>;
+
+const manualHelpContent: TemplateHelpMap = {
   "Lease Agreement": {
     "Agreement Details": {
       title: "Tenancy Dates & Agreement Setup",

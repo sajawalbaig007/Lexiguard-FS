@@ -1,8 +1,4 @@
- const leaseQuestions = [
-  {
-    name: "date",
-    question: "What is the agreement date?",
-  },
+const leaseQuestions = [
   {
     name: "landlordName",
     question: "What is the Landlord's full name?",
@@ -13,31 +9,27 @@
   },
   {
     name: "propertyAddress",
-    question: "What is the property address?",
-  },
-  {
-    name: "leasePurpose",
-    question: "What is the purpose of the lease? (Residential/Commercial)",
+    question: "What is the full property address?",
   },
   {
     name: "duration",
-    question: "What is the lease duration?",
+    question: "What is the lease duration? (e.g. 12 months)",
   },
   {
     name: "rentAmount",
-    question: "What is the rent amount?",
+    question: "What is the monthly rent amount?",
   },
   {
     name: "depositAmount",
-    question: "What is the security deposit?",
+    question: "What is the security deposit amount?",
+  },
+  {
+    name: "leasePurpose",
+    question: "What is the property usage? (Residential/Commercial)",
   },
   {
     name: "jurisdiction",
-    question: "Which country's/state's law applies?",
-  },
-  {
-    name: "specialClauses",
-    question: "Any special clauses? (optional)",
+    question: "Which country's/state law applies? (e.g. England & Wales)",
   },
 ];
 
