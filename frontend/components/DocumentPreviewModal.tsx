@@ -34,27 +34,51 @@ export default function DocumentPreviewModal({
 
   // ================= DOWNLOAD PDF =================
   const handleDownload = async () => {
-    const element = window.document.getElementById("print-area");
-    if (!element) return;
+  const element = window.document.getElementById("print-area");
+  if (!element) return;
 
-    const html2pdf = (await import("html2pdf.js")).default;
+  const html2pdf = (await import("html2pdf.js")).default;
 
-    html2pdf()
-      .set({
-        margin: 0,
-        filename: `${templateName}.pdf`,
-        image: { type: "jpeg", quality: 1 },
-        html2canvas: { scale: 2 },
-        jsPDF: {
-          unit: "pt",
-          format: "a4",
-          orientation: "portrait",
-        },
-      })
-      .from(element)
-      .save();
-  };
+  const pdf: any = html2pdf(); // 🔥 FIX: bypass TS limitation
 
+  pdf
+    .set({
+      margin: 0,
+      filename: `${templateName}.pdf`,
+
+      image: {
+        type: "jpeg",
+        quality: 1,
+      },
+
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        scrollX: 0,
+        scrollY: 0,
+      },
+
+      jsPDF: {
+        unit: "pt",
+        format: "a4",
+        orientation: "portrait",
+      },
+
+      // 🔥 IMPORTANT: prevents cut content & broken sections
+      pagebreak: {
+        mode: ["css", "legacy"],
+        avoid: [
+          "h1",
+          "h2",
+          ".text",
+          ".doc-flex",
+          ".section-title",
+        ],
+      },
+    })
+    .from(element)
+    .save();
+};
   return (
     <div className="fixed inset-0 z-[9999] bg-[#f5efe6] overflow-y-auto">
 

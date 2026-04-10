@@ -16,19 +16,19 @@ type Template = {
 const templates: Record<Category, Template[]> = {
   Popular: [
     {
-      id: "contractor_agreement",
-      title: "Independent Contractor Agreement",
-      emoji: "🛠️",
-      desc: "Create a contractor agreement outlining scope of work, payment terms, and responsibilities.",
-      image: "/templates/contractor.png",
-    },
-    {
       id: "lease_agreement",
       title: "Lease Agreement",
       emoji: "🏠",
       desc: "Create a lease agreement to clearly outline rent terms, rules, and responsibilities for landlords and tenants.",
       image: "/images/rental.jpg",
     },
+    {
+      id: "contractor_agreement",
+      title: "Independent Contractor Agreement",
+      emoji: "🛠️",
+      desc: "Create a contractor agreement outlining scope of work, payment terms, and responsibilities.",
+      image: "/templates/contractor.png",
+    }, 
     {
       id: "nda",
       title: "Non-Disclosure Agreement",
