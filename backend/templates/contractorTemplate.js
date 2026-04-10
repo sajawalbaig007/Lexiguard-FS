@@ -69,117 +69,106 @@
         This Agreement is made on <strong>${today}</strong>
       </p>
       <p style="color:#6b7280;font-size:12px; margin-top:6px;">
-        This document is intended to create legally binding obligations between the parties under applicable contract law.
+        This Agreement is intended to create legally binding obligations in accordance with the laws of England and Wales.
       </p>
     </div>
 
     <!-- INTRO -->
     <p class="text">
-      This Independent Contractor Agreement ("Agreement") is entered into by and between 
-      <strong>{{clientName}}</strong>, located at {{clientAddress}} ("Client"), 
-      and <strong>{{contractorName}}</strong>, located at {{contractorAddress}} ("Contractor").
-      Both parties agree to be bound by the terms and conditions set forth herein.
+      This Independent Contractor Agreement ("Agreement") is entered into between 
+      <strong>{{clientName}}</strong>, of {{clientAddress}} ("Client"), 
+      and <strong>{{contractorName}}</strong>, of {{contractorAddress}} ("Contractor").
     </p>
 
     <p class="text">
-      The parties acknowledge that they have read, understood, and voluntarily accept this Agreement, and that they have had the opportunity to seek independent legal advice prior to execution.
+      The parties hereby agree as follows, intending to be legally bound and acknowledging that they have had the opportunity to obtain independent legal advice prior to entering into this Agreement.
     </p>
 
     <!-- 1 -->
     <h2 class="section-title">1. Scope of Work</h2>
     <p class="text">
-      The Contractor agrees to perform the services described below in a professional and workmanlike manner, in accordance with industry standards:
+      The Contractor shall provide the following services ("Services") with reasonable skill, care, and diligence in accordance with generally accepted industry standards:
       <br /><br />
       {{servicesSummary}}
       <br /><br />
-      Any additional services not expressly included in this Agreement shall require written consent from the Client.
+      Any variation to the Services must be agreed in writing by both parties.
     </p>
 
     <!-- 2 -->
-    <h2 class="section-title">2. Term and Duration</h2>
+    <h2 class="section-title">2. Term</h2>
     <p class="text">
-      This Agreement shall commence on <strong>{{startDate}}</strong> and shall remain in effect until 
-      <strong>{{endDate}}</strong>, unless terminated earlier in accordance with this Agreement.
+      This Agreement shall commence on <strong>{{startDate}}</strong> and shall continue until 
+      <strong>{{endDate}}</strong>, unless terminated earlier in accordance with its terms.
       <br /><br />
-      Any extension of the term shall be mutually agreed in writing by both parties.
+      The parties may agree in writing to extend the duration of this Agreement.
     </p>
 
     <!-- 3 -->
-    <h2 class="section-title">3. Compensation and Payment Terms</h2>
+    <h2 class="section-title">3. Fees and Payment</h2>
     <p class="text">
-      The Client agrees to pay the Contractor a total amount of <strong>{{paymentAmount}}</strong>.
+      In consideration for the Services, the Client shall pay the Contractor the sum of <strong>{{paymentAmount}}</strong>.
       <br /><br />
       Payment shall be made in accordance with the following terms:
       <br /><br />
       {{paymentTerms}}
       <br /><br />
-      The Contractor shall be responsible for any applicable taxes arising from payments received under this Agreement.
+      The Contractor shall be responsible for all taxes, national insurance contributions, and any other statutory obligations arising from payments made under this Agreement.
     </p>
 
     <!-- 4 -->
-    <h2 class="section-title">4. Independent Contractor Relationship</h2>
+    <h2 class="section-title">4. Status of Contractor</h2>
     <p class="text">
-      The Contractor is engaged as an independent contractor and nothing in this Agreement shall be construed as creating an employer-employee relationship, partnership, or joint venture.
+      The Contractor is engaged as an independent contractor. Nothing in this Agreement shall render the Contractor an employee, worker, agent, or partner of the Client.
       <br /><br />
-      The Contractor shall have full control over the manner and means of performing the services, subject to the final deliverables agreed with the Client.
+      The Contractor shall have full control over the manner in which the Services are performed.
     </p>
 
     <!-- 5 -->
-    <h2 class="section-title">5. Confidentiality and Non-Disclosure</h2>
+    <h2 class="section-title">5. Confidentiality</h2>
     <p class="text">
-      The Contractor agrees to maintain strict confidentiality regarding all confidential information received from the Client.
+      The Contractor shall keep confidential all information of a confidential nature obtained from the Client and shall not disclose such information without prior written consent.
       <br /><br />
-      Such obligation shall survive termination of this Agreement. Confidential information shall not be disclosed to any third party without prior written consent.
+      This obligation shall survive termination of this Agreement.
     </p>
 
     <!-- 6 -->
-    <h2 class="section-title">6. Intellectual Property Rights</h2>
+    <h2 class="section-title">6. Intellectual Property</h2>
     <p class="text">
-      All deliverables, documents, designs, or work products created under this Agreement shall be the exclusive property of the Client upon full payment, unless otherwise agreed in writing.
+      All intellectual property rights in any work produced under this Agreement shall vest in the Client upon full payment.
       <br /><br />
-      The Contractor hereby waives any moral rights to such work to the extent permitted by law.
+      The Contractor agrees to assign such rights and execute any necessary documents to give effect to this clause.
     </p>
 
     <!-- 7 -->
     <h2 class="section-title">7. Termination</h2>
     <p class="text">
-      Either party may terminate this Agreement by providing {{terminationNotice}} written notice to the other party.
+      Either party may terminate this Agreement by giving reasonable written notice.
       <br /><br />
-      Upon termination, the Contractor shall be compensated for all work completed up to the termination date.
+      Upon termination, the Contractor shall be entitled to payment for all work completed up to the termination date.
     </p>
 
     <!-- 8 -->
-    <h2 class="section-title">8. Liability and Indemnity</h2>
+    <h2 class="section-title">8. Liability</h2>
     <p class="text">
-      The Contractor shall not be liable for any indirect, incidental, or consequential damages arising from this Agreement.
+      Nothing in this Agreement shall limit or exclude liability for death or personal injury caused by negligence.
       <br /><br />
-      The Contractor’s total liability under this Agreement shall not exceed the total amount paid by the Client.
-      <br /><br />
-      The Contractor agrees to indemnify the Client against any claims arising from negligence or breach of contract.
+      Subject to the above, the Contractor’s total liability shall not exceed the total fees paid under this Agreement.
     </p>
 
     <!-- 9 -->
     <h2 class="section-title">9. Governing Law</h2>
     <p class="text">
-      This Agreement shall be governed and construed in accordance with the laws of {{governingLaw}}, without regard to conflict of law principles.
+      This Agreement shall be governed by and construed in accordance with the laws of {{governingLaw}}.
+      <br /><br />
+      The parties submit to the exclusive jurisdiction of the courts of England and Wales.
     </p>
 
     <!-- 10 -->
-    <h2 class="section-title">10. Force Majeure</h2>
+    <h2 class="section-title">10. General</h2>
     <p class="text">
-      Neither party shall be liable for failure or delay in performance caused by circumstances beyond reasonable control, including but not limited to acts of God, war, strikes, or governmental restrictions.
-    </p>
-
-    <!-- 11 -->
-    <h2 class="section-title">11. Severability</h2>
-    <p class="text">
-      If any provision of this Agreement is found to be invalid or unenforceable, the remaining provisions shall continue in full force and effect.
-    </p>
-
-    <!-- 12 -->
-    <h2 class="section-title">12. Entire Agreement</h2>
-    <p class="text">
-      This Agreement constitutes the entire understanding between the parties and supersedes all prior discussions, agreements, or representations, whether written or oral.
+      This Agreement constitutes the entire agreement between the parties and supersedes any prior agreements or understandings.
+      <br /><br />
+      If any provision is held to be invalid, the remaining provisions shall remain in full force and effect.
     </p>
 
     <!-- SIGNATURES -->

@@ -1,4 +1,4 @@
-const ndaTemplate = (data = {}) => {
+ const ndaTemplate = (data = {}) => {
   const template = `
   <div 
     class="doc-container"
@@ -16,7 +16,7 @@ const ndaTemplate = (data = {}) => {
     <style>
       @media (max-width: 768px) {
         .doc-container {
-          padding: 8px !important; /* ✅ remove padding on mobile */
+          padding: 8px !important;
         }
         .doc-container h1 {
           font-size: 22px !important;
@@ -46,67 +46,79 @@ const ndaTemplate = (data = {}) => {
 
     <h3>Parties</h3>
     <p>
-      This Agreement is made between <strong>{{discloserName}}</strong> (the "Discloser") 
-      and <strong>{{recipientName}}</strong> (the "Recipient").
+      This Non-Disclosure Agreement ("Agreement") is made between 
+      <strong>{{discloserName}}</strong> (the "Discloser") and 
+      <strong>{{recipientName}}</strong> (the "Recipient").
     </p>
 
     <h3>1. Purpose</h3>
-    <p>{{purpose}}</p>
     <p>
-      In connection with this purpose, confidential information may be disclosed
-      between the parties.
+      The parties wish to explore the following purpose:
+      <br /><br />
+      {{purpose}}
+      <br /><br />
+      In connection with this purpose, the Discloser may disclose Confidential Information to the Recipient.
     </p>
 
-    <h3>2. Confidential Information</h3>
+    <h3>2. Definition of Confidential Information</h3>
     <p>
-      "Confidential Information" includes, but is not limited to:
+      "Confidential Information" shall include all information disclosed by the Discloser, whether in writing, orally, or otherwise, including but not limited to:
+      <br /><br />
+      {{confidentialScope}}
     </p>
-    <p>{{confidentialScope}}</p>
 
-    <h3>3. Obligations of Recipient</h3>
+    <h3>3. Obligations of the Recipient</h3>
     <p>
-      The Recipient agrees to:
-    </p>
-    <p>{{obligationsSummary}}</p>
-    <p>
-      In all cases, the Recipient shall protect Confidential Information with
-      reasonable care and not disclose it to third parties without consent.
+      The Recipient undertakes to:
+      <br /><br />
+      {{obligationsSummary}}
+      <br /><br />
+      The Recipient shall exercise reasonable care to protect such information and shall not disclose it to any third party without prior written consent of the Discloser.
     </p>
 
     <h3>4. Exclusions</h3>
     <p>
-      Confidential Information does not include information that is publicly
-      available or independently developed without breach of this Agreement.
+      Confidential Information shall not include information which:
+      <br /><br />
+      (a) is or becomes publicly available other than through breach of this Agreement;  
+      (b) is lawfully obtained from a third party; or  
+      (c) is independently developed without use of Confidential Information.
     </p>
 
     <h3>5. Term</h3>
     <p>
-      This Agreement shall remain in effect for <strong>{{duration}}</strong>.
+      This Agreement shall remain in force for a period of <strong>{{duration}}</strong>, unless terminated earlier in accordance with its terms.
     </p>
 
     <h3>6. Consideration</h3>
     <p>
-      Any applicable consideration or value exchanged under this Agreement:
+      The parties acknowledge the following consideration supporting this Agreement:
+      <br /><br />
       <strong>{{consideration}}</strong>
     </p>
 
     <h3>7. Governing Law</h3>
     <p>
-      This Agreement shall be governed by the laws of {{jurisdiction}}.
+      This Agreement shall be governed by and construed in accordance with the laws of {{governingLaw}}.
+      <br /><br />
+      The parties submit to the jurisdiction of the courts of England and Wales.
     </p>
 
-    <h3>8. Special Clauses</h3>
+    <h3>8. Special Conditions</h3>
     <p>{{specialClauses}}</p>
 
     <h3>9. Termination</h3>
     <p>
-      Either party may terminate this Agreement with written notice,
-      subject to ongoing confidentiality obligations.
+      Either party may terminate this Agreement by giving written notice.
+      <br /><br />
+      Notwithstanding termination, the obligations of confidentiality shall survive and remain binding.
     </p>
 
     <h3>10. Entire Agreement</h3>
     <p>
-      This document constitutes the entire agreement between the parties.
+      This Agreement constitutes the entire agreement between the parties and supersedes all prior arrangements.
+      <br /><br />
+      If any provision is held invalid, the remaining provisions shall remain in full force and effect.
     </p>
 
     <h3>Signatures</h3>

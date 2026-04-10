@@ -1,4 +1,4 @@
- const leaseQuestions = [
+const roomRentalQuestions = [
   {
     name: "date",
     question: "What is the agreement date?",
@@ -13,27 +13,27 @@
   },
   {
     name: "propertyAddress",
-    question: "What is the full address of the property?",
+    question: "What is the full property address?",
   },
   {
-    name: "leasePurpose",
-    question: "What is the purpose of the lease? (e.g., Residential or Commercial use)",
+    name: "roomDetails",
+    question: "Describe the room and shared areas (e.g., furnished room, kitchen access, bathroom, etc.)",
   },
   {
     name: "duration",
-    question: "What is the lease duration? (e.g., 12 months)",
+    question: "What is the rental duration? (e.g., 6 months)",
   },
   {
     name: "rentAmount",
-    question: "What is the rent amount? (e.g., £800 per month)",
+    question: "What is the monthly rent amount? (e.g., £500)",
   },
   {
     name: "depositAmount",
     question: "What is the security deposit amount?",
   },
   {
-    name: "specialClauses",
-    question: "Any special clauses or additional terms? (optional)",
+    name: "paymentTerms",
+    question: "What are the payment terms? (e.g., monthly, upfront, bank transfer)",
   },
   {
     name: "governingLaw",
@@ -41,4 +41,4 @@
   },
 ];
 
-export default leaseQuestions;
+export default roomRentalQuestions;
