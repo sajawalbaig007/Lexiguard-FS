@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -39,9 +39,29 @@ type Errors = {
 export default function DocumentBuilderClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const template = searchParams.get("template") || "Document";
 
-  const steps: Step[] = getManualTemplateQuestions(template);
+  // ✅ NORMALIZE (backend key)
+  const rawTemplate = searchParams.get("template") || "lease_agreement";
+
+  const template = rawTemplate
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "_");
+
+  // ✅ 🔥 ADD THIS MAPPING (MAIN FIX)
+  const templateMap: Record<string, string> = {
+    lease_agreement: "Lease Agreement",
+    nda: "NDA",
+    contractor_agreement: "Contractor Agreement",
+  };
+
+  const mappedTemplate = templateMap[template] || template;
+
+  console.log("🚀 Backend Template:", template);
+  console.log("🎯 Frontend Template:", mappedTemplate);
+
+  // ✅ USE mappedTemplate HERE
+  const steps: Step[] = getManualTemplateQuestions(mappedTemplate);
 
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState<FormData>({});
@@ -59,7 +79,9 @@ export default function DocumentBuilderClient() {
   const progress = Math.round(((currentStep + 1) / totalSteps) * 100);
 
   const stepName = steps[currentStep]?.step;
-  const help = getManualHelpContent(template, stepName);
+
+  // ✅ FIX HERE
+  const help = getManualHelpContent(mappedTemplate, stepName);
 
   const nextStep = () => {
     const fields = steps[currentStep]?.fields || [];
@@ -111,7 +133,8 @@ export default function DocumentBuilderClient() {
   };
 
   const buildDocument = (mode: "sidebar" | "final") => {
-    let documentText = manualGenerateDocument(template, formData);
+    // ✅ FIX HERE
+    let documentText = manualGenerateDocument(mappedTemplate, formData);
 
     skippedFields.forEach((field) => {
       const regex = new RegExp(`.*{{${field}}}.*\\n?`, "g");
@@ -149,11 +172,13 @@ export default function DocumentBuilderClient() {
         delete cleanedFormData[field];
       });
 
-const response = await saveManualDocument(
-  template.toLowerCase().trim(), // 🔥 FIX
-  documentHTML,
-  cleanedFormData
-);
+      // ✅ backend key hi bhejna hai
+      const response = await saveManualDocument(
+        template,
+        documentHTML,
+        cleanedFormData
+      );
+
       if (!response) {
         alert("Failed to save document");
         return;
