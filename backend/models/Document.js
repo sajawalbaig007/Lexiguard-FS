@@ -18,11 +18,17 @@ const documentSchema = new mongoose.Schema(
       default: {},
     },
 
+    // 🖼️ ADD THIS (LOGOS STORAGE)
+    logos: {
+      type: [String], // base64 images or URLs
+      default: [],
+    },
+
     // 🔥 Soft delete system
     isDeleted: {
       type: Boolean,
       default: false,
-      index: true, // ⚡ faster queries (important)
+      index: true,
     },
 
     deletedAt: {
@@ -31,10 +37,9 @@ const documentSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, // createdAt + updatedAt
+    timestamps: true,
   }
 );
 
-// 🔥 Prevent model overwrite error in Next.js / Nodemon
 export default mongoose.models.Document ||
   mongoose.model("Document", documentSchema);
