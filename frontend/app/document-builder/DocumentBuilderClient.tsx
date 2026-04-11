@@ -40,27 +40,18 @@ export default function DocumentBuilderClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // ✅ NORMALIZE (backend key)
   const rawTemplate = searchParams.get("template") || "lease_agreement";
+  const template = rawTemplate.toLowerCase().trim().replace(/\s+/g, "_");
 
-  const template = rawTemplate
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, "_");
-
-  // ✅ 🔥 ADD THIS MAPPING (MAIN FIX)
   const templateMap: Record<string, string> = {
     lease_agreement: "Lease Agreement",
     nda: "NDA",
     contractor_agreement: "Contractor Agreement",
+    employment_contract: "Employment Contract",
   };
 
-  const mappedTemplate = templateMap[template] || template;
+  const mappedTemplate = templateMap[template] || "Lease Agreement";
 
-  console.log("🚀 Backend Template:", template);
-  console.log("🎯 Frontend Template:", mappedTemplate);
-
-  // ✅ USE mappedTemplate HERE
   const steps: Step[] = getManualTemplateQuestions(mappedTemplate);
 
   const [currentStep, setCurrentStep] = useState(0);
@@ -71,7 +62,6 @@ export default function DocumentBuilderClient() {
   const [showSkipPopup, setShowSkipPopup] = useState(false);
   const [skippedFields, setSkippedFields] = useState<string[]>([]);
   const [showHelpMobile, setShowHelpMobile] = useState(false);
-
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
@@ -79,8 +69,6 @@ export default function DocumentBuilderClient() {
   const progress = Math.round(((currentStep + 1) / totalSteps) * 100);
 
   const stepName = steps[currentStep]?.step;
-
-  // ✅ FIX HERE
   const help = getManualHelpContent(mappedTemplate, stepName);
 
   const nextStep = () => {
@@ -96,12 +84,10 @@ export default function DocumentBuilderClient() {
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       setAnimateError(true);
-
       setTimeout(() => {
         setAnimateError(false);
         setErrors({});
       }, 500);
-
       return;
     }
 
@@ -133,11 +119,10 @@ export default function DocumentBuilderClient() {
   };
 
   const buildDocument = (mode: "sidebar" | "final") => {
-    // ✅ FIX HERE
     let documentText = manualGenerateDocument(mappedTemplate, formData);
 
     skippedFields.forEach((field) => {
-      const regex = new RegExp(`.*{{${field}}}.*\\n?`, "g");
+      const regex = new RegExp(`{{${field}}}`, "g");
       documentText = documentText.replace(regex, "");
     });
 
@@ -163,16 +148,11 @@ export default function DocumentBuilderClient() {
 
       const documentHTML = buildDocument("final");
 
-      const cleanedFormData: Record<string, string> = {
-        ...formData,
-        generatedDocument: documentHTML,
-      };
-
+      const cleanedFormData: Record<string, string> = { ...formData };
       skippedFields.forEach((field) => {
         delete cleanedFormData[field];
       });
 
-      // ✅ backend key hi bhejna hai
       const response = await saveManualDocument(
         template,
         documentHTML,
@@ -185,7 +165,6 @@ export default function DocumentBuilderClient() {
       }
 
       setSaved(true);
-
       setTimeout(() => {
         setSaved(false);
       }, 2000);
@@ -198,57 +177,52 @@ export default function DocumentBuilderClient() {
   };
 
   const handleDownloadPDF = async () => {
-  await handleSaveDocument();
+    const element = document.querySelector(".print-document") as HTMLElement | null;
+    if (!element) return;
 
-  const element = document.querySelector(".print-document") as HTMLElement | null;
-  if (!element) return;
+    // Show loading indicator (optional)
+    const downloadBtn = document.querySelector("#download-pdf-btn");
+    const originalText = downloadBtn?.innerHTML;
+    if (downloadBtn) downloadBtn.innerHTML = "⏳ Generating...";
 
-  // Temporarily hide bottom action bar to remove any borders/shadows
-  const bottomBar = document.getElementById("bottomActionBar");
-  if (bottomBar) bottomBar.style.display = "none";
+    try {
+      const html2pdf = (await import("html2pdf.js")).default;
+      
+      const opt = {
+        margin: [0.5, 0.5, 0.5, 0.5] as [number, number, number, number],
+        filename: `${mappedTemplate.replace(/\s/g, "_")}_${new Date().toISOString().split('T')[0]}.pdf`,
+        image: {
+          type: "jpeg" as const,
+          quality: 1.0,
+        },
+        html2canvas: {
+          scale: 3, // Higher scale for sharper text
+          useCORS: true,
+          letterRendering: true,
+          logging: false,
+          backgroundColor: "#ffffff",
+        },
+        jsPDF: {
+          unit: "in" as const,
+          format: "letter" as const,
+          orientation: "portrait" as const,
+        },
+        pagebreak: {
+          mode: ['css', 'legacy'],
+          before: '.page-break-before',
+          after: '.page-break-after',
+          avoid: 'p, h1, h2, h3, h4, h5, h6, .signature-wrapper',
+        },
+      };
 
-  // Ensure element matches PDF width exactly
-  element.style.width = "7.8in";
-  element.style.maxWidth = "7.8in";
-  element.style.margin = "0 auto";
-
-  const html2pdf = (await import("html2pdf.js")).default;
- const opt = {
-  margin: [0.2, 0.2, 0.2, 0.2] as [number, number, number, number],
-
-  filename: `${template}.pdf`,
-
-  image: {
-    type: "jpeg" as const,
-    quality: 0.98,
-  },
-
-  html2canvas: {
-    scale: 2,
-    useCORS: true,
-    scrollX: 0,
-    scrollY: 0,
-    logging: true,
-    backgroundColor: null, // ✅ IMPORTANT: removes unwanted white border effect
-  },
-
-  jsPDF: {
-    unit: "in" as const,
-    format: [8.5, 11] as [number, number], // Letter size
-    orientation: "portrait" as const,
-  },
-};
-
-  // Generate PDF
-  html2pdf()
-    .set(opt)
-    .from(element)
-    .save()
-    .finally(() => {
-      // Restore bottom bar after PDF is saved
-      if (bottomBar) bottomBar.style.display = "flex";
-    });
-};
+      await html2pdf().set(opt).from(element).save();
+    } catch (error) {
+      console.error("PDF generation error:", error);
+      alert("Failed to generate PDF. Please try again.");
+    } finally {
+      if (downloadBtn) downloadBtn.innerHTML = originalText || "Download";
+    }
+  };
 
   if (previewMode) {
     const documentText = buildDocument(previewMode);
@@ -263,86 +237,70 @@ export default function DocumentBuilderClient() {
         </button>
 
         <div className="flex justify-center py-8 lg:py-16">
-          <div className="print-document bg-[#fffdf9] w-[95%] lg:w-[900px] min-h-[1150px] shadow-2xl px-6 lg:px-24 py-10 lg:py-20 mb-32 rounded-sm">
+          {/* Beautiful document container for preview & download */}
+          <div 
+            id="pdf-container"
+            className="print-document bg-white shadow-2xl w-[95%] lg:w-[8.5in] min-h-[11in] px-8 lg:px-12 py-10 lg:py-12 mb-32"
+            style={{
+              fontFamily: "'Times New Roman', Georgia, serif",
+              color: "#1a1a1a",
+              lineHeight: "1.6",
+            }}
+          >
             <div dangerouslySetInnerHTML={{ __html: documentText }} />
           </div>
         </div>
 
-     {previewMode === "final" && (
-  <div
-    style={{
-      width: "7.8in",
-      maxWidth: "100%",
-      minHeight: "11in",
-      margin: "0 auto",
-      padding: "20px 40px",
-      boxSizing: "border-box",
-      backgroundColor: "#fffdf9",
-      color: "#1a1a1a",
-      fontFamily: "'Times New Roman', serif",
-      position: "relative",
-    }}
-    className="print-document"
-  >
-    {/* Your document content goes here */}
+        {previewMode === "final" && (
+          <div
+            id="bottomActionBar"
+            className="fixed bottom-0 left-0 w-full bg-white/95 backdrop-blur-sm border-t border-gray-200 shadow-lg py-3 z-50"
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: "2rem",
+            }}
+          >
+            <button
+              onClick={handleSaveDocument}
+              disabled={saving}
+              className="flex flex-col items-center gap-1 px-5 py-2 text-gray-700 hover:text-[#2D4C8C] hover:bg-gray-50 rounded-lg transition-all duration-200 disabled:opacity-50"
+            >
+              <Save size={20} />
+              <span className="text-xs font-medium">
+                {saving ? "Saving..." : saved ? "Saved ✓" : "Save"}
+              </span>
+            </button>
 
-    {/* Bottom Action Bar */}
-    <div
-      id="bottomActionBar"
-      style={{
-        position: "fixed",
-        bottom: 0,
-        left: 0,
-        width: "100%",
-        backgroundColor: "#fff",
-        border: "none",
-        borderTop: "none", // <-- Remove border
-        boxShadow: "none", // <-- Remove shadow
-        padding: "12px 0",
-        display: "flex",
-        justifyContent: "center",
-        gap: "1.5rem",
-      }}
-    >
-      <button
-        onClick={handleSaveDocument}
-        disabled={saving}
-        className="flex flex-col items-center text-gray-700 hover:text-black hover:bg-gray-100 px-4 py-2 rounded-lg transition disabled:opacity-50"
-      >
-        <Save />
-        <span className="text-xs">
-          {saving ? "Saving..." : saved ? "Saved" : "Save"}
-        </span>
-      </button>
+            <button
+              id="download-pdf-btn"
+              onClick={handleDownloadPDF}
+              className="flex flex-col items-center gap-1 px-5 py-2 text-gray-700 hover:text-[#2D4C8C] hover:bg-gray-50 rounded-lg transition-all duration-200"
+            >
+              <Download size={20} />
+              <span className="text-xs font-medium">Download PDF</span>
+            </button>
 
-      <button
-        onClick={handleDownloadPDF}
-        className="flex flex-col items-center text-gray-700 hover:text-black hover:bg-gray-100 px-4 py-2 rounded-lg transition"
-      >
-        <Download />
-        <span className="text-xs">Download</span>
-      </button>
-
-      <button
-        onClick={() => setPreviewMode(null)}
-        className="flex flex-col items-center text-gray-700 hover:text-black hover:bg-gray-100 px-4 py-2 rounded-lg transition"
-      >
-        <ArrowLeft />
-        <span className="text-xs">Edit</span>
-      </button>
-    </div>
-  </div>
-)}
+            <button
+              onClick={() => setPreviewMode(null)}
+              className="flex flex-col items-center gap-1 px-5 py-2 text-gray-700 hover:text-[#2D4C8C] hover:bg-gray-50 rounded-lg transition-all duration-200"
+            >
+              <ArrowLeft size={20} />
+              <span className="text-xs font-medium">Edit</span>
+            </button>
+          </div>
+        )}
       </div>
     );
   }
 
+  // Main Form Return
   return (
     <div className="flex w-screen h-screen bg-white overflow-hidden relative">
       {/* Mobile Top Bar */}
       <div className="lg:hidden fixed top-0 left-0 w-full bg-white z-50 border-b p-3">
         <div className="flex justify-between items-center mb-2">
-          <span className="text-sm font-medium text-black">{template}</span>
+          <span className="text-sm font-medium text-black">{mappedTemplate}</span>
           <button onClick={() => setShowHelpMobile(true)} className="text-xl">
             💡
           </button>
@@ -350,7 +308,7 @@ export default function DocumentBuilderClient() {
 
         <div className="w-full bg-gray-200 h-2 rounded">
           <div
-            className="bg-[#2D4C8C] h-2 rounded"
+            className="bg-[#2D4C8C] h-2 rounded transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -411,9 +369,9 @@ export default function DocumentBuilderClient() {
           {steps.map((s: Step, i: number) => (
             <div
               key={i}
-              className={`p-2 rounded-md text-sm flex items-center gap-2 justify-center lg:justify-start ${
+              className={`p-2 rounded-md text-sm flex items-center gap-2 justify-center lg:justify-start transition-all duration-200 ${
                 i === currentStep
-                  ? "bg-gray-200 font-semibold text-gray-900"
+                  ? "bg-[#2D4C8C] text-white font-semibold"
                   : i < currentStep
                   ? "text-gray-500"
                   : "text-gray-700"
@@ -463,7 +421,7 @@ export default function DocumentBuilderClient() {
                       ? animateError
                         ? "border-red-500 bg-red-50"
                         : "border-red-400 bg-red-50"
-                      : "border-gray-300"
+                      : "border-gray-300 focus:border-[#2D4C8C] focus:ring-1 focus:ring-[#2D4C8C]"
                   }`}
                   value={formData[field.name] || ""}
                   onChange={(e) =>
@@ -482,7 +440,7 @@ export default function DocumentBuilderClient() {
             <button
               onClick={prevStep}
               disabled={currentStep === 0}
-              className="px-5 py-2 rounded-lg bg-gray-200 disabled:opacity-50 text-gray-800 hidden sm:flex items-center gap-2"
+              className="px-5 py-2 rounded-lg bg-gray-200 disabled:opacity-50 text-gray-800 hidden sm:flex items-center gap-2 hover:bg-gray-300 transition"
             >
               Back
             </button>
@@ -498,7 +456,7 @@ export default function DocumentBuilderClient() {
             <div className="flex gap-3">
               <button
                 onClick={() => setShowSkipPopup(true)}
-                className="px-6 py-2 bg-gray-300 text-gray-900 rounded-lg hover:bg-gray-400 hidden sm:flex"
+                className="px-6 py-2 bg-gray-300 text-gray-900 rounded-lg hover:bg-gray-400 hidden sm:flex transition"
               >
                 Skip
               </button>
@@ -518,9 +476,10 @@ export default function DocumentBuilderClient() {
                     nextStep();
                   }
                 }}
-                className="px-6 py-2 bg-[#2D4C8C] text-white rounded-lg hover:bg-[#1f3563] hidden sm:flex"
+                className="px-6 py-2 bg-[#2D4C8C] text-white rounded-lg hover:bg-[#1f3563] hidden sm:flex transition items-center gap-2"
               >
-                {currentStep === steps.length - 1 ? "Preview" : "Next"}
+                {currentStep === steps.length - 1 ? "Preview Document" : "Next"}
+                {currentStep !== steps.length - 1 && <ChevronRight size={18} />}
               </button>
 
               <button

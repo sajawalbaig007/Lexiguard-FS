@@ -34,45 +34,66 @@ export default function DocumentPreviewModal({
 
   // ================= DOWNLOAD PDF =================
   const handleDownload = async () => {
-    const element = window.document.getElementById("print-area");
-    if (!element) return;
+  const element = window.document.getElementById("print-area");
+  if (!element) return;
 
-    const html2pdf = (await import("html2pdf.js")).default;
+  const html2pdf = (await import("html2pdf.js")).default;
 
-    const pdf: any = html2pdf();
+  // ✅ Clone to avoid messing with live UI
+  const clone = element.cloneNode(true) as HTMLElement;
 
-    pdf
-      .set({
-        margin: 0,
-        filename: `${templateName}.pdf`,
+  // Remove unwanted UI elements if any exist
+  const removeSelectors = [
+    ".no-print",
+    "button",
+    "input",
+    "textarea",
+    "select",
+  ];
 
-        image: {
-          type: "jpeg",
-          quality: 1,
-        },
+  removeSelectors.forEach((selector) => {
+    clone.querySelectorAll(selector).forEach((el) => el.remove());
+  });
 
-        html2canvas: {
-          scale: 2,
-          useCORS: true,
-          allowTaint: true, // ✅ IMPORTANT for base64/images
-          scrollX: 0,
-          scrollY: 0,
-        },
+  // Force clean PDF styling
+  clone.style.background = "#ffffff";
+  clone.style.color = "#000000";
+  clone.style.padding = "40px";
 
-        jsPDF: {
-          unit: "pt",
-          format: "a4",
-          orientation: "portrait",
-        },
+  const opt = {
+    margin: [20, 15, 20, 15], // top, left, bottom, right
 
-        pagebreak: {
-          mode: ["css", "legacy"],
-          avoid: ["h1", "h2", ".text", ".doc-flex", ".section-title"],
-        },
-      })
-      .from(element)
-      .save();
+    filename: `${templateName
+      .replace(/\s+/g, "_")
+      .toLowerCase()}_document.pdf`,
+
+    image: {
+      type: "jpeg",
+      quality: 1,
+    },
+
+    html2canvas: {
+      scale: 3, // 🔥 sharper PDF
+      useCORS: true,
+      backgroundColor: "#ffffff",
+      scrollX: 0,
+      scrollY: 0,
+    },
+
+    jsPDF: {
+      unit: "mm",
+      format: "a4",
+      orientation: "portrait",
+    },
+
+    pagebreak: {
+      mode: ["css", "legacy"],
+      avoid: ["h1", "h2", ".avoid-break"],
+    },
   };
+
+  await html2pdf().set(opt).from(clone).save();
+};
 
   return (
     <div className="fixed inset-0 z-[9999] bg-[#f5efe6] overflow-y-auto">

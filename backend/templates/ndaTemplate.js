@@ -1,6 +1,6 @@
-const ndaTemplate = (data = {}) => {
+const employmentContractTemplate = (data = {}) => {
 
-  // ✅ AUTO DATE
+  // ✅ AUTO DATE (same as your NDA)
   const today = new Date();
   const day = String(today.getDate()).padStart(2, "0");
   const month = today.toLocaleString("en-GB", { month: "long" });
@@ -56,147 +56,95 @@ const ndaTemplate = (data = {}) => {
     <!-- HEADER -->
     <div style="text-align:center; margin-bottom:30px;">
       <h1 style="font-size:26px;font-weight:600;">
-        NON-DISCLOSURE AGREEMENT (NDA)
+        CONTRACT OF EMPLOYMENT
       </h1>
     </div>
 
     <p class="text">
-      This Agreement is made and entered into as of this 
-      <strong>${day}</strong> day of <strong>${month}</strong>, 
-      <strong>${year}</strong> ("Effective Date") between 
-      <strong>{{discloserName}}</strong> ("Discloser") and 
-      <strong>{{recipientName}}</strong> ("Recipient").
-    </p>
-
-    <h2 class="section-title">I. BACKGROUND</h2>
-    <p class="text">
-      The Discloser and the Recipient wish to disclose certain confidential information to each other for the purpose of 
-      <strong>{{purpose}}</strong> (the "Purpose"). 
-      The parties agree to protect this information as set out below.
-    </p>
-
-    <h2 class="section-title">II. AGREEMENT</h2>
-
-    <h3 class="section-title">1. Confidential Information</h3>
-    <p class="text">
-      "Confidential Information" means any information (including, without limitation, data, documents, images, prototypes, designs, plans, drawings, trade secrets, business strategies, financial data, or other materials, including combinations of individual items of information) disclosed by the Discloser to the Recipient before, on, or after the Effective Date, whether in written, oral, visual, electronic, or other form, and whether or not explicitly designated as "confidential" at the time of disclosure.
+      This Agreement is made on 
+      <strong>${day} ${month} ${year}</strong> between:
     </p>
 
     <p class="text">
-      Confidential Information may also include information of a third party that is in the Discloser's possession and disclosed to the Recipient under this Agreement.
+      <strong>{{companyName}}</strong> ("the Company") with address at <strong>{{companyAddress}}</strong><br>
+      <strong>{{employeeName}}</strong> ("you") with address at <strong>{{employeeAddress}}</strong>
     </p>
 
     <p class="text">
-      Confidential Information does not include information that the Recipient can establish:
-      <br>(a) was publicly known and made generally available in the public domain prior to the time of disclosure;
-      <br>(b) becomes publicly known and made generally available after disclosure through no action or inaction of the Recipient;
-      <br>(c) is in the possession of the Recipient, without confidentiality obligations, prior to the time of disclosure;
-      <br>(d) is disclosed to the Recipient by a third party without breaching any obligations of confidentiality; or
-      <br>(e) is independently developed by the Recipient without the use of or reference to the Discloser's Confidential Information.
+      <strong>Important Note:</strong> This contract works alongside company policies (and/or Employee Handbook) which cover details like holidays, sickness, and bonuses. These are separate documents.
+      This agreement outlines the terms of your employment with the Company.
     </p>
 
+    <h2 class="section-title">Company policies</h2>
     <p class="text">
-      If the Recipient becomes legally compelled to disclose any Confidential Information, the Recipient shall provide the Discloser with prompt written notice and assist the Discloser in seeking a protective order or another appropriate remedy.
+      Company policies (and/or Employee Handbook) contain information about your job, but they aren't considered part of this contract unless mentioned here. You'll receive a copy of these policies, which the Company may update from time to time.
     </p>
 
-    <h3 class="section-title">2. Non-Use and Non-Disclosure & Non-Solicitation</h3>
+    <h2 class="section-title">Start date</h2>
     <p class="text">
-      The Recipient agrees not to use the Confidential Information for any purpose other than evaluating and discussing the potential business relationship with the Discloser.
+      Your employment with the Company starts <strong>{{startDate}}</strong>. Your continuous employment starts on the same date (previous jobs don't count).
     </p>
 
+    <h2 class="section-title">Probationary period (Optional)</h2>
     <p class="text">
-      The Recipient agrees not to solicit any employees, customers, or suppliers of the Discloser for a period of 
-      <strong>{{nonSolicitPeriod}}</strong>.
+      The first <strong>{{probationPeriod}}</strong> of your employment are considered probationary. The Company can extend this period if needed to properly assess your performance. During probation, either side can terminate your employment with one week's written notice.
     </p>
 
-    <h3 class="section-title">3. Maintenance of Confidentiality</h3>
+    <h2 class="section-title">Job Title and duties</h2>
     <p class="text">
-      The Recipient agrees to take all reasonable measures to protect the secrecy of the Confidential Information.
+      Your job title is <strong>{{jobTitle}}</strong>. Your job description and duties are included in this Agreement. The Company may ask you to perform other tasks as needed for business purposes.
     </p>
 
-    <h3 class="section-title">4. No Obligation</h3>
+    <h2 class="section-title">Work location</h2>
     <p class="text">
-      Nothing in this Agreement obligates either party to proceed with any transaction.
+      Your primary workplace will be <strong>{{workLocation}}</strong>. You may be required to travel within the UK and abroad for work.
     </p>
 
-    <h3 class="section-title">5. No Warranty</h3>
+    <h2 class="section-title">Salary</h2>
     <p class="text">
-      All Confidential Information is provided "AS IS".
+      Your annual salary is £<strong>{{salary}}</strong>. You'll be paid in equal monthly installments, in arrears, on or before the last day of each month by direct deposit to your bank account.
     </p>
 
-    <h3 class="section-title">6. Return of Materials</h3>
+    <h2 class="section-title">Overtime</h2>
     <p class="text">
-      All materials must be returned or destroyed upon request.
+      Overtime policy: <strong>{{overtimePolicy}}</strong>
     </p>
 
-    <h3 class="section-title">7. No Licence</h3>
+    <h2 class="section-title">Work hours</h2>
     <p class="text">
-      Nothing grants rights to intellectual property.
+      Your usual work hours are <strong>{{workHours}}</strong>. These hours may change to meet business needs. You may also be required to work additional hours to fulfill your job duties.
     </p>
 
-    <h3 class="section-title">8. Term</h3>
+    <h2 class="section-title">Holidays</h2>
     <p class="text">
-      This Agreement shall remain in effect until information becomes public.
+      The Company's holiday year runs as defined by company policy. Full-time staff get standard paid holidays including public and bank holidays.
     </p>
 
-    <h3 class="section-title">9. Remedies</h3>
+    <h2 class="section-title">Further details</h2>
     <p class="text">
-      Breach may result in legal remedies including injunction.
+      There are no terms applying to this Agreement which relate to the following:
+      <br>• The period for which the employment is intended to continue or the date when it is to end;
+      <br>• Any collective agreements which directly affect the terms and conditions of employment;
+      <br>• Work outside the United Kingdom.
     </p>
 
-    <h3 class="section-title">10. Recipient Information</h3>
-    <p class="text">
-      Feedback related to <strong>{{product}}</strong> becomes property of Discloser.
-    </p>
-
-    <h3 class="section-title">11. Binding Agreement</h3>
-    <p class="text">
-      This Agreement binds successors.
-    </p>
-
-    <h3 class="section-title">12. Governing Law</h3>
-    <p class="text">
-      Governed by England and Wales courts in <strong>{{city}}</strong>.
-    </p>
-
-    <h3 class="section-title">13. Entire Agreement</h3>
-    <p class="text">
-      This is the complete agreement.
-    </p>
-
-    <h3 class="section-title">14. Disclosure of Illegal Acts</h3>
-    <p class="text">
-      This Agreement does not restrict lawful disclosures.
-    </p>
-
-    <h3 class="section-title">15. Data Protection Compliance</h3>
-    <p class="text">
-      The Recipient agrees to comply with GDPR and data protection laws.
-    </p>
-
-    <!-- SIGNATURE (UPDATED UI) -->
+    <!-- SIGNATURE -->
     <div class="doc-flex" style="margin-top:60px;">
       <div class="doc-col">
         <p><strong>COMPANY</strong></p>
-
         <div style="border-bottom:1px solid #000; height:40px; margin-top:25px;"></div>
         <p style="font-size:12px; color:#6b7280;">Signature</p>
-
-       
       </div>
 
       <div class="doc-col">
-        <p><strong>RECIPIENT</strong></p>
-
+        <p><strong>EMPLOYEE</strong></p>
         <div style="border-bottom:1px solid #000; height:40px; margin-top:25px;"></div>
         <p style="font-size:12px; color:#6b7280;">Signature</p>
-
-       
       </div>
     </div>
 
     <p class="text" style="margin-top:30px; font-size:12px; color:#6b7280;">
-      Disclaimer: This document is intended as a template and does not constitute legal advice.
+      Disclaimer: This document is intended as a sample employment contract template and should not be taken as legal advice. We recommend that you consult with a solicitor to ensure this contract meets your specific needs and complies with all relevant UK employment laws.
     </p>
 
   </div>
@@ -205,4 +153,4 @@ const ndaTemplate = (data = {}) => {
   return template.replace(/{{(.*?)}}/g, (_, key) => data[key.trim()] ?? "");
 };
 
-export default ndaTemplate;
+export default employmentContractTemplate;

@@ -385,6 +385,66 @@ function contractorTemplate(data: FormData) {
   );
 }
 
+function employmentContractTemplate(data: FormData) {
+  return wrapper(
+    "Employment Contract",
+    `
+      <p style="margin-bottom: 20px; page-break-inside: avoid;">
+        This Employment Contract is made on
+        <strong>${data.agreementDate || "{{agreementDate}}"}</strong>
+        between <strong>${data.employerName || "{{employerName}}"}</strong>
+        of <strong>${data.employerAddress || "{{employerAddress}}"}</strong>
+        (the "Employer"), and
+        <strong>${data.employeeName || "{{employeeName}}"}</strong>
+        of <strong>${data.employeeAddress || "{{employeeAddress}}"}</strong>
+        (the "Employee").
+      </p>
+
+      <p style="margin-bottom: 20px; page-break-inside: avoid;">
+        The Employee is hereby employed as
+        <strong>${data.jobTitle || "{{jobTitle}}"}</strong>,
+        and shall perform duties including:
+        <strong>${data.responsibilities || "{{responsibilities}}"}</strong>.
+      </p>
+
+      <p style="margin-bottom: 20px; page-break-inside: avoid;">
+        The employment shall commence on
+        <strong>${data.startDate || "{{startDate}}"}</strong>
+        and shall continue unless terminated in accordance with this Agreement.
+      </p>
+
+      <p style="margin-bottom: 20px; page-break-inside: avoid;">
+        The Employee shall receive a salary of
+        <strong>${data.salary || "{{salary}}"}</strong>,
+        payable on a
+        <strong>${data.paymentCycle || "{{paymentCycle}}"}</strong>
+        basis.
+      </p>
+
+      <p style="margin-bottom: 20px; page-break-inside: avoid;">
+        The Employee agrees to perform duties diligently,
+        follow company policies, and act in the best interest of the Employer.
+      </p>
+
+      <p style="margin-bottom: 20px; page-break-inside: avoid;">
+        The Employer reserves the right to terminate employment with
+        <strong>${data.noticePeriod || "{{noticePeriod}}"}</strong>
+        written notice, subject to applicable labor laws.
+      </p>
+
+      <p style="margin-bottom: 20px; page-break-inside: avoid;">
+        All confidential information accessed during employment
+        shall remain strictly protected even after termination.
+      </p>
+
+      <p style="margin-bottom: 0; page-break-inside: avoid;">
+        Both parties agree that this contract represents the full agreement
+        between them and is legally binding.
+      </p>
+    `
+  );
+}
+
 export default function manualGenerateDocument(
   template: string,
   formData: FormData
@@ -399,7 +459,11 @@ export default function manualGenerateDocument(
     case "Contractor Agreement":
       return contractorTemplate(formData);
 
+    // ✅ NEW ADDED
+    case "Employment Contract":
+      return employmentContractTemplate(formData);
+
     default:
       return "<p>Template not found</p>";
   }
-}                                                                           
+}                                                                         
