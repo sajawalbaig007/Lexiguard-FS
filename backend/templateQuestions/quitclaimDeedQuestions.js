@@ -1,4 +1,4 @@
-const quitclaimDeedQuestions = [
+ const quitclaimDeedQuestions = [
   {
     name: "grantorName",
     question: "Who currently owns the property and is transferring it?",
@@ -58,12 +58,7 @@ const quitclaimDeedQuestions = [
   {
     name: "consideration",
     question: "What is being given in exchange for the property?",
-    options: [
-      "Money",
-      "Gift (love and affection)",
-      "Family transfer",
-      "Other",
-    ],
+    options: ["Money", "Gift (love and affection)", "Family transfer", "Other"],
     example: "e.g., PKR 500,000 or 'Gift'",
     recommendation:
       "Clearly mention whether money is involved or if it is a gift. Even if no payment is made, writing 'love and affection' or 'gift' is important legally.",
@@ -109,6 +104,18 @@ const quitclaimDeedQuestions = [
     example: "e.g., 78 Model Town, Lahore",
     recommendation:
       "Provide the full address of the witness. This is important in case verification is needed later for legal purposes.",
+  },
+
+  // 🆕 NEW LOGO / IMAGE UPLOAD QUESTION
+  {
+    name: "logos",
+    question: "Do you want to upload logos or images for this document?",
+    type: "file",
+    multiple: true,
+    min: 2,
+    optional: true,
+    recommendation:
+      "Upload at least 2 logos or images (PNG/JPG). These will appear at the end of your final document for branding or verification purposes.",
   },
 ];
 
