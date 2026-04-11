@@ -402,4 +402,4 @@ export default function manualGenerateDocument(
     default:
       return "<p>Template not found</p>";
   }
-}
+}                                                                           
