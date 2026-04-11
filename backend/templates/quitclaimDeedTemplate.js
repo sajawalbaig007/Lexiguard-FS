@@ -1,4 +1,4 @@
- const quitclaimDeedTemplate = (data = {}) => {
+const quitclaimDeedTemplate = (data = {}) => {
   const today = new Date().toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "long",
@@ -7,210 +7,124 @@
 
   const template = `
   <div 
-    class="doc-container"
     style="
-      font-family: 'Times New Roman', Georgia, serif;
-      max-width: 820px;
+      font-family: 'Cambria', 'Times New Roman', Georgia, serif;
+      max-width: 850px;
       margin: auto;
-      padding: 60px 50px;
-      line-height: 1.9;
+      padding: 60px;
+      line-height: 1.95;
       color: #111;
       background: #fff;
-      box-sizing: border-box;
-      font-size: 15.5px;
+      font-size: 16px;
     "
   >
-
-    <style>
-      @media (max-width: 768px) {
-        .doc-container { padding: 20px !important; }
-        .doc-container h1 { font-size: 22px !important; }
-        .doc-container h3 { font-size: 15px !important; }
-        .doc-container p { font-size: 14px !important; }
-        .doc-flex { flex-direction: column !important; gap: 40px; }
-        .doc-col { width: 100% !important; }
-      }
-    </style>
 
     <!-- HEADER -->
     <h1 style="
       text-align:center;
-      font-size:30px;
-      letter-spacing:1.5px;
-      margin-bottom:20px;
-      font-weight:600;
+      font-size:28px;
+      margin-bottom:30px;
+      font-weight:700;
+      letter-spacing:1px;
     ">
       QUITCLAIM DEED
     </h1>
 
-    <p style="
-      text-align:center;
-      margin-bottom:30px;
-      font-size:14px;
-    ">
-      This Deed is executed on <strong>${today}</strong>
-    </p>
-
-    <p style="
-      text-align:center;
-      font-size:13px;
-      color:#444;
-      margin-bottom:50px;
-    ">
-      This instrument transfers any interest the Grantor may have in the property without warranties of title.
+    <p style="text-align:center; margin-bottom:40px;">
+      This Quitclaim Deed is made and executed on this <strong>${today}</strong>.
     </p>
 
     <!-- PARTIES -->
-    <h3 style="
-      font-size:15px;
-      margin-top:30px;
-      margin-bottom:10px;
-      font-weight:600;
-    ">
-      1. PARTIES
-    </h3>
+    <h3 style="margin-top:30px; font-weight:700;">1. PARTIES</h3>
     <p>
-      This Quitclaim Deed is made between <strong>{{grantorName}}</strong> (the “Grantor”) 
-      and <strong>{{granteeName}}</strong> (the “Grantee”).
+      This Quitclaim Deed is entered into by and between <strong>{{grantorName}}</strong>, hereinafter referred to as the “Grantor”, 
+      and <strong>{{granteeName}}</strong>, hereinafter referred to as the “Grantee”. The Grantor and Grantee may hereinafter collectively 
+      be referred to as the “Parties” and individually as a “Party”, where the context so requires.
     </p>
 
     <!-- PROPERTY -->
-    <h3 style="
-      font-size:15px;
-      margin-top:35px;
-      margin-bottom:10px;
-      font-weight:600;
-    ">
-      2. PROPERTY DESCRIPTION
-    </h3>
+    <h3 style="margin-top:35px; font-weight:700;">2. PROPERTY DESCRIPTION</h3>
     <p>
-      The property which is the subject of this Deed is situated at:
+      The immovable property which is the subject matter of this Deed is situated at <strong>{{propertyAddress}}</strong>, together with 
+      all rights, easements, privileges, and appurtenances whatsoever to the said property belonging or in any way appertaining thereto.
+    </p>
+
+    <p>
+      The legal description of the aforesaid property, insofar as the same is known or has been provided, is set out as follows:
       <br/><br/>
-      <strong>{{propertyAddress}}</strong>
-      <br/><br/>
-      <span style="display:block; margin-top:10px;">
-        Legal Description (if applicable):
-      </span>
-      <br/>
       {{legalDescription}}
     </p>
 
     <!-- TRANSFER -->
-    <h3 style="
-      font-size:15px;
-      margin-top:35px;
-      margin-bottom:10px;
-      font-weight:600;
-    ">
-      3. TRANSFER OF INTEREST
-    </h3>
+    <h3 style="margin-top:35px; font-weight:700;">3. CONVEYANCE AND TRANSFER</h3>
     <p>
-      The Grantor hereby releases, remises, and forever quitclaims unto the Grantee all rights, title, interest, and claim whatsoever in the above-described property.
-      <br/><br/>
-      This conveyance is made without any covenant, warranty, or representation of title.
+      The Grantor, for and in consideration of the sum stated herein and for other good and valuable consideration, the receipt and sufficiency 
+      of which is hereby acknowledged, does hereby remise, release, and forever quitclaim unto the Grantee all rights, title, interests, claims, 
+      and demands whatsoever, both at law and in equity, which the Grantor has or may have in and to the above-described property.
+    </p>
+
+    <p>
+      It is expressly understood and agreed that this conveyance transfers only such interest, if any, as the Grantor presently holds in the 
+      property, and shall not be construed as a representation that the Grantor possesses valid or marketable title thereto.
     </p>
 
     <!-- NO WARRANTY -->
-    <h3 style="
-      font-size:15px;
-      margin-top:35px;
-      margin-bottom:10px;
-      font-weight:600;
-    ">
-      4. NO WARRANTY
-    </h3>
+    <h3 style="margin-top:35px; font-weight:700;">4. ABSENCE OF WARRANTIES</h3>
     <p>
-      This Deed is made on an “as is” basis. The Grantor provides no assurance as to the validity or marketability of title.
-      The Grantee accepts the property subject to all existing matters including, without limitation, liens, charges, and encumbrances.
+      This Deed is executed and delivered without any covenant, warranty, or representation, express or implied, as to title, possession, 
+      encumbrances, or otherwise. The Grantee hereby accepts the property in its present condition, subject to all existing liens, charges, 
+      encumbrances, restrictions, easements, and other matters affecting title, whether known or unknown.
     </p>
 
     <!-- CONSIDERATION -->
-    <h3 style="
-      font-size:15px;
-      margin-top:35px;
-      margin-bottom:10px;
-      font-weight:600;
-    ">
-      5. CONSIDERATION
-    </h3>
+    <h3 style="margin-top:35px; font-weight:700;">5. CONSIDERATION</h3>
     <p>
-      The consideration for this transfer is stated as follows:
+      The consideration for this conveyance is stated as follows:
       <br/><br/>
       <strong>{{consideration}}</strong>
     </p>
 
     <!-- POSSESSION -->
-    <h3 style="
-      font-size:15px;
-      margin-top:35px;
-      margin-bottom:10px;
-      font-weight:600;
-    ">
-      6. POSSESSION
-    </h3>
+    <h3 style="margin-top:35px; font-weight:700;">6. POSSESSION</h3>
     <p>
-      Possession of the property shall pass to the Grantee upon execution of this Deed unless otherwise agreed in writing between the parties.
+      Vacant and peaceful possession of the property shall pass to the Grantee upon the execution and delivery of this Deed, unless otherwise 
+      agreed in writing between the Parties.
     </p>
 
-    <!-- TAXES / FEES -->
-    <h3 style="
-      font-size:15px;
-      margin-top:35px;
-      margin-bottom:10px;
-      font-weight:600;
-    ">
-      7. TAXES AND FEES
-    </h3>
+    <!-- TAXES -->
+    <h3 style="margin-top:35px; font-weight:700;">7. TAXES AND EXPENSES</h3>
     <p>
-      All applicable taxes, duties, registration fees, and associated charges arising from this conveyance shall be borne by:
+      All taxes, duties, registration fees, stamp duties, and any other governmental or administrative charges arising out of or in connection 
+      with this transaction shall be borne and paid by:
       <br/><br/>
       {{taxResponsibility}}
     </p>
 
-    <!-- GOVERNING LAW -->
-    <h3 style="
-      font-size:15px;
-      margin-top:35px;
-      margin-bottom:10px;
-      font-weight:600;
-    ">
-      8. GOVERNING LAW
-    </h3>
+    <!-- LAW -->
+    <h3 style="margin-top:35px; font-weight:700;">8. GOVERNING LAW</h3>
     <p>
-      This Deed shall be governed by and construed in accordance with the laws of <strong>{{governingLaw}}</strong>.
+      This Deed shall be governed by, and construed in accordance with, the laws of <strong>{{governingLaw}}</strong>, and the Parties hereby 
+      submit to the jurisdiction of the competent courts thereof.
     </p>
 
-    <!-- ENTIRE AGREEMENT -->
-    <h3 style="
-      font-size:15px;
-      margin-top:35px;
-      margin-bottom:10px;
-      font-weight:600;
-    ">
-      9. ENTIRE AGREEMENT
-    </h3>
+    <!-- ENTIRE -->
+    <h3 style="margin-top:35px; font-weight:700;">9. ENTIRE AGREEMENT</h3>
     <p>
-      This document constitutes the entire agreement between the parties and supersedes all prior negotiations, representations, or agreements, whether written or oral.
+      This Deed constitutes the entire agreement between the Parties with respect to the subject matter hereof and supersedes all prior 
+      negotiations, understandings, representations, and agreements, whether written or oral.
     </p>
 
     <!-- SIGNATURES -->
-    <h3 style="
-      font-size:15px;
-      margin-top:50px;
-      margin-bottom:25px;
-      font-weight:600;
-    ">
-      EXECUTION
-    </h3>
+    <h3 style="margin-top:50px; font-weight:700;">EXECUTION</h3>
 
-    <div class="doc-flex" style="display:flex; justify-content:space-between; margin-top:60px;">
-      <div class="doc-col" style="width:45%;">
-        <p><strong>Signed by the Grantor:</strong></p>
+    <div style="display:flex; justify-content:space-between; margin-top:60px;">
+      <div style="width:45%;">
+        <p><strong>Grantor</strong></p>
         <div style="border-bottom:1px solid #000;height:50px;margin-top:25px;"></div>
       </div>
 
-      <div class="doc-col" style="width:45%;">
-        <p><strong>Signed by the Grantee:</strong></p>
+      <div style="width:45%;">
+        <p><strong>Grantee</strong></p>
         <div style="border-bottom:1px solid #000;height:50px;margin-top:25px;"></div>
       </div>
     </div>
