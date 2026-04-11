@@ -1,5 +1,5 @@
 const quitclaimDeedTemplate = (data = {}) => {
-  const today = new Date().toLocaleDateString("en-GB", {
+  const today = data.executionDate || new Date().toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "long",
     year: "numeric",
@@ -11,8 +11,8 @@ const quitclaimDeedTemplate = (data = {}) => {
       font-family: 'Cambria', 'Times New Roman', Georgia, serif;
       max-width: 850px;
       margin: auto;
-      padding: 60px;
-      line-height: 1.95;
+      padding: 65px;
+      line-height: 2;
       color: #111;
       background: #fff;
       font-size: 16px;
@@ -20,82 +20,91 @@ const quitclaimDeedTemplate = (data = {}) => {
   >
 
     <!-- HEADER -->
-    <h1 style="
-      text-align:center;
-      font-size:28px;
-      margin-bottom:30px;
-      font-weight:700;
-      letter-spacing:1px;
-    ">
+    <h1 style="text-align:center; font-size:28px; margin-bottom:25px; font-weight:700; letter-spacing:1px;">
       QUITCLAIM DEED
     </h1>
 
     <p style="text-align:center; margin-bottom:40px;">
-      This Quitclaim Deed is made and executed on this <strong>${today}</strong>.
+      This Deed is made and executed on this <strong>${today}</strong>.
+    </p>
+
+    <!-- RECITAL -->
+    <p>
+      THIS DEED WITNESSES as follows, that the Grantor, being desirous of transferring whatever right, title, or interest 
+      may be vested in the property described herein, has agreed to convey the same to the Grantee upon the terms and 
+      conditions set forth in this instrument.
     </p>
 
     <!-- PARTIES -->
-    <h3 style="margin-top:30px; font-weight:700;">1. PARTIES</h3>
+    <h3 style="margin-top:35px; font-weight:700;">1. PARTIES</h3>
     <p>
-      This Quitclaim Deed is entered into by and between <strong>{{grantorName}}</strong>, hereinafter referred to as the “Grantor”, 
-      and <strong>{{granteeName}}</strong>, hereinafter referred to as the “Grantee”. The Grantor and Grantee may hereinafter collectively 
-      be referred to as the “Parties” and individually as a “Party”, where the context so requires.
+      This Quitclaim Deed is made between <strong>{{grantorName}}</strong>, residing at <strong>{{grantorAddress}}</strong>, 
+      (hereinafter referred to as the “Grantor”), and <strong>{{granteeName}}</strong>, residing at 
+      <strong>{{granteeAddress}}</strong>, (hereinafter referred to as the “Grantee”).
+    </p>
+
+    <p>
+      The expressions “Grantor” and “Grantee” shall, where the context admits, include their respective heirs, successors, 
+      assigns, legal representatives, and any persons deriving title under them.
     </p>
 
     <!-- PROPERTY -->
     <h3 style="margin-top:35px; font-weight:700;">2. PROPERTY DESCRIPTION</h3>
     <p>
-      The immovable property which is the subject matter of this Deed is situated at <strong>{{propertyAddress}}</strong>, together with 
-      all rights, easements, privileges, and appurtenances whatsoever to the said property belonging or in any way appertaining thereto.
+      The property forming the subject matter of this Deed is a <strong>{{propertyType}}</strong> situated at 
+      <strong>{{propertyAddress}}</strong>, bearing Title Number <strong>{{titleNumber}}</strong>, together with all 
+      buildings, fixtures, improvements, rights, easements, liberties, privileges, and appurtenances whatsoever attached thereto.
     </p>
 
     <p>
-      The legal description of the aforesaid property, insofar as the same is known or has been provided, is set out as follows:
+      The legal description of the said property is as follows:
       <br/><br/>
       {{legalDescription}}
     </p>
 
     <!-- TRANSFER -->
-    <h3 style="margin-top:35px; font-weight:700;">3. CONVEYANCE AND TRANSFER</h3>
+    <h3 style="margin-top:35px; font-weight:700;">3. CONVEYANCE AND QUITCLAIM</h3>
     <p>
-      The Grantor, for and in consideration of the sum stated herein and for other good and valuable consideration, the receipt and sufficiency 
-      of which is hereby acknowledged, does hereby remise, release, and forever quitclaim unto the Grantee all rights, title, interests, claims, 
-      and demands whatsoever, both at law and in equity, which the Grantor has or may have in and to the above-described property.
+      The Grantor, for and in consideration of the sum of <strong>{{consideration}}</strong>, the receipt and sufficiency 
+      of which is hereby acknowledged, does hereby remise, release, and forever quitclaim unto the Grantee all estate, 
+      right, title, interest, use, trust, property, claim, and demand whatsoever, both at law and in equity, which the 
+      Grantor now has or may at any time hereafter have in the said property.
     </p>
 
     <p>
-      It is expressly understood and agreed that this conveyance transfers only such interest, if any, as the Grantor presently holds in the 
-      property, and shall not be construed as a representation that the Grantor possesses valid or marketable title thereto.
+      It is expressly declared that this conveyance is made without any covenant or warranty of title, whether express 
+      or implied, and shall operate solely to pass such interest as the Grantor may possess at the time of execution 
+      of this Deed.
+    </p>
+
+    <!-- ENCUMBRANCES -->
+    <h3 style="margin-top:35px; font-weight:700;">4. EXISTING ENCUMBRANCES</h3>
+    <p>
+      The property is conveyed subject to the following encumbrances, restrictions, covenants, and matters affecting title:
+      <br/><br/>
+      {{encumbrances}}
     </p>
 
     <!-- NO WARRANTY -->
-    <h3 style="margin-top:35px; font-weight:700;">4. ABSENCE OF WARRANTIES</h3>
+    <h3 style="margin-top:35px; font-weight:700;">5. ABSENCE OF WARRANTIES</h3>
     <p>
-      This Deed is executed and delivered without any covenant, warranty, or representation, express or implied, as to title, possession, 
-      encumbrances, or otherwise. The Grantee hereby accepts the property in its present condition, subject to all existing liens, charges, 
-      encumbrances, restrictions, easements, and other matters affecting title, whether known or unknown.
-    </p>
-
-    <!-- CONSIDERATION -->
-    <h3 style="margin-top:35px; font-weight:700;">5. CONSIDERATION</h3>
-    <p>
-      The consideration for this conveyance is stated as follows:
-      <br/><br/>
-      <strong>{{consideration}}</strong>
+      The Grantor makes no representation or warranty whatsoever as to the condition of the property, the state of title, 
+      or the existence or absence of any encumbrances. The Grantee expressly agrees to accept the property in its present 
+      condition and at the Grantee’s sole risk.
     </p>
 
     <!-- POSSESSION -->
     <h3 style="margin-top:35px; font-weight:700;">6. POSSESSION</h3>
     <p>
-      Vacant and peaceful possession of the property shall pass to the Grantee upon the execution and delivery of this Deed, unless otherwise 
-      agreed in writing between the Parties.
+      Vacant possession of the property shall be delivered to the Grantee upon execution of this Deed unless otherwise 
+      agreed in writing. Any existing occupancies or tenancies shall remain subject to their respective terms.
     </p>
 
     <!-- TAXES -->
-    <h3 style="margin-top:35px; font-weight:700;">7. TAXES AND EXPENSES</h3>
+    <h3 style="margin-top:35px; font-weight:700;">7. TAXES AND CHARGES</h3>
     <p>
-      All taxes, duties, registration fees, stamp duties, and any other governmental or administrative charges arising out of or in connection 
-      with this transaction shall be borne and paid by:
+      All taxes, duties, stamp duties, registration fees, and other outgoings relating to the execution and registration 
+      of this Deed shall be borne and discharged by:
       <br/><br/>
       {{taxResponsibility}}
     </p>
@@ -103,30 +112,42 @@ const quitclaimDeedTemplate = (data = {}) => {
     <!-- LAW -->
     <h3 style="margin-top:35px; font-weight:700;">8. GOVERNING LAW</h3>
     <p>
-      This Deed shall be governed by, and construed in accordance with, the laws of <strong>{{governingLaw}}</strong>, and the Parties hereby 
-      submit to the jurisdiction of the competent courts thereof.
+      This Deed shall be governed by and construed in accordance with the laws of <strong>{{governingLaw}}</strong>, 
+      and the Parties hereby submit to the exclusive jurisdiction of the courts thereof.
     </p>
 
     <!-- ENTIRE -->
     <h3 style="margin-top:35px; font-weight:700;">9. ENTIRE AGREEMENT</h3>
     <p>
-      This Deed constitutes the entire agreement between the Parties with respect to the subject matter hereof and supersedes all prior 
-      negotiations, understandings, representations, and agreements, whether written or oral.
+      This Deed constitutes the entire agreement between the Parties relating to the subject matter herein and supersedes 
+      all prior agreements, negotiations, representations, or understandings, whether written or oral.
     </p>
 
-    <!-- SIGNATURES -->
-    <h3 style="margin-top:50px; font-weight:700;">EXECUTION</h3>
+    <!-- EXECUTION -->
+    <h3 style="margin-top:50px; font-weight:700;">10. EXECUTION</h3>
+    <p>
+      IN WITNESS WHEREOF, the Parties hereto have executed this Quitclaim Deed on the date first above written.
+    </p>
 
-    <div style="display:flex; justify-content:space-between; margin-top:60px;">
-      <div style="width:45%;">
-        <p><strong>Grantor</strong></p>
-        <div style="border-bottom:1px solid #000;height:50px;margin-top:25px;"></div>
-      </div>
+    <div style="margin-top:60px;">
+      <p><strong>Signed by the Grantor:</strong></p>
+      <div style="border-bottom:1px solid #000;height:50px;margin-top:20px;"></div>
+    </div>
 
-      <div style="width:45%;">
-        <p><strong>Grantee</strong></p>
-        <div style="border-bottom:1px solid #000;height:50px;margin-top:25px;"></div>
-      </div>
+    <div style="margin-top:50px;">
+      <p><strong>Signed by the Grantee:</strong></p>
+      <div style="border-bottom:1px solid #000;height:50px;margin-top:20px;"></div>
+    </div>
+
+    <!-- WITNESS -->
+    <div style="margin-top:60px;">
+      <p><strong>Witness Signature:</strong></p>
+      <div style="border-bottom:1px solid #000;height:50px;margin-top:20px;"></div>
+
+      <p style="margin-top:20px;">
+        Name: <strong>{{witnessName}}</strong><br/>
+        Address: <strong>{{witnessAddress}}</strong>
+      </p>
     </div>
 
   </div>
