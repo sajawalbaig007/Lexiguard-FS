@@ -106,17 +106,7 @@
       "Provide the full address of the witness. This is important in case verification is needed later for legal purposes.",
   },
 
-  // 🆕 NEW LOGO / IMAGE UPLOAD QUESTION
-  {
-    name: "logos",
-    question: "Do you want to upload logos or images for this document?",
-    type: "file",
-    multiple: true,
-    min: 2,
-    optional: true,
-    recommendation:
-      "Upload at least 2 logos or images (PNG/JPG). These will appear at the end of your final document for branding or verification purposes.",
-  },
+ 
 ];
 
 export default quitclaimDeedQuestions;
