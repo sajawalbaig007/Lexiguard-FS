@@ -18,15 +18,6 @@ const employmentContractTemplate = (data = {}) => {
       box-sizing: border-box;
     "
   >
-  <div class="doc-container" style="
-      font-family: Inter, system-ui, -apple-system, sans-serif;
-      width: 100%;
-      line-height: 1.8;
-      padding: 40px 50px;
-      color: #111827;
-      background: #ffffff;
-    ">
-
     <style>
       .section-title {
         margin-top: 32px;
@@ -65,107 +56,123 @@ const employmentContractTemplate = (data = {}) => {
       }
     </style>
 
-    <!-- HEADER -->
     <h1 style="text-align:center; font-size:28px; margin-bottom:10px;">
-      EMPLOYMENT CONTRACT
+      CONTRACT OF EMPLOYMENT
     </h1>
 
-    <p style="text-align:center; color:#555;">
-      This Agreement is made and entered into on <strong>${today}</strong>
+    <p style="text-align:center;">
+      This Agreement is made on <strong>${today}</strong> between:<br />
+      <strong>{{companyName}}</strong> ("the Company") with address at <strong>{{companyAddress}}</strong><br />
+      <strong>{{employeeName}}</strong> ("you") with address at <strong>{{employeeAddress}}</strong>
     </p>
 
     <p style="text-align:center; font-size:12px; color:#666;">
-      This Employment Contract sets out the terms and conditions of employment.
+      Important Note: This contract works alongside company policies ({{policyReference}}) which cover details like holidays, sickness, and bonuses. These are separate documents.
+      This agreement outlines the terms of your employment with the Company.
     </p>
 
-    <!-- PARTIES -->
-    <h3>Parties</h3>
+    <h3>Company policies</h3>
     <p>
-      This Employment Contract is entered into between 
-      <strong>{{employerName}}</strong> ("Employer") and 
-      <strong>{{employeeName}}</strong> ("Employee").
+      {{policyDetails}} contain information about your job, but they aren't considered part of this contract unless mentioned here. You'll receive a copy of these policies, which the Company may update from time to time.
     </p>
 
-    <!-- POSITION -->
-    <h3>1. Position</h3>
+    <h3>Start date</h3>
     <p>
-      The Employee is employed as <strong>{{jobTitle}}</strong>.
-      The Employee agrees to perform duties as assigned by the Employer.
+      Your employment with the Company starts <strong>{{startDate}}</strong>. Your continuous employment starts on the same date (previous jobs don't count).
     </p>
 
-    <!-- START DATE -->
-    <h3>2. Start Date</h3>
+    <h3>Probationary period (Optional)</h3>
     <p>
-      Employment shall commence on <strong>{{startDate}}</strong>.
+      The first <strong>{{probationPeriod}}</strong> of your employment are considered probationary. The Company can extend this period if needed to properly assess your performance. During probation, either side can terminate your employment with one week's written notice.
     </p>
 
-    <!-- COMPENSATION -->
-    <h3>3. Compensation</h3>
+    <h3>Job Title and duties</h3>
     <p>
-      The Employee shall be paid <strong>{{salary}}</strong>.
-      Payment shall be made on a <strong>{{paymentFrequency}}</strong> basis.
+      Your job title is <strong>{{jobTitle}}</strong>. Your job description and duties are included in this Agreement. The Company may ask you to perform other tasks as needed for business purposes.
     </p>
 
-    <!-- WORK HOURS -->
-    <h3>4. Working Hours</h3>
+    <h3>Work location</h3>
     <p>
-      The Employee is expected to work <strong>{{workingHours}}</strong>.
+      Your primary workplace will be <strong>{{workLocation}}</strong> (or the Company's main office) {{workLocationAlternative}}. You may be required to travel within the UK {{internationalTravel}} for work.
     </p>
 
-    <!-- DUTIES -->
-    <h3>5. Duties and Responsibilities</h3>
+    <h3>Salary</h3>
     <p>
-      The Employee shall:
-      <br /><br />
-      {{duties}}
+      Your annual salary is <strong>£{{salary}}</strong>. You'll be paid in equal <strong>{{paymentFrequency}}</strong> installments, in arrears, on or before the <strong>{{paymentDay}}</strong> by direct deposit to your bank account.
     </p>
 
-    <!-- CONFIDENTIALITY -->
-    <h3>6. Confidentiality</h3>
+    <h3>Overtime</h3>
     <p>
-      The Employee agrees not to disclose any confidential information obtained during employment.
+      {{overtimeTerms}}
     </p>
 
-    <!-- TERM -->
-    <h3>7. Term</h3>
+    <h3>Performance reviews (Optional)</h3>
     <p>
-      This Agreement shall continue for <strong>{{employmentType}}</strong>.
+      The Company will review your performance annually. Performance reviews are entirely at the Company's discretion, and the frequency may vary. Positive reviews may be used for pay raises, but don't guarantee them.
     </p>
 
-    <!-- TERMINATION -->
-    <h3>8. Termination</h3>
+    <h3>Pension & retirement</h3>
     <p>
-      Either party may terminate this Agreement by giving <strong>{{noticePeriod}}</strong> notice.
+      {{pensionTerms}}
     </p>
 
-    <!-- GOVERNING LAW -->
-    <h3>9. Governing Law</h3>
+    <h3>Work hours</h3>
     <p>
-      This Agreement shall be governed by the laws of 
-      <strong>{{governingLaw}}</strong>.
+      Your usual work hours are <strong>{{workHours}}</strong> Monday to Friday with a lunch break of at least <strong>{{lunchBreakMinutes}}</strong> minutes between <strong>{{lunchStart}}</strong> and <strong>{{lunchEnd}}</strong>. These hours may change to meet business needs. You may also be required to work additional hours to fulfill your job duties. The exact duration of these extra hours won't be predetermined.
     </p>
 
-    <!-- SIGNATURES -->
+    <h3>Holidays</h3>
+    <p>
+      The Company's holiday year runs from <strong>{{holidayYearStart}}</strong> to <strong>{{holidayYearEnd}}</strong>. Full-time staff get <strong>{{holidayDays}}</strong> paid holidays per year, including public and bank holidays (explained in clause 10.2 below). Part-time staff receive a pro-rated amount of holiday entitlement.
+    </p>
+
+    <h3>Public & bank holidays</h3>
+    <p>
+      The Company requires you to use some of your holiday entitlement (up to 8 days per year) for public and bank holidays that fall on your normal working days. Employees who work on public and bank holidays won't be required to use additional holiday time (subject to clause 10.3).
+    </p>
+
+    <h3>Taking holidays</h3>
+    <p>
+      Holidays can only be taken at times convenient to the Company and according to the rules in the {{holidayPolicyReference}}.
+    </p>
+
+    <h3>Holiday payout on termination</h3>
+    <p>
+      When your employment ends, you'll be paid for any unused holidays at a rate of 1/260th of your <strong>{{fteReference}}</strong> salary for each untaken day.
+    </p>
+
+    <h3>Further details</h3>
+    <p>
+      There are no terms applying to this Agreement which relate to the following:
+      <br />• The period for which the employment is intended to continue or the date when it is to end;
+      <br />• Any collective agreements which directly affect the terms and conditions of employment;
+      <br />• Work outside the United Kingdom.
+    </p>
+
+    <p style="margin-top: 40px; font-size: 12px; color: #666; border-top: 1px solid #ccc; padding-top: 20px;">
+      <strong>Disclaimer:</strong> This document is intended as a sample employment contract template and should not be taken as legal advice. We recommend that you consult with a solicitor to ensure this contract meets your specific needs and complies with all relevant UK employment laws.
+    </p>
+
     <h3>Signatures</h3>
-
     <div class="doc-flex">
       <div class="doc-col">
-        <p><strong>Employer Signature</strong></p>
+        <p><strong>For and on behalf of the Company</strong></p>
         <div style="border-bottom:1px solid #000;height:45px;margin-top:10px;"></div>
-        <p class="text">{{employerName}}</p>
+        <p class="text">{{companySignatory}}</p>
       </div>
-
       <div class="doc-col">
         <p><strong>Employee Signature</strong></p>
         <div style="border-bottom:1px solid #000;height:45px;margin-top:10px;"></div>
         <p class="text">{{employeeName}}</p>
       </div>
     </div>
-
   </div>
   `;
 
-  return template.replace(/{{(.*?)}}/g, (_, key) => data[key.trim()] ?? "");
+  return template.replace(/{{(.*?)}}/g, (_, key) => {
+    const trimmedKey = key.trim();
+    return data[trimmedKey] !== undefined ? data[trimmedKey] : `[${trimmedKey}]`;
+  });
 };
 
 export default employmentContractTemplate;

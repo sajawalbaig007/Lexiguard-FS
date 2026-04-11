@@ -39,86 +39,86 @@ import transcriptRequestQuestions from "./templateQuestions/transcriptRequestQue
 import employmentContractQuestions from "./templateQuestions/employmentContractQuestions.js";
 
 const templateRegistry = {
-  bill_of_sale: {
-    name: "Bill of Sale",
-    template: billOfSaleTemplate,
-    questions: billOfSaleQuestions,
-  },
-  business_contract: {
-    name: "Business Contract",
-    template: businessContractTemplate,
-    questions: businessContractQuestions,
-  },
-  child_travel_consent: {
-    name: "Child Travel Consent",
-    template: childTravelConsentTemplate,
-    questions: childTravelConsentQuestions,
-  },
-  contractor_agreement: {
-    name: "Independent Contractor Agreement",
-    template: contractorTemplate,
-    questions: contractorQuestions,
-  },
-  divorce_agreement: {
-    name: "Divorce Agreement",
-    template: divorceAgreementTemplate,
-    questions: divorceAgreementQuestions,
-  },
-  eviction_notice: {
-    name: "Eviction Notice",
-    template: evictionNoticeTemplate,
-    questions: evictionNoticeQuestions,
-  },
-  invoice: {
-    name: "Invoice",
-    template: invoiceTemplate,
-    questions: invoiceQuestions,
-  },
-  lease_agreement: {
-    name: "Lease Agreement",
-    template: leaseTemplate,
-    questions: leaseQuestions,
-  },
-  lease_termination: {
-    name: "Lease Termination Agreement",
-    template: leaseTerminationTemplate,
-    questions: leaseTerminationQuestions,
-  },
+  // bill_of_sale: {
+  //   name: "Bill of Sale",
+  //   template: billOfSaleTemplate,
+  //   questions: billOfSaleQuestions,
+  // },
+  // business_contract: {
+  //   name: "Business Contract",
+  //   template: businessContractTemplate,
+  //   questions: businessContractQuestions,
+  // },
+  // child_travel_consent: {
+  //   name: "Child Travel Consent",
+  //   template: childTravelConsentTemplate,
+  //   questions: childTravelConsentQuestions,
+  // },
+  // contractor_agreement: {
+  //   name: "Independent Contractor Agreement",
+  //   template: contractorTemplate,
+  //   questions: contractorQuestions,
+  // },
+  // divorce_agreement: {
+  //   name: "Divorce Agreement",
+  //   template: divorceAgreementTemplate,
+  //   questions: divorceAgreementQuestions,
+  // },
+  // eviction_notice: {
+  //   name: "Eviction Notice",
+  //   template: evictionNoticeTemplate,
+  //   questions: evictionNoticeQuestions,
+  // },
+  // invoice: {
+  //   name: "Invoice",
+  //   template: invoiceTemplate,
+  //   questions: invoiceQuestions,
+  // },
+  // lease_agreement: {
+  //   name: "Lease Agreement",
+  //   template: leaseTemplate,
+  //   questions: leaseQuestions,
+  // },
+  // lease_termination: {
+  //   name: "Lease Termination Agreement",
+  //   template: leaseTerminationTemplate,
+  //   questions: leaseTerminationQuestions,
+  // },
   nda: {
     name: "Non-Disclosure Agreement",
     template: ndaTemplate,
     questions: ndaQuestions,
   },
-  power_of_attorney: {
-    name: "Power of Attorney",
-    template: powerOfAttorneyTemplate,
-    questions: powerOfAttorneyQuestions,
-  },
-  property_management: {
-    name: "Property Management Agreement",
-    template: propertyManagementTemplate,
-    questions: propertyManagementQuestions,
-  },
-  quitclaim_deed: {
-    name: "Quitclaim Deed",
-    template: quitclaimDeedTemplate,
-    questions: quitclaimDeedQuestions,
-  },
-  resume: {
-    name: "Resume",
-    template: resumeTemplate,
-    questions: resumeQuestions,
-  },
-  room_rental_agreement: {
-    name: "Room Rental Agreement",
-    template: roomRentalTemplate,
-    questions: roomRentalQuestions,
-  },
-  transcript_request: {
-    name: "Transcript Request",
-    template: transcriptRequestTemplate,
-    questions: transcriptRequestQuestions,
-  },
+  // power_of_attorney: {
+  //   name: "Power of Attorney",
+  //   template: powerOfAttorneyTemplate,
+  //   questions: powerOfAttorneyQuestions,
+  // },
+  // property_management: {
+  //   name: "Property Management Agreement",
+  //   template: propertyManagementTemplate,
+  //   questions: propertyManagementQuestions,
+  // },
+  // quitclaim_deed: {
+  //   name: "Quitclaim Deed",
+  //   template: quitclaimDeedTemplate,
+  //   questions: quitclaimDeedQuestions,
+  // },
+  // resume: {
+  //   name: "Resume",
+  //   template: resumeTemplate,
+  //   questions: resumeQuestions,
+  // },
+  // room_rental_agreement: {
+  //   name: "Room Rental Agreement",
+  //   template: roomRentalTemplate,
+  //   questions: roomRentalQuestions,
+  // },
+  // transcript_request: {
+  //   name: "Transcript Request",
+  //   template: transcriptRequestTemplate,
+  //   questions: transcriptRequestQuestions,
+  // },
 
   // ✅ NEW ENTRY (ADDED)
   employment_contract: {

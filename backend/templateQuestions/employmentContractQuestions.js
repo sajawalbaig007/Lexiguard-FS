@@ -2,79 +2,92 @@ const employmentContractQuestions = [
   {
     name: "companyName",
     question: "What is the company's full legal name?",
-    example: "e.g., ABC Solutions Pvt Ltd",
-    recommendation:
-      "Enter the official registered company name. Avoid abbreviations unless legally registered.",
+    example: "e.g., ABC Solutions Ltd",
+    recommendation: "Enter the official registered company name as it appears on the contract.",
   },
   {
     name: "companyAddress",
     question: "What is the company's registered address?",
     example: "e.g., 123 Business Street, London, UK",
-    recommendation:
-      "Provide the full official business address where the company is registered.",
+    recommendation: "Provide the full official registered address of the company.",
   },
   {
     name: "employeeName",
-    question: "What is the employee’s full legal name?",
-    example: "e.g., Sarah Khan",
-    recommendation:
-      "Use the employee’s legal name exactly as shown on CNIC or passport.",
+    question: "What is the employee's full legal name?",
+    example: "e.g., John Smith",
+    recommendation: "Use the employee's full legal name as shown on official documents.",
   },
   {
     name: "employeeAddress",
-    question: "What is the employee’s residential address?",
-    example: "e.g., House 12, Street 5, Lahore",
-    recommendation:
-      "Enter the employee’s complete home address for legal identification.",
+    question: "What is the employee's residential address?",
+    example: "e.g., 45 Park Avenue, Manchester, UK",
+    recommendation: "Enter the employee's complete home address for correspondence.",
   },
   {
     name: "startDate",
-    question: "When will the employment start?",
-    example: "e.g., 01 January 2026",
-    recommendation:
-      "Enter the official joining date. This is also used as the continuous employment start date.",
+    question: "What is the employment start date?",
+    example: "e.g., 15 March 2026",
+    recommendation: "This date starts both employment and continuous employment period.",
   },
   {
     name: "probationPeriod",
     question: "What is the probation period?",
-    options: ["3 months", "6 months", "None"],
-    recommendation:
-      "Select probation duration. 3 months is most common for standard employment.",
+    example: "e.g., 3 months or 6 months",
+    recommendation: "Standard probation is 3 months. Leave as '3 months' if unsure.",
   },
   {
     name: "jobTitle",
-    question: "What is the employee’s job title?",
-    example: "e.g., Software Engineer",
-    recommendation:
-      "Clearly define the official job title used in HR records.",
+    question: "What is the employee's job title?",
+    example: "e.g., Marketing Manager",
+    recommendation: "Use the official job title that reflects the role and responsibilities.",
   },
   {
     name: "workLocation",
-    question: "Where is the employee's primary workplace?",
-    example: "e.g., Head Office, Karachi or Remote",
-    recommendation:
-      "Specify the main work location. You can also mention remote or hybrid if applicable.",
+    question: "What is the primary workplace address?",
+    example: "e.g., 123 Business Street, London, UK",
+    recommendation: "Enter the main office location where employee will primarily work.",
   },
   {
     name: "salary",
-    question: "What is the employee’s annual salary?",
-    example: "e.g., 120000",
-    recommendation:
-      "Enter numeric salary amount only. Currency is assumed in contract context.",
+    question: "What is the annual salary amount?",
+    example: "e.g., 35000",
+    recommendation: "Enter numeric amount only (e.g., 35000 for £35,000).",
   },
   {
-    name: "overtimePolicy",
+    name: "paymentFrequency",
+    question: "How often will the employee be paid?",
+    example: "e.g., monthly",
+    recommendation: "Standard is monthly. Other options: weekly, bi-weekly.",
+  },
+  {
+    name: "paymentDay",
+    question: "What day of the month is payday?",
+    example: "e.g., last day of each month",
+    recommendation: "Common options: last day of each month, 28th, or 30th.",
+  },
+  {
+    name: "overtimeTerms",
     question: "What is the overtime policy?",
-    options: ["No overtime pay", "Paid overtime with approval"],
-    recommendation:
-      "Select whether overtime is compensated or not. Keep it clear to avoid disputes.",
+    example: "e.g., You won't receive extra pay for working overtime.",
+    recommendation: "Option 1: No overtime pay. Option 2: Overtime with prior approval paid at current rate.",
+  },
+  {
+    name: "pensionTerms",
+    question: "What is the pension policy?",
+    example: "e.g., After three months of service, you can join the Company's pension scheme.",
+    recommendation: "Choose one: joining scheme, no scheme, complies with duties, specific scheme, or no retirement age.",
   },
   {
     name: "workHours",
     question: "What are the standard working hours?",
-    example: "e.g., 9 AM to 5 PM, Monday to Friday",
-    recommendation:
-      "Define working hours and working days clearly to avoid confusion.",
+    example: "e.g., 9 am to 5.30 pm",
+    recommendation: "Specify start and end times including lunch break details.",
+  },
+  {
+    name: "holidayDays",
+    question: "How many paid holiday days per year?",
+    example: "e.g., 28",
+    recommendation: "Standard full-time UK entitlement is 28 days including bank holidays.",
   },
 ];
 
