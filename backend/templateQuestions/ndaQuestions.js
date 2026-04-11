@@ -1,26 +1,5 @@
 const ndaQuestions = [
   {
-    name: "day",
-    question: "Enter the day of the agreement",
-    example: "e.g., 11",
-    recommendation:
-      "Enter only the numeric day (1–31). Make sure it matches the actual signing date of the agreement.",
-  },
-  {
-    name: "month",
-    question: "Enter the month of the agreement",
-    example: "e.g., April",
-    recommendation:
-      "Write the full month name (e.g., January, February). Avoid short forms like 'Apr' to maintain a formal legal format.",
-  },
-  {
-    name: "year",
-    question: "Enter the year of the agreement",
-    example: "e.g., 2026",
-    recommendation:
-      "Use the full 4-digit year. This ensures clarity and avoids ambiguity in legal interpretation.",
-  },
-  {
     name: "discloserName",
     question: "What is the Disclosing Party's full name or company name?",
     example: "e.g., ABC Technologies Ltd.",

@@ -1,4 +1,11 @@
 const ndaTemplate = (data = {}) => {
+
+  // ✅ AUTO DATE
+  const today = new Date();
+  const day = String(today.getDate()).padStart(2, "0");
+  const month = today.toLocaleString("en-GB", { month: "long" });
+  const year = today.getFullYear();
+
   const template = `
   <div 
     class="doc-container"
@@ -55,8 +62,8 @@ const ndaTemplate = (data = {}) => {
 
     <p class="text">
       This Agreement is made and entered into as of this 
-      <strong>{{day}}</strong> day of <strong>{{month}}</strong>, 
-      <strong>{{year}}</strong> ("Effective Date") between 
+      <strong>${day}</strong> day of <strong>${month}</strong>, 
+      <strong>${year}</strong> ("Effective Date") between 
       <strong>{{discloserName}}</strong> ("Discloser") and 
       <strong>{{recipientName}}</strong> ("Recipient").
     </p>
@@ -167,17 +174,25 @@ const ndaTemplate = (data = {}) => {
       The Recipient agrees to comply with GDPR and data protection laws.
     </p>
 
-    <!-- SIGNATURE -->
-    <div class="doc-flex">
+    <!-- SIGNATURE (UPDATED UI) -->
+    <div class="doc-flex" style="margin-top:60px;">
       <div class="doc-col">
         <p><strong>COMPANY</strong></p>
-        <p>By: {{discloserRep}}</p>
+
+        <div style="border-bottom:1px solid #000; height:40px; margin-top:25px;"></div>
+        <p style="font-size:12px; color:#6b7280;">Signature</p>
+
+        <p style="margin-top:15px;">By: {{discloserRep}}</p>
         <p>Title: {{discloserTitle}}</p>
       </div>
 
       <div class="doc-col">
         <p><strong>RECIPIENT</strong></p>
-        <p>By: {{recipientRep}}</p>
+
+        <div style="border-bottom:1px solid #000; height:40px; margin-top:25px;"></div>
+        <p style="font-size:12px; color:#6b7280;">Signature</p>
+
+        <p style="margin-top:15px;">By: {{recipientRep}}</p>
         <p>Title: {{recipientTitle}}</p>
       </div>
     </div>

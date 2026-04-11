@@ -21,13 +21,6 @@ const employmentContractQuestions = [
       "Clearly define the job title. This helps avoid confusion about responsibilities and expectations.",
   },
   {
-    name: "startDate",
-    question: "When will the employee start working?",
-    example: "e.g., 01 May 2026",
-    recommendation:
-      "Enter the official joining date. This is important for salary, benefits, and legal records.",
-  },
-  {
     name: "salary",
     question: "What is the employee’s salary?",
     example: "e.g., PKR 120,000 per month",
