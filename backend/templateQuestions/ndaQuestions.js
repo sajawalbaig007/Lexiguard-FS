@@ -1,15 +1,11 @@
- const ndaQuestions = [
-  {
-    name: "date",
-    question: "What is the agreement date?",
-  },
+const ndaQuestions = [
   {
     name: "discloserName",
-    question: "What is the Disclosing Party's full name or company name?",
+    question: "Enter the full name or company name of the Disclosing Party.",
   },
   {
     name: "recipientName",
-    question: "What is the Receiving Party's full name or company name?",
+    question: "Enter the full name or company name of the Receiving Party.",
   },
   {
     name: "purpose",
@@ -17,27 +13,27 @@
   },
   {
     name: "confidentialScope",
-    question: "What type of information should be considered confidential?",
+    question: "Describe what information will be considered confidential.",
   },
   {
     name: "obligationsSummary",
-    question: "What obligations should the Recipient follow?",
+    question: "List the obligations the Recipient must follow.",
   },
   {
     name: "duration",
-    question: "What is the duration of confidentiality? (e.g., 2 years)",
+    question: "How long should confidentiality last? (e.g., 2 years, 5 years)",
   },
   {
     name: "consideration",
-    question: "Is there any payment or consideration involved?",
+    question: "What consideration (if any) supports this agreement?",
   },
   {
     name: "specialClauses",
-    question: "Any special clauses or additional terms? (optional)",
+    question: "Add any special terms or conditions (optional).",
   },
   {
     name: "governingLaw",
-    question: "Which law governs this agreement? (e.g., England and Wales)",
+    question: "Which jurisdiction or law governs this agreement?",
   },
 ];
 

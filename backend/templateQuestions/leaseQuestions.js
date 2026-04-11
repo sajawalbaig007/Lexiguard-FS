@@ -1,43 +1,39 @@
- const leaseQuestions = [
-  {
-    name: "date",
-    question: "What is the agreement date?",
-  },
+const leaseQuestions = [
   {
     name: "landlordName",
-    question: "What is the Landlord's full name?",
+    question: "Enter the full name of the Landlord.",
   },
   {
     name: "tenantName",
-    question: "What is the Tenant's full name?",
+    question: "Enter the full name of the Tenant.",
   },
   {
     name: "propertyAddress",
-    question: "What is the full address of the property?",
+    question: "Enter the full property address.",
   },
   {
     name: "leasePurpose",
-    question: "What is the purpose of the lease? (e.g., Residential or Commercial use)",
+    question: "What is the purpose of the lease? (Residential / Commercial / Other)",
   },
   {
     name: "duration",
-    question: "What is the lease duration? (e.g., 12 months)",
+    question: "Enter the lease duration (e.g., 12 months, 2 years).",
   },
   {
     name: "rentAmount",
-    question: "What is the rent amount? (e.g., £800 per month)",
+    question: "Enter the rent amount (e.g., 800, 1200).",
   },
   {
     name: "depositAmount",
-    question: "What is the security deposit amount?",
+    question: "Enter the security deposit amount.",
   },
   {
     name: "specialClauses",
-    question: "Any special clauses or additional terms? (optional)",
+    question: "Add any special terms or conditions (optional).",
   },
   {
     name: "governingLaw",
-    question: "Which law governs this agreement? (e.g., England and Wales)",
+    question: "Which law governs this agreement?",
   },
 ];
 

@@ -1,43 +1,39 @@
 const roomRentalQuestions = [
   {
-    name: "date",
-    question: "What is the agreement date?",
-  },
-  {
     name: "landlordName",
-    question: "What is the Landlord's full name?",
+    question: "Enter the full name of the Landlord.",
   },
   {
     name: "tenantName",
-    question: "What is the Tenant's full name?",
+    question: "Enter the full name of the Tenant.",
   },
   {
     name: "propertyAddress",
-    question: "What is the full property address?",
+    question: "Enter the full property address.",
   },
   {
     name: "roomDetails",
-    question: "Describe the room and shared areas (e.g., furnished room, kitchen access, bathroom, etc.)",
+    question: "Describe the room and shared facilities (e.g., furnished room, kitchen access, bathroom, etc.).",
   },
   {
     name: "duration",
-    question: "What is the rental duration? (e.g., 6 months)",
+    question: "Enter the rental duration (e.g., 6 months, 1 year).",
   },
   {
     name: "rentAmount",
-    question: "What is the monthly rent amount? (e.g., £500)",
+    question: "Enter the monthly rent amount (e.g., 500, 800).",
   },
   {
     name: "depositAmount",
-    question: "What is the security deposit amount?",
+    question: "Enter the security deposit amount.",
   },
   {
     name: "paymentTerms",
-    question: "What are the payment terms? (e.g., monthly, upfront, bank transfer)",
+    question: "Explain payment terms (e.g., monthly bank transfer, upfront payment).",
   },
   {
     name: "governingLaw",
-    question: "Which law governs this agreement? (e.g., England and Wales)",
+    question: "Which law governs this agreement?",
   },
 ];
 
