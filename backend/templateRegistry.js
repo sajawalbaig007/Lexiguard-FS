@@ -1,4 +1,4 @@
- import billOfSaleTemplate from "./templates/billOfSaleTemplate.js";
+import billOfSaleTemplate from "./templates/billOfSaleTemplate.js";
 import businessContractTemplate from "./templates/businessContractTemplate.js";
 import childTravelConsentTemplate from "./templates/childTravelConsentTemplate.js";
 import contractorTemplate from "./templates/contractorTemplate.js";
@@ -14,6 +14,9 @@ import quitclaimDeedTemplate from "./templates/quitclaimDeedTemplate.js";
 import resumeTemplate from "./templates/resumeTemplate.js";
 import roomRentalTemplate from "./templates/roomrentalTemplate.js";
 import transcriptRequestTemplate from "./templates/transcriptRequestTemplate.js";
+
+// ✅ NEW IMPORT (ADDED)
+import employmentContractTemplate from "./templates/employmentContractTemplate.js";
 
 import billOfSaleQuestions from "./templateQuestions/billOfSaleQuestions.js";
 import businessContractQuestions from "./templateQuestions/businessContractQuestions.js";
@@ -31,6 +34,9 @@ import quitclaimDeedQuestions from "./templateQuestions/quitclaimDeedQuestions.j
 import resumeQuestions from "./templateQuestions/resumeQuestions.js";
 import roomRentalQuestions from "./templateQuestions/roomrentalQuestions.js";
 import transcriptRequestQuestions from "./templateQuestions/transcriptRequestQuestions.js";
+
+// ✅ NEW IMPORT (ADDED)
+import employmentContractQuestions from "./templateQuestions/employmentContractQuestions.js";
 
 const templateRegistry = {
   bill_of_sale: {
@@ -112,6 +118,13 @@ const templateRegistry = {
     name: "Transcript Request",
     template: transcriptRequestTemplate,
     questions: transcriptRequestQuestions,
+  },
+
+  // ✅ NEW ENTRY (ADDED)
+  employment_contract: {
+    name: "Employment Contract",
+    template: employmentContractTemplate,
+    questions: employmentContractQuestions,
   },
 };
 

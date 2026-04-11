@@ -182,8 +182,7 @@ const ndaTemplate = (data = {}) => {
         <div style="border-bottom:1px solid #000; height:40px; margin-top:25px;"></div>
         <p style="font-size:12px; color:#6b7280;">Signature</p>
 
-        <p style="margin-top:15px;">By: {{discloserRep}}</p>
-        <p>Title: {{discloserTitle}}</p>
+       
       </div>
 
       <div class="doc-col">
@@ -192,8 +191,7 @@ const ndaTemplate = (data = {}) => {
         <div style="border-bottom:1px solid #000; height:40px; margin-top:25px;"></div>
         <p style="font-size:12px; color:#6b7280;">Signature</p>
 
-        <p style="margin-top:15px;">By: {{recipientRep}}</p>
-        <p>Title: {{recipientTitle}}</p>
+       
       </div>
     </div>
 
