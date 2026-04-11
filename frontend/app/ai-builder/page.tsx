@@ -26,9 +26,7 @@ function AIChatPage() {
   const rawTemplate = params.get("template");
   const templateName = rawTemplate ? decodeURIComponent(rawTemplate) : null;
 
-  // ================= STATE =================
-  const fileInputRefs = useRef<(HTMLInputElement | null)[]>([]);
-
+  // ================= STATE ================= 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -42,6 +40,26 @@ function AIChatPage() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const currentQ = questions[currentIndex];
+
+  const convertLogoToBase64 = async (files: (File | null)[]) => {
+    const validFiles = files.filter(Boolean) as File[];
+
+    return Promise.all(
+      validFiles.map(
+        (file) =>
+          new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = reject;
+          })
+      )
+    );
+  };
+
+  
+
+ 
 
   // ================= INIT CHAT =================
   useEffect(() => {
@@ -162,6 +180,9 @@ function AIChatPage() {
   const handleClose = () => {
     router.back();
   };
+
+   
+ 
 
   // ================= UI =================
   return (
@@ -308,6 +329,8 @@ function AIChatPage() {
           </p>
         )}
       </div>
+
+     
 
       {/* PREVIEW */}
       {document && templateName && (

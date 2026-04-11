@@ -1,4 +1,4 @@
-const quitclaimDeedQuestions = [
+ const quitclaimDeedQuestions = [
   {
     name: "grantorName",
     question: "Who currently owns the property and is transferring it?",
@@ -58,12 +58,7 @@ const quitclaimDeedQuestions = [
   {
     name: "consideration",
     question: "What is being given in exchange for the property?",
-    options: [
-      "Money",
-      "Gift (love and affection)",
-      "Family transfer",
-      "Other",
-    ],
+    options: ["Money", "Gift (love and affection)", "Family transfer", "Other"],
     example: "e.g., PKR 500,000 or 'Gift'",
     recommendation:
       "Clearly mention whether money is involved or if it is a gift. Even if no payment is made, writing 'love and affection' or 'gift' is important legally.",
@@ -110,6 +105,8 @@ const quitclaimDeedQuestions = [
     recommendation:
       "Provide the full address of the witness. This is important in case verification is needed later for legal purposes.",
   },
+
+ 
 ];
 
 export default quitclaimDeedQuestions;

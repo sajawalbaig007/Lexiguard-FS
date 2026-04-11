@@ -1,9 +1,40 @@
- const quitclaimDeedTemplate = (data = {}) => {
+const quitclaimDeedTemplate = (data = {}) => {
   const today = new Date().toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "long",
     year: "numeric",
   });
+
+  // ================= LOGO SECTION (NEW - SAFE ADDITION) =================
+  const logos = Array.isArray(data.logos) ? data.logos : [];
+
+  const logoHtml =
+    logos.length > 0
+      ? `
+    <div style="
+      display:flex;
+      justify-content:center;
+      gap:20px;
+      margin-bottom:40px;
+      flex-wrap:wrap;
+    ">
+      ${logos
+        .map(
+          (logo) => `
+        <img 
+          src="${logo}" 
+          style="
+            max-height:80px;
+            max-width:160px;
+            object-fit:contain;
+          "
+        />
+      `
+        )
+        .join("")}
+    </div>
+  `
+      : "";
 
   const template = `
   <div 
@@ -18,6 +49,9 @@
       font-size: 16px;
     "
   >
+
+    <!-- LOGOS (NEW INSERTION - NO OTHER CHANGES) -->
+    ${logoHtml}
 
     <!-- HEADER -->
     <h1 style="
@@ -135,5 +169,4 @@
   return template.replace(/{{(.*?)}}/g, (_, key) => data[key.trim()] ?? "");
 };
 
-export default quitclaimDeedTemplate; 
- 
+export default quitclaimDeedTemplate;

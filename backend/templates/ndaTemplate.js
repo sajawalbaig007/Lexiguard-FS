@@ -1,35 +1,21 @@
 const ndaTemplate = (data = {}) => {
-  const today = new Date().toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
-
   const template = `
   <div 
     class="doc-container"
     style="
-      font-family: Georgia, 'Times New Roman', serif; 
-      max-width: 800px; 
-      margin: auto; 
-      padding: 40px;
-      line-height: 1.75; 
-      color: #222;
-      box-sizing: border-box;
-    "
-  >
-  <div class="doc-container" style="
       font-family: Inter, system-ui, -apple-system, sans-serif;
-      width: 100%;
-      line-height: 1.8;
+      max-width: 800px;
+      margin: auto;
       padding: 40px 50px;
+      line-height: 1.8;
       color: #111827;
       background: #ffffff;
-    ">
+    "
+  >
 
     <style>
       .section-title {
-        margin-top: 32px;
+        margin-top: 28px;
         font-size: 16px;
         font-weight: 600;
         border-bottom: 1px solid #e5e7eb;
@@ -55,277 +41,150 @@ const ndaTemplate = (data = {}) => {
 
       @media (max-width: 768px) {
         .doc-container { padding: 12px !important; }
-        .doc-container h1 { font-size: 22px !important; text-align: center !important; }
-        .doc-container h3 { font-size: 16px !important; }
-        .doc-container p { font-size: 14px !important; }
-        .doc-flex { flex-direction: column !important; gap: 30px; }
+        .doc-flex { flex-direction: column !important; }
         .doc-col { width: 100% !important; }
-        .doc-container h1 {
-          font-size: 20px !important;
-        }
-        .section-title {
-          font-size: 15px !important;
-        }
-        .text {
-          font-size: 13px !important;
-        }
-        .doc-flex {
-          flex-direction: column !important;
-        }
-        .doc-col {
-          width: 100% !important;
-        }
       }
     </style>
 
     <!-- HEADER -->
-    <h1 style="text-align:center; font-size:28px; margin-bottom:10px;">
-      NON-DISCLOSURE AGREEMENT (NDA)
-    </h1>
-
-    <p style="text-align:center; color:#555;">
-      This Agreement is made and entered into on <strong>${today}</strong>
-    </p>
-
-    <p style="text-align:center; font-size:12px; color:#666;">
-      This Agreement is intended to protect confidential information shared between parties.
-    </p>
-
-    <!-- PARTIES -->
-    <h3>Parties</h3>
-    <p>
-      This Non-Disclosure Agreement ("Agreement") is entered into between
-      <strong>{{discloserName}}</strong> ("Discloser") and
-      <strong>{{recipientName}}</strong> ("Recipient").
-      Both parties agree to be legally bound by the terms of this Agreement.
-    </p>
-
-    <!-- PURPOSE -->
-    <h3>1. Purpose</h3>
-    <p>
-      The purpose of this Agreement is to allow the parties to engage in discussions and evaluate a potential business relationship regarding the following:
-      <br /><br />
-      {{purpose}}
-      <br /><br />
-      In connection with this purpose, the Discloser may share confidential and sensitive information.
-    </p>
-
-    <!-- CONFIDENTIAL INFO -->
-    <h3>2. Definition of Confidential Information</h3>
-    <p>
-      Confidential Information includes any data or information disclosed by the Discloser, whether written, oral, digital, or otherwise, including but not limited to:
-      <br /><br />
-      {{confidentialScope}}
-      <br /><br />
-      Such information shall be treated as strictly confidential regardless of form or format.
-    </p>
-
-    <!-- OBLIGATIONS -->
-    <h3>3. Obligations of the Recipient</h3>
-    <p>
-      The Recipient agrees to:
-      <br /><br />
-      {{obligationsSummary}}
-      <br /><br />
-      The Recipient shall take all reasonable steps to protect Confidential Information from unauthorized access, use, or disclosure.
-    </p>
-
-    <!-- EXCLUSIONS -->
-    <h3>4. Exclusions</h3>
-    <p>
-      Confidential Information shall not include information that:
-      <br /><br />
-      (a) is publicly available without breach of this Agreement;  
-      (b) is lawfully received from a third party without restriction; or  
-      (c) is independently developed without use of Confidential Information.
-    </p>
-
-    <!-- TERM -->
-    <h3>5. Term</h3>
-    <p>
-      This Agreement shall remain in effect for a period of <strong>{{duration}}</strong>.
-      Confidentiality obligations shall survive termination as required under this Agreement.
-    <div style="text-align:center; margin-bottom:40px;">
-      <h1 style="font-size:26px;font-weight:600;margin-bottom:8px;">
+    <div style="text-align:center; margin-bottom:30px;">
+      <h1 style="font-size:26px;font-weight:600;">
         NON-DISCLOSURE AGREEMENT (NDA)
       </h1>
-      <p style="color:#6b7280;font-size:13px;">
-        Date of Agreement: <strong>${today}</strong>
-      </p>
-      <p style="color:#6b7280;font-size:12px; margin-top:6px;">
-        This Non-Disclosure Agreement ("Agreement") is a legally binding contract entered into under applicable confidentiality and contract laws.
-      </p>
     </div>
 
-    <!-- 1. Parties -->
-    <h2 class="section-title">1. Parties</h2>
     <p class="text">
-      This Agreement is made between <strong>{{discloserName}}</strong> ("Disclosing Party") 
-      and <strong>{{recipientName}}</strong> ("Receiving Party").
+      This Agreement is made and entered into as of this 
+      <strong>{{day}}</strong> day of <strong>{{month}}</strong>, 
+      <strong>{{year}}</strong> ("Effective Date") between 
+      <strong>{{discloserName}}</strong> ("Discloser") and 
+      <strong>{{recipientName}}</strong> ("Recipient").
     </p>
 
-    <!-- 2. Purpose of Disclosure -->
-    <h2 class="section-title">2. Purpose of Disclosure</h2>
+    <h2 class="section-title">I. BACKGROUND</h2>
     <p class="text">
-      The purpose of this Agreement is:
-      <strong>{{purpose}}</strong>
+      The Discloser and the Recipient wish to disclose certain confidential information to each other for the purpose of 
+      <strong>{{purpose}}</strong> (the "Purpose"). 
+      The parties agree to protect this information as set out below.
     </p>
+
+    <h2 class="section-title">II. AGREEMENT</h2>
+
+    <h3 class="section-title">1. Confidential Information</h3>
     <p class="text">
-      The Parties wish to exchange confidential information for the above purpose only.
+      "Confidential Information" means any information (including, without limitation, data, documents, images, prototypes, designs, plans, drawings, trade secrets, business strategies, financial data, or other materials, including combinations of individual items of information) disclosed by the Discloser to the Recipient before, on, or after the Effective Date, whether in written, oral, visual, electronic, or other form, and whether or not explicitly designated as "confidential" at the time of disclosure.
     </p>
 
-    <!-- 3. Definition of Confidential Information -->
-    <h2 class="section-title">3. Definition of Confidential Information</h2>
     <p class="text">
-      Confidential Information includes but is not limited to:
+      Confidential Information may also include information of a third party that is in the Discloser's possession and disclosed to the Recipient under this Agreement.
     </p>
+
     <p class="text">
-      <strong>{{confidentialScope}}</strong>
+      Confidential Information does not include information that the Recipient can establish:
+      <br>(a) was publicly known and made generally available in the public domain prior to the time of disclosure;
+      <br>(b) becomes publicly known and made generally available after disclosure through no action or inaction of the Recipient;
+      <br>(c) is in the possession of the Recipient, without confidentiality obligations, prior to the time of disclosure;
+      <br>(d) is disclosed to the Recipient by a third party without breaching any obligations of confidentiality; or
+      <br>(e) is independently developed by the Recipient without the use of or reference to the Discloser's Confidential Information.
     </p>
+
     <p class="text">
-      This includes business data, technical data, financial information, trade secrets, and any information marked or reasonably understood as confidential.
+      If the Recipient becomes legally compelled to disclose any Confidential Information, the Recipient shall provide the Discloser with prompt written notice and assist the Discloser in seeking a protective order or another appropriate remedy.
     </p>
 
-    <!-- 4. Obligations of Receiving Party -->
-    <h2 class="section-title">4. Obligations of Receiving Party</h2>
-    <p class="text">The Receiving Party agrees to:</p>
-    <p class="text"><strong>{{obligationsSummary}}</strong></p>
-    <p class="text">In addition, the Receiving Party shall:</p>
-    <ul class="text" style="margin-top: 5px; padding-left: 20px;">
-      <li>Protect confidential information using reasonable security measures</li>
-      <li>Restrict access to authorised personnel only</li>
-      <li>Not disclose information to any third party without written consent</li>
-      <li>Use the information solely for the stated purpose</li>
-    </ul>
-
-    <!-- 5. Exclusions -->
-    <h2 class="section-title">5. Exclusions</h2>
-    <p class="text">Confidential Information does not include information that:</p>
-    <ul class="text" style="margin-top: 5px; padding-left: 20px;">
-      <li>Is publicly available without breach of this Agreement</li>
-      <li>Was already known before disclosure</li>
-      <li>Is independently developed without use of confidential data</li>
-      <li>Is required to be disclosed by law or court order</li>
-    </ul>
-
-    <!-- 6. Term and Duration -->
-    <h2 class="section-title">6. Term and Duration</h2>
+    <h3 class="section-title">2. Non-Use and Non-Disclosure & Non-Solicitation</h3>
     <p class="text">
-      This Agreement shall remain in effect for <strong>{{duration}}</strong>.
+      The Recipient agrees not to use the Confidential Information for any purpose other than evaluating and discussing the potential business relationship with the Discloser.
     </p>
+
     <p class="text">
-      Confidentiality obligations shall survive termination of this Agreement.
+      The Recipient agrees not to solicit any employees, customers, or suppliers of the Discloser for a period of 
+      <strong>{{nonSolicitPeriod}}</strong>.
     </p>
 
-    <!-- CONSIDERATION -->
-    <h3>6. Consideration</h3>
-    <p>
-      The parties acknowledge that the exchange of confidential information and mutual obligations constitute sufficient legal consideration.
-      <br /><br />
-      Additional consideration (if any):
-      <strong>{{consideration}}</strong>
-    </p>
-
-    <!-- GOVERNING LAW -->
-    <h3>7. Governing Law</h3>
-    <p>
-      This Agreement shall be governed by and interpreted in accordance with the laws of
-      <strong>{{governingLaw}}</strong>.
-      <br /><br />
-      The parties agree to submit to the jurisdiction of the competent courts.
-    </p>
-
-    <!-- SPECIAL TERMS -->
-    <h3>8. Special Conditions</h3>
-    <p>{{specialClauses}}</p>
-
-    <!-- TERMINATION -->
-    <h3>9. Termination</h3>
-    <p>
-      Either party may terminate this Agreement by providing written notice.
-      <br /><br />
-      All confidentiality obligations shall survive termination indefinitely unless otherwise agreed.
-    </p>
-
-    <!-- ENTIRE AGREEMENT -->
-    <h3>10. Entire Agreement</h3>
-    <p>
-      This Agreement constitutes the entire understanding between the parties and supersedes all prior agreements or discussions.
-      <br /><br />
-      If any provision is found invalid, the remaining provisions shall remain fully enforceable.
-    </p>
-
-    <!-- SIGNATURES -->
-    <h3>Signatures</h3>
-
-    <div class="doc-flex" style="display:flex; justify-content:space-between; margin-top:40px;">
-      <div class="doc-col">
-        <p><strong>Discloser Signature</strong></p>
-        <div style="border-bottom:1px solid #000;height:45px;margin-top:10px;"></div>
-      </div>
-
-      <div class="doc-col">
-        <p><strong>Recipient Signature</strong></p>
-        <div style="border-bottom:1px solid #000;height:45px;margin-top:10px;"></div>
-    <!-- 7. Consideration -->
-    <h2 class="section-title">7. Consideration</h2>
+    <h3 class="section-title">3. Maintenance of Confidentiality</h3>
     <p class="text">
-      Any consideration or value exchanged under this Agreement:
-      <strong>{{consideration}}</strong>
+      The Recipient agrees to take all reasonable measures to protect the secrecy of the Confidential Information.
     </p>
 
-    <!-- 8. Return or Destruction of Information -->
-    <h2 class="section-title">8. Return or Destruction of Information</h2>
+    <h3 class="section-title">4. No Obligation</h3>
     <p class="text">
-      Upon request or termination, the Receiving Party shall immediately return or destroy all confidential materials and certify the same in writing.
+      Nothing in this Agreement obligates either party to proceed with any transaction.
     </p>
 
-    <!-- 9. Liability and Remedies -->
-    <h2 class="section-title">9. Liability and Remedies</h2>
+    <h3 class="section-title">5. No Warranty</h3>
     <p class="text">
-      Any breach of this Agreement may cause irreparable harm, and the Disclosing Party shall be entitled to legal remedies including injunctive relief and damages.
+      All Confidential Information is provided "AS IS".
     </p>
 
-    <!-- 10. No License -->
-    <h2 class="section-title">10. No License</h2>
+    <h3 class="section-title">6. Return of Materials</h3>
     <p class="text">
-      Nothing in this Agreement grants any ownership, license, or rights to intellectual property except as expressly stated.
+      All materials must be returned or destroyed upon request.
     </p>
 
-    <!-- 11. Governing Law -->
-    <h2 class="section-title">11. Governing Law</h2>
+    <h3 class="section-title">7. No Licence</h3>
     <p class="text">
-      This Agreement shall be governed by the laws of <strong>{{jurisdiction}}</strong>.
+      Nothing grants rights to intellectual property.
     </p>
 
-    <!-- 12. Force Majeure -->
-    <h2 class="section-title">12. Force Majeure</h2>
+    <h3 class="section-title">8. Term</h3>
     <p class="text">
-      Neither party shall be liable for delays or failure caused by events beyond reasonable control including natural disasters, war, or governmental actions.
+      This Agreement shall remain in effect until information becomes public.
     </p>
 
-    <!-- 13. Entire Agreement -->
-    <h2 class="section-title">13. Entire Agreement</h2>
+    <h3 class="section-title">9. Remedies</h3>
     <p class="text">
-      This Agreement constitutes the entire understanding between the parties and supersedes all prior agreements.
+      Breach may result in legal remedies including injunction.
     </p>
 
-    <!-- SIGNATURES -->
-    <h2 class="section-title">Signatures</h2>
+    <h3 class="section-title">10. Recipient Information</h3>
+    <p class="text">
+      Feedback related to <strong>{{product}}</strong> becomes property of Discloser.
+    </p>
 
+    <h3 class="section-title">11. Binding Agreement</h3>
+    <p class="text">
+      This Agreement binds successors.
+    </p>
+
+    <h3 class="section-title">12. Governing Law</h3>
+    <p class="text">
+      Governed by England and Wales courts in <strong>{{city}}</strong>.
+    </p>
+
+    <h3 class="section-title">13. Entire Agreement</h3>
+    <p class="text">
+      This is the complete agreement.
+    </p>
+
+    <h3 class="section-title">14. Disclosure of Illegal Acts</h3>
+    <p class="text">
+      This Agreement does not restrict lawful disclosures.
+    </p>
+
+    <h3 class="section-title">15. Data Protection Compliance</h3>
+    <p class="text">
+      The Recipient agrees to comply with GDPR and data protection laws.
+    </p>
+
+    <!-- SIGNATURE -->
     <div class="doc-flex">
       <div class="doc-col">
-        <p><strong>Disclosing Party</strong></p>
-        <div style="border-bottom:1px solid #111;height:30px;margin-top:20px;"></div>
-        <p class="text">{{discloserName}}</p>
+        <p><strong>COMPANY</strong></p>
+        <p>By: {{discloserRep}}</p>
+        <p>Title: {{discloserTitle}}</p>
       </div>
 
       <div class="doc-col">
-        <p><strong>Receiving Party</strong></p>
-        <div style="border-bottom:1px solid #111;height:30px;margin-top:20px;"></div>
-        <p class="text">{{recipientName}}</p>
+        <p><strong>RECIPIENT</strong></p>
+        <p>By: {{recipientRep}}</p>
+        <p>Title: {{recipientTitle}}</p>
       </div>
     </div>
+
+    <p class="text" style="margin-top:30px; font-size:12px; color:#6b7280;">
+      Disclaimer: This document is intended as a template and does not constitute legal advice.
+    </p>
 
   </div>
   `;
