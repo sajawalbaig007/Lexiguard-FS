@@ -6,7 +6,6 @@ const ndaTemplate = (data = {}) => {
   });
 
   const template = `
-<<<<<<< HEAD
   <div 
     class="doc-container"
     style="
@@ -19,7 +18,6 @@ const ndaTemplate = (data = {}) => {
       box-sizing: border-box;
     "
   >
-=======
   <div class="doc-container" style="
       font-family: Inter, system-ui, -apple-system, sans-serif;
       width: 100%;
@@ -28,7 +26,6 @@ const ndaTemplate = (data = {}) => {
       color: #111827;
       background: #ffffff;
     ">
->>>>>>> 9759c9bc000f5e6fe621cbaa4fe61274d8c744e0
 
     <style>
       .section-title {
@@ -57,14 +54,12 @@ const ndaTemplate = (data = {}) => {
       }
 
       @media (max-width: 768px) {
-<<<<<<< HEAD
         .doc-container { padding: 12px !important; }
         .doc-container h1 { font-size: 22px !important; text-align: center !important; }
         .doc-container h3 { font-size: 16px !important; }
         .doc-container p { font-size: 14px !important; }
         .doc-flex { flex-direction: column !important; gap: 30px; }
         .doc-col { width: 100% !important; }
-=======
         .doc-container h1 {
           font-size: 20px !important;
         }
@@ -80,12 +75,10 @@ const ndaTemplate = (data = {}) => {
         .doc-col {
           width: 100% !important;
         }
->>>>>>> 9759c9bc000f5e6fe621cbaa4fe61274d8c744e0
       }
     </style>
 
     <!-- HEADER -->
-<<<<<<< HEAD
     <h1 style="text-align:center; font-size:28px; margin-bottom:10px;">
       NON-DISCLOSURE AGREEMENT (NDA)
     </h1>
@@ -152,7 +145,6 @@ const ndaTemplate = (data = {}) => {
     <p>
       This Agreement shall remain in effect for a period of <strong>{{duration}}</strong>.
       Confidentiality obligations shall survive termination as required under this Agreement.
-=======
     <div style="text-align:center; margin-bottom:40px;">
       <h1 style="font-size:26px;font-weight:600;margin-bottom:8px;">
         NON-DISCLOSURE AGREEMENT (NDA)
@@ -220,13 +212,11 @@ const ndaTemplate = (data = {}) => {
     <h2 class="section-title">6. Term and Duration</h2>
     <p class="text">
       This Agreement shall remain in effect for <strong>{{duration}}</strong>.
->>>>>>> 9759c9bc000f5e6fe621cbaa4fe61274d8c744e0
     </p>
     <p class="text">
       Confidentiality obligations shall survive termination of this Agreement.
     </p>
 
-<<<<<<< HEAD
     <!-- CONSIDERATION -->
     <h3>6. Consideration</h3>
     <p>
@@ -277,7 +267,6 @@ const ndaTemplate = (data = {}) => {
       <div class="doc-col">
         <p><strong>Recipient Signature</strong></p>
         <div style="border-bottom:1px solid #000;height:45px;margin-top:10px;"></div>
-=======
     <!-- 7. Consideration -->
     <h2 class="section-title">7. Consideration</h2>
     <p class="text">
@@ -335,7 +324,6 @@ const ndaTemplate = (data = {}) => {
         <p><strong>Receiving Party</strong></p>
         <div style="border-bottom:1px solid #111;height:30px;margin-top:20px;"></div>
         <p class="text">{{recipientName}}</p>
->>>>>>> 9759c9bc000f5e6fe621cbaa4fe61274d8c744e0
       </div>
     </div>
 

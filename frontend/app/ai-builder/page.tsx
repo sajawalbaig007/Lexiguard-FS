@@ -8,30 +8,37 @@ import DocumentPreviewModal from "@/components/DocumentPreviewModal";
 type Question = {
   name: string;
   question: string;
+  example?: string;
+  recommendation?: string;
+  options?: string[];
 };
 
 type Message = {
   role: "ai" | "user";
   content: string;
+  meta?: Question;
 };
 
 function AIChatPage() {
   const router = useRouter();
   const params = useSearchParams();
 
-  // ✅ FIXED (safe null handling)
   const rawTemplate = params.get("template");
   const templateName = rawTemplate ? decodeURIComponent(rawTemplate) : null;
 
   // ================= STATE =================
+  const fileInputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
   const [questions, setQuestions] = useState<Question[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [answers, setAnswers] = useState<Record<string, any>>({});
   const [input, setInput] = useState("");
   const [document, setDocument] = useState("");
   const [loadingDoc, setLoadingDoc] = useState(false);
   const [loadingQuestions, setLoadingQuestions] = useState(true);
+
+  const [showHelp, setShowHelp] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const currentQ = questions[currentIndex];
@@ -60,9 +67,7 @@ function AIChatPage() {
       try {
         setLoadingQuestions(true);
 
-        console.time("fetchQuestions");
         const data = await fetchQuestions(templateName as string);
-        console.timeEnd("fetchQuestions");
 
         if (!Array.isArray(data)) {
           throw new Error("Invalid questions format");
@@ -75,6 +80,7 @@ function AIChatPage() {
           {
             role: "ai",
             content: data[0]?.question || "Let's begin.",
+            meta: data[0],
           },
         ]);
       } catch (err) {
@@ -99,17 +105,16 @@ function AIChatPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // ================= MESSAGE HANDLER =================
-  const addMessage = (role: "ai" | "user", content: string) => {
-    setMessages((prev) => [...prev, { role, content }]);
+  const addMessage = (role: "ai" | "user", content: string, meta?: Question) => {
+    setMessages((prev) => [...prev, { role, content, meta }]);
   };
 
   // ================= NEXT =================
   const handleNext = async () => {
-    if (!input.trim() || !currentQ || loadingDoc) return;
+    if (!currentQ || loadingDoc) return;
+    if (!input.trim()) return;
 
     const userInput = input.trim();
-
     addMessage("user", userInput);
 
     const updatedAnswers = {
@@ -120,31 +125,26 @@ function AIChatPage() {
     setAnswers(updatedAnswers);
     setInput("");
 
-    // NEXT QUESTION
     if (currentIndex + 1 < questions.length) {
       const nextIndex = currentIndex + 1;
       setCurrentIndex(nextIndex);
 
       setTimeout(() => {
-        addMessage("ai", questions[nextIndex]?.question || "");
+        addMessage(
+          "ai",
+          questions[nextIndex]?.question || "",
+          questions[nextIndex]
+        );
       }, 300);
-    }
-
-    // GENERATE DOCUMENT
-    else {
-      if (!templateName) return;
+    } else {
+      setAnswers(updatedAnswers);
 
       setLoadingDoc(true);
       addMessage("ai", "📝 Generating your document...");
 
       try {
-        const res = await generateDocument(
-          templateName as string,
-          updatedAnswers
-        );
-
+        const res = await generateDocument(templateName!, updatedAnswers);
         setDocument(res?.document || "<p>Error generating document</p>");
-
         addMessage("ai", "✅ Document generated successfully!");
       } catch (err) {
         console.error(err);
@@ -166,12 +166,75 @@ function AIChatPage() {
   // ================= UI =================
   return (
     <div className="fixed inset-0 bg-white z-50 flex flex-col">
+
       {/* HEADER */}
       <div className="bg-gradient-to-r from-[#2F4EA1] to-[#4F6EDB] p-4 text-white flex justify-between items-center shadow">
+
         <div>
           <h2 className="font-semibold text-lg">🤖 AI Assistant</h2>
           <p className="text-xs opacity-80">{templateName}</p>
         </div>
+
+        {/* HELP BULB */}
+        <div className="relative ml-auto flex items-center gap-3">
+          <button
+            onClick={() => setShowHelp(!showHelp)}
+            className="text-4xl hover:scale-110 transition-transform drop-shadow-lg"
+          >
+            💡
+          </button>
+
+          {showHelp && currentQ && (
+            <div className="absolute right-0 top-12 w-80 z-50">
+              <div className="relative bg-white/90 backdrop-blur-xl border border-gray-200 shadow-2xl rounded-2xl p-5">
+
+                <button
+                  onClick={() => setShowHelp(false)}
+                  className="absolute top-2 right-2 text-gray-500 hover:text-red-500 text-lg font-bold"
+                >
+                  ✕
+                </button>
+
+                <div className="text-sm font-semibold text-gray-800 mb-3">
+                  💡 Help & Guidance
+                </div>
+
+                <div className="space-y-3 text-sm text-gray-700 leading-relaxed">
+
+                  {currentQ.example && (
+                    <div className="p-3 rounded-xl bg-blue-50 border border-blue-100">
+                      <div className="font-semibold text-blue-700 mb-1 text-sm">
+                        Example
+                      </div>
+                      <div className="text-base">
+                        {currentQ.example}
+                      </div>
+                    </div>
+                  )}
+
+                  {currentQ.recommendation && (
+                    <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-100">
+                      <div className="font-semibold text-emerald-700 mb-1 text-sm">
+                        Tip
+                      </div>
+                      <div className="text-base">
+                        {currentQ.recommendation}
+                      </div>
+                    </div>
+                  )}
+
+                  {!currentQ.example && !currentQ.recommendation && (
+                    <div className="text-gray-500 text-base">
+                      No guidance available for this question.
+                    </div>
+                  )}
+
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
         <button
           onClick={handleClose}
           className="text-white text-xl font-bold hover:opacity-70"
@@ -185,9 +248,7 @@ function AIChatPage() {
         {messages.map((msg, idx) => (
           <div
             key={idx}
-            className={`flex ${
-              msg.role === "user" ? "justify-end" : "justify-start"
-            }`}
+            className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
           >
             <div
               className={`max-w-[80%] p-3 rounded-2xl text-sm ${
@@ -196,7 +257,7 @@ function AIChatPage() {
                   : "bg-white border shadow text-gray-800 rounded-bl-sm"
               }`}
             >
-              {msg.content}
+              <div>{msg.content}</div>
             </div>
           </div>
         ))}
@@ -229,8 +290,9 @@ function AIChatPage() {
                 : "Type your answer..."
             }
             disabled={loadingQuestions}
-            className="flex-1 border rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-[#2F4EA1]"
+            className="flex-1 border rounded-xl p-3 text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#2F4EA1]"
           />
+
           <button
             onClick={handleNext}
             disabled={loadingQuestions || loadingDoc}
