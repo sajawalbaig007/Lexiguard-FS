@@ -268,6 +268,11 @@ const employmentContractTemplate = (data = {}) => {
       <li class="text">Work outside the United Kingdom.</li>
     </ul>
 
+    <!-- DISCLAIMER -->
+    <div class="disclaimer-box">
+      <strong>⚠️ Disclaimer:</strong> This document is a sample employment contract template provided for informational purposes only and does not constitute legal advice. Employment laws vary by jurisdiction and are subject to change. You are strongly advised to consult with a qualified solicitor or legal professional to ensure that this contract complies with all applicable laws and meets your specific requirements. Neither the template provider nor the Company assumes any legal liability arising from the use of this document.
+    </div>
+
     <!-- SIGNATURES -->
     <div class="section-title">16. EXECUTION OF AGREEMENT</div>
     <p class="text" style="margin-bottom: 30px;">IN WITNESS WHEREOF, the parties hereto have executed this Agreement as of the date first written above.</p>

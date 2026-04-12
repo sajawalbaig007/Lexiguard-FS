@@ -15,19 +15,19 @@ type Template = {
 
 const templates: Record<Category, Template[]> = {
   Popular: [
+        {
+      id: "employment_contract",
+      title: "Employment Contract",
+      emoji: "💼",
+      desc: "Create an employment contract outlining roles, salary, and terms of employment.",
+      image: "/templates/employment.png",
+    },
     {
       id: "nda",
       title: "Non-Disclosure Agreement",
       emoji: "🤝",
       desc: "Non-disclosure agreement template.",
       image: "/templates/nda.png",
-    },
-    {
-      id: "employment_contract",
-      title: "Employment Contract",
-      emoji: "💼",
-      desc: "Create an employment contract outlining roles, salary, and terms of employment.",
-      image: "/templates/employment.png",
     },
     {
       id: "uk_service_agreement",

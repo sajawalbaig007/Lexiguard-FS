@@ -177,52 +177,90 @@ export default function DocumentBuilderClient() {
   };
 
   const handleDownloadPDF = async () => {
-    const element = document.querySelector(".print-document") as HTMLElement | null;
-    if (!element) return;
+  const element = document.querySelector(".print-document") as HTMLElement | null;
+  if (!element) return;
 
-    // Show loading indicator (optional)
-    const downloadBtn = document.querySelector("#download-pdf-btn");
-    const originalText = downloadBtn?.innerHTML;
-    if (downloadBtn) downloadBtn.innerHTML = "⏳ Generating...";
+  const downloadBtn = document.querySelector("#download-pdf-btn");
+  const originalText = downloadBtn?.innerHTML;
+  if (downloadBtn) downloadBtn.innerHTML = "⏳ Generating...";
 
-    try {
-      const html2pdf = (await import("html2pdf.js")).default;
-      
-      const opt = {
-        margin: [0.5, 0.5, 0.5, 0.5] as [number, number, number, number],
-        filename: `${mappedTemplate.replace(/\s/g, "_")}_${new Date().toISOString().split('T')[0]}.pdf`,
-        image: {
-          type: "jpeg" as const,
-          quality: 1.0,
-        },
-        html2canvas: {
-          scale: 3, // Higher scale for sharper text
-          useCORS: true,
-          letterRendering: true,
-          logging: false,
-          backgroundColor: "#ffffff",
-        },
-        jsPDF: {
-          unit: "in" as const,
-          format: "letter" as const,
-          orientation: "portrait" as const,
-        },
-        pagebreak: {
-          mode: ['css', 'legacy'],
-          before: '.page-break-before',
-          after: '.page-break-after',
-          avoid: 'p, h1, h2, h3, h4, h5, h6, .signature-wrapper',
-        },
-      };
+  try {
+    // Dynamically import html2pdf
+    const html2pdf = (await import("html2pdf.js")).default;
+    
+    // Create a clone of the element to avoid affecting the original
+    const cloneElement = element.cloneNode(true) as HTMLElement;
+    
+    // Ensure all text styles are preserved in clone
+    cloneElement.style.fontFamily = "'Times New Roman', Georgia, serif";
+    cloneElement.style.fontSize = "16px";
+    cloneElement.style.lineHeight = "1.6";
+    cloneElement.style.color = "#1a1a1a";
+    cloneElement.style.backgroundColor = "#ffffff";
+    
+    // Apply styles to all child elements without using className as selector
+    const allElements = cloneElement.querySelectorAll("*");
+    allElements.forEach((el) => {
+      const htmlEl = el as HTMLElement;
+      // Set default font family for all elements
+      htmlEl.style.fontFamily = "'Times New Roman', Georgia, serif";
+      htmlEl.style.fontSize = "inherit";
+      htmlEl.style.lineHeight = "inherit";
+      htmlEl.style.color = "inherit";
+    });
+    
+    // Create a temporary container for PDF generation
+    const tempContainer = document.createElement("div");
+    tempContainer.style.position = "absolute";
+    tempContainer.style.left = "-9999px";
+    tempContainer.style.top = "-9999px";
+    tempContainer.style.width = "8.5in";
+    tempContainer.style.backgroundColor = "#ffffff";
+    tempContainer.appendChild(cloneElement);
+    document.body.appendChild(tempContainer);
 
-      await html2pdf().set(opt).from(element).save();
-    } catch (error) {
-      console.error("PDF generation error:", error);
-      alert("Failed to generate PDF. Please try again.");
-    } finally {
-      if (downloadBtn) downloadBtn.innerHTML = originalText || "Download";
-    }
-  };
+    const opt = {
+      margin: [0.5, 0.5, 0.5, 0.5] as [number, number, number, number],
+      filename: `${mappedTemplate.replace(/\s/g, "_")}_${new Date().toISOString().split('T')[0]}.pdf`,
+      image: {
+        type: "jpeg" as const,
+        quality: 1.0,
+      },
+      html2canvas: {
+        scale: 3,
+        useCORS: true,
+        letterRendering: true,
+        logging: false,
+        backgroundColor: "#ffffff",
+        dpi: 300,
+        windowWidth: element.scrollWidth,
+      },
+      jsPDF: {
+        unit: "in" as const,
+        format: "letter" as const,
+        orientation: "portrait" as const,
+        compress: true,
+      },
+      pagebreak: {
+        mode: ['css', 'legacy'],
+        before: '.page-break-before',
+        after: '.page-break-after',
+        avoid: 'p, h1, h2, h3, h4, h5, h6, .signature-wrapper',
+      },
+    };
+
+    await html2pdf().set(opt).from(cloneElement).save();
+    
+    // Clean up temporary container
+    document.body.removeChild(tempContainer);
+    
+  } catch (error) {
+    console.error("PDF generation error:", error);
+    alert("Failed to generate PDF. Please try again.");
+  } finally {
+    if (downloadBtn) downloadBtn.innerHTML = originalText || "Download";
+  }
+};
 
   if (previewMode) {
     const documentText = buildDocument(previewMode);
@@ -243,8 +281,13 @@ export default function DocumentBuilderClient() {
             className="print-document bg-white shadow-2xl w-[95%] lg:w-[8.5in] min-h-[11in] px-8 lg:px-12 py-10 lg:py-12 mb-32"
             style={{
               fontFamily: "'Times New Roman', Georgia, serif",
-              color: "#1a1a1a",
+              fontSize: "16px",
               lineHeight: "1.6",
+              color: "#1a1a1a",
+              backgroundColor: "#ffffff",
+              WebkitFontSmoothing: "antialiased",
+              MozOsxFontSmoothing: "grayscale",
+              textRendering: "optimizeLegibility",
             }}
           >
             <div dangerouslySetInnerHTML={{ __html: documentText }} />
