@@ -1,4 +1,3 @@
-// employmentContractTemplate.ts
 const employmentContractTemplate = (data = {}) => {
   const today = new Date().toLocaleDateString("en-GB", {
     day: "2-digit",
@@ -18,8 +17,6 @@ const employmentContractTemplate = (data = {}) => {
       color: #2c2418;
       background: #ffffff;
       box-sizing: border-box;
-      border: 1px solid #e0cfb5;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
     "
   >
     <style>
@@ -28,8 +25,8 @@ const employmentContractTemplate = (data = {}) => {
         margin-bottom: 12px;
         font-size: 16px;
         font-weight: 700;
-        color: #8b5a2b;
-        border-bottom: 1.5px solid #c4a57b;
+        color: #4a2c14;
+        border-bottom: 1.5px solid #b87c4a;
         padding-bottom: 6px;
         letter-spacing: 0.5px;
       }
@@ -37,7 +34,7 @@ const employmentContractTemplate = (data = {}) => {
         margin-top: 18px;
         font-weight: 600;
         font-size: 15px;
-        color: #5c3d1a;
+        color: #4a2c14;
       }
       .text {
         color: #2c2418;
@@ -49,7 +46,7 @@ const employmentContractTemplate = (data = {}) => {
         font-weight: 700;
         display: inline-block;
         width: 28px;
-        color: #8b5a2b;
+        color: #4a2c14;
       }
       .doc-flex {
         display: flex;
@@ -84,8 +81,14 @@ const employmentContractTemplate = (data = {}) => {
         border-radius: 0 8px 8px 0;
       }
       .disclaimer-box strong {
-        color: #8b5a2b;
+        color: #4a2c14;
         font-weight: 700;
+      }
+      hr {
+        border: none;
+        height: 1px;
+        background: #b87c4a;
+        margin: 20px 0;
       }
       @media (max-width: 768px) {
         .doc-container { padding: 25px !important; }
@@ -97,8 +100,8 @@ const employmentContractTemplate = (data = {}) => {
 
     <!-- HEADER -->
     <div style="text-align:center; margin-bottom: 35px;">
-      <h1 style="font-size: 32px; margin-bottom: 8px; letter-spacing: 2px; color: #5c3d1a; font-weight: 600;">EMPLOYMENT CONTRACT</h1>
-      <div style="height: 2px; width: 70px; background: #c4a57b; margin: 12px auto;"></div>
+      <h1 style="font-size: 32px; margin-bottom: 8px; letter-spacing: 2px; color: #4a2c14; font-weight: 700;">CONTRACT OF EMPLOYMENT</h1>
+      <div style="height: 2px; width: 70px; background: #b87c4a; margin: 12px auto;"></div>
       <p style="font-size: 13px; color: #8a7a64; margin-top: 8px;">Legally binding agreement</p>
     </div>
 
@@ -106,6 +109,8 @@ const employmentContractTemplate = (data = {}) => {
     <p style="font-size: 14px;">This Agreement is made on <strong>${today}</strong> between:</p>
     <p style="margin-left: 20px; font-size: 14px;"><strong>{{companyName}}</strong> ("the Company") with address at <strong>{{companyAddress}}</strong></p>
     <p style="margin-left: 20px; font-size: 14px;"><strong>{{employeeName}}</strong> ("the Employee") with address at <strong>{{employeeAddress}}</strong></p>
+
+    <hr />
 
     <p style="margin-top: 20px; font-size: 13px; color: #6b5a48; font-style: italic;">
       <strong>Important Note:</strong> This contract works alongside company policies ({{policyReference}}) which cover details like holidays, sickness, and bonuses. These are separate documents.<br>
