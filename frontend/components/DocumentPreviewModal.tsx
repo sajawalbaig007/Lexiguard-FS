@@ -128,6 +128,7 @@ export default function DocumentPreviewModal({
           className="bg-[#fffdf9] w-full max-w-[1100px] min-h-[1150px] shadow-xl border border-[#e8dccb]"
         >
           <div className="px-6 lg:px-20 py-10 lg:py-20">
+            
             {/* CONTENT - Fixed word wrapping */}
             <div
               className="text-[15px] lg:text-[16px] text-[#2f2a24] font-serif text-justify"
