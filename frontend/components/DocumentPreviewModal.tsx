@@ -32,71 +32,15 @@ export default function DocumentPreviewModal({
     }, 600);
   };
 
-  // ================= DOWNLOAD PDF =================
-  const handleDownload = async () => {
-    const element = window.document.getElementById("print-area");
-    if (!element) return;
-
-    const html2pdf = (await import("html2pdf.js")).default;
-
-    // Clone to avoid messing with live UI
-    const clone = element.cloneNode(true) as HTMLElement;
-
-    // Remove unwanted UI elements if any exist
-    const removeSelectors = [
-      ".no-print",
-      "button",
-      "input",
-      "textarea",
-      "select",
-    ];
-
-    removeSelectors.forEach((selector) => {
-      clone.querySelectorAll(selector).forEach((el) => el.remove());
-    });
-
-    // Force clean PDF styling for single page
-    clone.style.background = "#ffffff";
-    clone.style.color = "#000000";
-    clone.style.padding = "20px";
-    clone.style.fontSize = "12px";
-    clone.style.lineHeight = "1.4";
-    clone.style.maxHeight = "277mm"; // A4 page height
-    clone.style.overflow = "hidden";
-
-    const opt = {
-      margin: [5, 5, 5, 5] as [number, number, number, number], // Very small margins
-      filename: `${templateName
-        .replace(/\s+/g, "_")
-        .toLowerCase()}_document.pdf`,
-      image: {
-        type: "jpeg" as const,
-        quality: 0.95,
-      },
-      html2canvas: {
-        scale: 2, // Balanced for single page
-        useCORS: true,
-        backgroundColor: "#ffffff",
-        scrollX: 0,
-        scrollY: 0,
-      },
-      jsPDF: {
-        unit: "mm" as const,
-        format: "a4" as const,
-        orientation: "portrait" as const,
-      },
-      pagebreak: {
-        mode: "avoid-all" as any, // Force everything on one page
-      },
-    };
-
-    await html2pdf().set(opt).from(clone).save();
+  // ================= DOWNLOAD =================
+  const handleDownload = () => {
+    window.print();
   };
 
   return (
     <div className="fixed inset-0 z-50 bg-[#f5efe6] overflow-y-auto">
       {/* HEADER */}
-      <div className="fixed top-0 left-0 w-full bg-white border-b shadow-sm px-6 py-3 flex justify-between items-center z-50">
+      <div className="fixed top-0 left-0 w-full bg-white border-b shadow-sm px-6 py-3 flex justify-between items-center z-50 no-print">
         <h2 className="text-sm font-medium text-gray-800">
           📄 Document Preview
         </h2>
@@ -110,95 +54,68 @@ export default function DocumentPreviewModal({
       </div>
 
       {/* DOCUMENT */}
-      <div className="flex justify-center pt-20 pb-32 px-2 lg:px-6">
-        <div
-          id="print-area"
-          className="bg-white w-full max-w-[900px] shadow-xl border border-gray-200"
-          style={{ pageBreakInside: "avoid", pageBreakAfter: "avoid" }}
-        >
-          <div className="px-8 py-8">
+      <div className="pt-20 pb-32">
+        <div className="flex justify-center">
+          <div
+            id="print-area"
+            style={{
+              width: "200mm", // 🔥 thora chhota for right margin feel
+              minHeight: "297mm",
+              padding: "20mm 25mm 20mm 20mm", // 🔥 RIGHT SIDE EXTRA SPACE
+              background: "#fffdf9",
+              color: "#2f2a24",
+              boxSizing: "border-box",
+            }}
+          >
             {/* HEADER */}
-            <div className="border-b-2 border-gray-300 pb-4 mb-6 text-center">
-              <h1 className="text-2xl font-bold tracking-wider text-gray-800 uppercase">
-                EMPLOYMENT CONTRACT
+            <div
+              style={{
+                borderBottom: "1px solid #d6c7b0",
+                paddingBottom: "20px",
+                marginBottom: "40px",
+                textAlign: "center",
+              }}
+            >
+              <h1
+                style={{
+                  fontSize: "28px",
+                  letterSpacing: "3px",
+                  fontFamily: "serif",
+                  color: "#3e2f1c",
+                  margin: 0,
+                }}
+              >
+                DOCUMENT
               </h1>
-              <p className="text-xs text-gray-500 mt-2 tracking-wide">
-                Formal Legal Agreement Document
+              <p
+                style={{
+                  fontSize: "12px",
+                  color: "#8a7a64",
+                  marginTop: "10px",
+                }}
+              >
+                Legal Agreement Document
               </p>
             </div>
 
-            {/* CONTENT - Compact for single page */}
+            {/* CONTENT */}
             <div
-              className="text-gray-700"
               style={{
-                fontSize: "11px",
-                lineHeight: "1.5",
-                fontFamily: "serif",
-                wordWrap: "break-word",
-                overflowWrap: "break-word",
+                fontSize: "15px",
+                lineHeight: "1.9",
+                textAlign: "justify",
+                fontFamily: "Times New Roman, serif",
+                paddingRight: "20px", // 🔥 CONTENT RIGHT GAP (px-5 approx)
               }}
               dangerouslySetInnerHTML={{ __html: document }}
             />
-
-            {/* Signature line */}
-            <div className="mt-8 pt-4 border-t border-gray-300 text-right">
-              <p className="text-xs text-gray-500 mt-4">
-                Executed and agreed by the parties
-              </p>
-            </div>
-
-            {/* PDF-specific styles */}
-            <style>{`
-              #print-area, #print-area * {
-                word-wrap: break-word !important;
-                overflow-wrap: break-word !important;
-                white-space: normal !important;
-                page-break-inside: avoid !important;
-                page-break-after: avoid !important;
-                break-inside: avoid !important;
-              }
-              
-              #print-area p, #print-area div, #print-area li {
-                margin-bottom: 6px;
-                text-align: left;
-              }
-              
-              #print-area ul, #print-area ol {
-                margin-top: 4px;
-                margin-bottom: 8px;
-                padding-left: 20px;
-              }
-              
-              #print-area h1 {
-                font-size: 18px !important;
-                margin-bottom: 8px !important;
-              }
-              
-              #print-area h2 {
-                font-size: 16px !important;
-                margin-bottom: 6px !important;
-              }
-              
-              #print-area h3 {
-                font-size: 14px !important;
-                margin-bottom: 4px !important;
-              }
-              
-              img {
-                max-width: 120px;
-                height: auto;
-                margin: 10px 0;
-                border: 1px solid #ddd;
-                padding: 2px;
-              }
-            `}</style>
           </div>
         </div>
       </div>
 
       {/* ACTIONS */}
       {!hideActions && (
-        <div className="fixed bottom-0 left-0 w-full bg-white border-t shadow-lg p-3 flex justify-center gap-10">
+        <div className="fixed bottom-0 left-0 w-full bg-white border-t shadow-lg p-3 flex justify-center gap-10 no-print">
           <button
             onClick={handleDownload}
             className="flex flex-col items-center text-gray-700 hover:text-black hover:bg-gray-100 px-4 py-2 rounded-lg transition"
@@ -227,6 +144,56 @@ export default function DocumentPreviewModal({
           </button>
         </div>
       )}
+
+      {/* PRINT FIX */}
+      <style jsx global>{`
+        @media print {
+          body {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: white;
+          }
+
+          body * {
+            visibility: hidden;
+          }
+
+          #print-area,
+          #print-area * {
+            visibility: visible;
+          }
+
+          #print-area {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+
+            width: 200mm;
+            min-height: 297mm;
+
+            padding: 20mm 25mm 20mm 20mm; /* 🔥 RIGHT SPACE */
+
+            background: #fffdf9;
+            box-sizing: border-box;
+          }
+
+          .no-print {
+            display: none !important;
+          }
+
+          p {
+            page-break-inside: avoid;
+            margin-bottom: 12px;
+          }
+
+          h1,
+          h2,
+          h3 {
+            page-break-after: avoid;
+          }
+        }
+      `}</style>
     </div>
   );
 }
