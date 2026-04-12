@@ -10,8 +10,8 @@ const employmentContractTemplate = (data = {}) => {
     class="doc-container"
     style="
       font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif; 
-      max-width: 1000px; 
-      margin: auto; 
+      max-width: 100%; 
+      margin: 0; 
       padding: 50px 60px;
       line-height: 1.6; 
       color: #2c2418;
@@ -29,6 +29,7 @@ const employmentContractTemplate = (data = {}) => {
         border-bottom: 1.5px solid #b87c4a;
         padding-bottom: 6px;
         letter-spacing: 0.5px;
+        width: fit-content;
       }
       .sub-section {
         margin-top: 18px;
@@ -92,13 +93,13 @@ const employmentContractTemplate = (data = {}) => {
       }
       @media (max-width: 768px) {
         .doc-container { padding: 25px !important; }
-        .doc-container h1 { font-size: 24px !important; text-align: center !important; }
+        .doc-container h1 { font-size: 28px !important; text-align: center !important; }
         .doc-flex { flex-direction: column !important; gap: 30px; }
         .doc-col { width: 100% !important; }
       }
     </style>
 
-    <!-- HEADER -->
+    <!-- HEADER - Single Title -->
     <div style="text-align:center; margin-bottom: 35px;">
       <h1 style="font-size: 32px; margin-bottom: 8px; letter-spacing: 2px; color: #4a2c14; font-weight: 700;">CONTRACT OF EMPLOYMENT</h1>
       <div style="height: 2px; width: 70px; background: #b87c4a; margin: 12px auto;"></div>
@@ -187,7 +188,7 @@ const employmentContractTemplate = (data = {}) => {
       <strong>⚠️ Disclaimer:</strong> This document is a sample employment contract template provided for informational purposes only and does not constitute legal advice. Employment laws vary by jurisdiction and are subject to change. You are strongly advised to consult with a qualified solicitor or legal professional to ensure that this contract complies with all applicable laws and meets your specific requirements. Neither the template provider nor the Company assumes any legal liability arising from the use of this document.
     </div>
 
-    <!-- SIGNATURES -->
+    <!-- SIGNATURES - ONLY SIGNATURE OPTIONS -->
     <div class="section-title" style="margin-top: 35px;">16. EXECUTION OF AGREEMENT</div>
     <p class="text">IN WITNESS WHEREOF, the parties hereto have executed this Agreement as of the date first written above.</p>
 
@@ -196,19 +197,11 @@ const employmentContractTemplate = (data = {}) => {
         <p><strong>For and on behalf of the Company</strong></p>
         <div class="signature-line"></div>
         <p class="print-name">Signature</p>
-        <div class="signature-line" style="margin-top: 15px;"></div>
-        <p class="print-name">Print Name: <strong>{{companySignatory}}</strong></p>
-        <div class="signature-line" style="margin-top: 15px;"></div>
-        <p class="print-name">Title: <strong>{{companySignatoryTitle}}</strong></p>
       </div>
       <div class="doc-col">
         <p><strong>Employee</strong></p>
         <div class="signature-line"></div>
         <p class="print-name">Signature</p>
-        <div class="signature-line" style="margin-top: 15px;"></div>
-        <p class="print-name">Print Name: <strong>{{employeeName}}</strong></p>
-        <div class="signature-line" style="margin-top: 15px;"></div>
-        <p class="print-name">Date: <strong>${today}</strong></p>
       </div>
     </div>
 
