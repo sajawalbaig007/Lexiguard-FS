@@ -128,16 +128,6 @@ export default function DocumentPreviewModal({
           className="bg-[#fffdf9] w-full max-w-[1100px] min-h-[1150px] shadow-xl border border-[#e8dccb]"
         >
           <div className="px-6 lg:px-20 py-10 lg:py-20">
-            {/* HEADER */}
-            <div className="border-b border-[#c4a57b] pb-8 mb-12 text-center">
-              <h1 className="text-3xl lg:text-4xl font-semibold tracking-widest font-serif text-[#4a3724]">
-                EMPLOYMENT CONTRACT
-              </h1>
-              <p className="text-sm text-[#8a7a64] mt-3 tracking-wide">
-                Formal Legal Agreement Document
-              </p>
-            </div>
-
             {/* CONTENT - Fixed word wrapping */}
             <div
               className="text-[15px] lg:text-[16px] text-[#2f2a24] font-serif text-justify"

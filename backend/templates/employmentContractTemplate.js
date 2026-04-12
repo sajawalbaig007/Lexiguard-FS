@@ -182,6 +182,14 @@ const employmentContractTemplate = (data = {}) => {
         }
       }
     </style>
+
+    <!-- HEADER - Single Title -->
+    <div style="text-align:center; margin-bottom: 40px; width: 100%;">
+      <h1 style="font-size: 36px; margin-bottom: 10px; letter-spacing: 2px; color: #4a2c14; font-weight: 700;">CONTRACT OF EMPLOYMENT</h1>
+      <div style="height: 2px; width: 80px; background: #b87c4a; margin: 15px auto;"></div>
+      <p style="font-size: 14px; color: #8a7a64; margin-top: 10px;">Legally binding agreement</p>
+    </div>
+
     <!-- DATE AND PARTIES -->
     <p style="font-size: 15px; margin-bottom: 8px;">This Agreement is made on <strong>${today}</strong> between:</p>
     <p style="margin-left: 25px; font-size: 15px; margin-top: 5px;"><strong>{{companyName}}</strong> ("the Company") with address at <strong>{{companyAddress}}</strong></p>
