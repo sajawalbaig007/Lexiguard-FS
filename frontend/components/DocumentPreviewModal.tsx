@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import { useState } from "react";
 
@@ -34,70 +34,64 @@ export default function DocumentPreviewModal({
 
   // ================= DOWNLOAD PDF =================
   const handleDownload = async () => {
-  const element = window.document.getElementById("print-area");
-  if (!element) return;
+    const element = window.document.getElementById("print-area");
+    if (!element) return;
 
-  const html2pdf = (await import("html2pdf.js")).default;
+    const html2pdf = (await import("html2pdf.js")).default;
 
-  // ✅ Clone to avoid messing with live UI
-  const clone = element.cloneNode(true) as HTMLElement;
+    // ✅ Clone to avoid messing with live UI
+    const clone = element.cloneNode(true) as HTMLElement;
 
-  // Remove unwanted UI elements if any exist
-  const removeSelectors = [
-    ".no-print",
-    "button",
-    "input",
-    "textarea",
-    "select",
-  ];
+    // Remove unwanted UI elements if any exist
+    const removeSelectors = [
+      ".no-print",
+      "button",
+      "input",
+      "textarea",
+      "select",
+    ];
 
-  removeSelectors.forEach((selector) => {
-    clone.querySelectorAll(selector).forEach((el) => el.remove());
-  });
+    removeSelectors.forEach((selector) => {
+      clone.querySelectorAll(selector).forEach((el) => el.remove());
+    });
 
-  // Force clean PDF styling
-  clone.style.background = "#ffffff";
-  clone.style.color = "#000000";
-  clone.style.padding = "40px";
+    // Force clean PDF styling
+    clone.style.background = "#ffffff";
+    clone.style.color = "#000000";
+    clone.style.padding = "40px";
 
-  const opt = {
-    margin: [20, 15, 20, 15], // top, left, bottom, right
+    const opt = {
+      margin: [20, 15, 20, 15] as [number, number, number, number], // Mutable tuple
+      filename: `${templateName
+        .replace(/\s+/g, "_")
+        .toLowerCase()}_document.pdf`,
+      image: {
+        type: "jpeg" as const,
+        quality: 1,
+      },
+      html2canvas: {
+        scale: 3, // 🔥 sharper PDF
+        useCORS: true,
+        backgroundColor: "#ffffff",
+        scrollX: 0,
+        scrollY: 0,
+      },
+      jsPDF: {
+        unit: "mm" as const,
+        format: "a4" as const,
+        orientation: "portrait" as const,
+      },
+      pagebreak: {
+        mode: ["css", "legacy"] as ["css", "legacy"], // Explicit tuple
+        avoid: ["h1", "h2", ".avoid-break"] as string[],
+      },
+    };
 
-    filename: `${templateName
-      .replace(/\s+/g, "_")
-      .toLowerCase()}_document.pdf`,
-
-    image: {
-      type: "jpeg",
-      quality: 1,
-    },
-
-    html2canvas: {
-      scale: 3, // 🔥 sharper PDF
-      useCORS: true,
-      backgroundColor: "#ffffff",
-      scrollX: 0,
-      scrollY: 0,
-    },
-
-    jsPDF: {
-      unit: "mm",
-      format: "a4",
-      orientation: "portrait",
-    },
-
-    pagebreak: {
-      mode: ["css", "legacy"],
-      avoid: ["h1", "h2", ".avoid-break"],
-    },
+    await html2pdf().set(opt).from(clone).save();
   };
 
-  await html2pdf().set(opt).from(clone).save();
-};
-
   return (
-    <div className="fixed inset-0 z-[9999] bg-[#f5efe6] overflow-y-auto">
-
+    <div className="fixed inset-0 z-50 bg-[#f5efe6] overflow-y-auto">
       {/* HEADER */}
       <div className="fixed top-0 left-0 w-full bg-white border-b shadow-sm px-6 py-3 flex justify-between items-center z-50">
         <h2 className="text-sm font-medium text-gray-800">
@@ -119,7 +113,6 @@ export default function DocumentPreviewModal({
           className="bg-[#fffdf9] w-full max-w-[1100px] min-h-[1150px] shadow-xl border border-[#e8dccb]"
         >
           <div className="px-6 lg:px-20 py-10 lg:py-20">
-
             {/* HEADER */}
             <div className="border-b border-[#d6c7b0] pb-8 mb-12 text-center">
               <h1 className="text-3xl lg:text-4xl font-semibold tracking-widest font-serif text-[#3e2f1c]">
@@ -137,7 +130,7 @@ export default function DocumentPreviewModal({
               dangerouslySetInnerHTML={{ __html: document }}
             />
 
-            {/* 🆕 IMAGE SAFETY STYLES */}
+            {/* IMAGE SAFETY STYLES */}
             <style jsx>{`
               img {
                 max-width: 180px;
@@ -155,7 +148,6 @@ export default function DocumentPreviewModal({
                 margin-top: 40px;
               }
             `}</style>
-
           </div>
         </div>
       </div>
@@ -163,7 +155,6 @@ export default function DocumentPreviewModal({
       {/* ACTIONS */}
       {!hideActions && (
         <div className="fixed bottom-0 left-0 w-full bg-white border-t shadow-lg p-3 flex justify-center gap-10">
-
           <button
             onClick={handleDownload}
             className="flex flex-col items-center text-gray-700 hover:text-black hover:bg-gray-100 px-4 py-2 rounded-lg transition"
@@ -190,7 +181,6 @@ export default function DocumentPreviewModal({
             ←
             <span className="text-xs mt-1">Back</span>
           </button>
-
         </div>
       )}
     </div>
