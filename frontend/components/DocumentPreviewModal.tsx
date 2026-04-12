@@ -32,15 +32,83 @@ export default function DocumentPreviewModal({
     }, 600);
   };
 
-  // ================= DOWNLOAD =================
-  const handleDownload = () => {
-    window.print();
+  // ================= DOWNLOAD PDF =================
+  const handleDownload = async () => {
+    const element = window.document.getElementById("print-area");
+    if (!element) return;
+
+    const html2pdf = (await import("html2pdf.js")).default;
+
+    // Clone to avoid messing with live UI
+    const clone = element.cloneNode(true) as HTMLElement;
+
+    // Remove unwanted UI elements if any exist
+    const removeSelectors = [
+      ".no-print",
+      "button",
+      "input",
+      "textarea",
+      "select",
+    ];
+
+    removeSelectors.forEach((selector) => {
+      clone.querySelectorAll(selector).forEach((el) => el.remove());
+    });
+
+    // Force clean PDF styling with better text handling
+    clone.style.background = "#ffffff";
+    clone.style.color = "#000000";
+    clone.style.padding = "20px";
+    clone.style.fontSize = "14px";
+    clone.style.lineHeight = "1.6";
+    clone.style.wordWrap = "break-word";
+    clone.style.overflowWrap = "break-word";
+    
+    // Ensure all text content wraps properly
+    const allElements = clone.querySelectorAll("*");
+    allElements.forEach((el) => {
+      (el as HTMLElement).style.maxWidth = "100%";
+      (el as HTMLElement).style.wordWrap = "break-word";
+      (el as HTMLElement).style.overflowWrap = "break-word";
+    });
+
+    const opt = {
+      margin: [10, 10, 10, 10] as [number, number, number, number],
+      filename: `${templateName
+        .replace(/\s+/g, "_")
+        .toLowerCase()}_document.pdf`,
+      image: {
+        type: "jpeg" as const,
+        quality: 1,
+      },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff",
+        scrollX: 0,
+        scrollY: 0,
+        logging: false,
+      },
+      jsPDF: {
+        unit: "mm" as const,
+        format: "a4" as const,
+        orientation: "portrait" as const,
+      },
+      pagebreak: {
+        mode: ["css", "legacy"] as ["css", "legacy"],
+        before: ".page-break-before",
+        after: ".page-break-after",
+        avoid: ["h1", "h2", ".avoid-break"],
+      },
+    };
+
+    await html2pdf().set(opt).from(clone).save();
   };
 
   return (
     <div className="fixed inset-0 z-50 bg-[#f5efe6] overflow-y-auto">
       {/* HEADER */}
-      <div className="fixed top-0 left-0 w-full bg-white border-b shadow-sm px-6 py-3 flex justify-between items-center z-50 no-print">
+      <div className="fixed top-0 left-0 w-full bg-white border-b shadow-sm px-6 py-3 flex justify-between items-center z-50">
         <h2 className="text-sm font-medium text-gray-800">
           📄 Document Preview
         </h2>
@@ -54,68 +122,66 @@ export default function DocumentPreviewModal({
       </div>
 
       {/* DOCUMENT */}
-      <div className="pt-20 pb-32">
-        <div className="flex justify-center">
-          <div
-            id="print-area"
-            style={{
-              width: "200mm", // 🔥 thora chhota for right margin feel
-              minHeight: "297mm",
-              padding: "20mm 25mm 20mm 20mm", // 🔥 RIGHT SIDE EXTRA SPACE
-              background: "#fffdf9",
-              color: "#2f2a24",
-              boxSizing: "border-box",
-            }}
-          >
+      <div className="flex justify-center pt-20 pb-32 px-2 lg:px-6">
+        <div
+          id="print-area"
+          className="bg-[#fffdf9] w-full max-w-[1100px] min-h-[1150px] shadow-xl border border-[#e8dccb]"
+        >
+          <div className="px-6 lg:px-20 py-10 lg:py-20">
             {/* HEADER */}
-            <div
-              style={{
-                borderBottom: "1px solid #d6c7b0",
-                paddingBottom: "20px",
-                marginBottom: "40px",
-                textAlign: "center",
-              }}
-            >
-              <h1
-                style={{
-                  fontSize: "28px",
-                  letterSpacing: "3px",
-                  fontFamily: "serif",
-                  color: "#3e2f1c",
-                  margin: 0,
-                }}
-              >
-                DOCUMENT
+            <div className="border-b border-[#c4a57b] pb-8 mb-12 text-center">
+              <h1 className="text-3xl lg:text-4xl font-semibold tracking-widest font-serif text-[#4a3724]">
+                EMPLOYMENT CONTRACT
               </h1>
-              <p
-                style={{
-                  fontSize: "12px",
-                  color: "#8a7a64",
-                  marginTop: "10px",
-                }}
-              >
-                Legal Agreement Document
+              <p className="text-sm text-[#8a7a64] mt-3 tracking-wide">
+                Formal Legal Agreement Document
               </p>
             </div>
 
-            {/* CONTENT */}
+            {/* CONTENT - Fixed word wrapping */}
             <div
-              style={{
-                fontSize: "15px",
-                lineHeight: "1.9",
-                textAlign: "justify",
-                fontFamily: "Times New Roman, serif",
-                paddingRight: "20px", // 🔥 CONTENT RIGHT GAP (px-5 approx)
+              className="text-[15px] lg:text-[16px] text-[#2f2a24] font-serif text-justify"
+              style={{ 
+                lineHeight: "1.8",
+                wordWrap: "break-word",
+                overflowWrap: "break-word",
+                whiteSpace: "normal"
               }}
               dangerouslySetInnerHTML={{ __html: document }}
             />
+
+            {/* IMAGE SAFETY STYLES */}
+            <style jsx>{`
+              img {
+                max-width: 180px;
+                height: auto;
+                margin-top: 20px;
+                border: 1px solid #ddd;
+                padding: 4px;
+                display: inline-block;
+              }
+
+              .logo-grid {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 15px;
+                margin-top: 40px;
+              }
+              
+              /* Ensure text wraps in PDF */
+              div, p, span, h1, h2, h3, h4 {
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                white-space: normal;
+              }
+            `}</style>
           </div>
         </div>
       </div>
 
       {/* ACTIONS */}
       {!hideActions && (
-        <div className="fixed bottom-0 left-0 w-full bg-white border-t shadow-lg p-3 flex justify-center gap-10 no-print">
+        <div className="fixed bottom-0 left-0 w-full bg-white border-t shadow-lg p-3 flex justify-center gap-10">
           <button
             onClick={handleDownload}
             className="flex flex-col items-center text-gray-700 hover:text-black hover:bg-gray-100 px-4 py-2 rounded-lg transition"
@@ -144,56 +210,6 @@ export default function DocumentPreviewModal({
           </button>
         </div>
       )}
-
-      {/* PRINT FIX */}
-      <style jsx global>{`
-        @media print {
-          body {
-            margin: 0 !important;
-            padding: 0 !important;
-            background: white;
-          }
-
-          body * {
-            visibility: hidden;
-          }
-
-          #print-area,
-          #print-area * {
-            visibility: visible;
-          }
-
-          #print-area {
-            position: absolute;
-            left: 50%;
-            top: 0;
-            transform: translateX(-50%);
-
-            width: 200mm;
-            min-height: 297mm;
-
-            padding: 20mm 25mm 20mm 20mm; /* 🔥 RIGHT SPACE */
-
-            background: #fffdf9;
-            box-sizing: border-box;
-          }
-
-          .no-print {
-            display: none !important;
-          }
-
-          p {
-            page-break-inside: avoid;
-            margin-bottom: 12px;
-          }
-
-          h1,
-          h2,
-          h3 {
-            page-break-after: avoid;
-          }
-        }
-      `}</style>
     </div>
   );
 }

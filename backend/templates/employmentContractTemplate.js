@@ -1,3 +1,4 @@
+// employmentContractTemplate.ts
 const employmentContractTemplate = (data = {}) => {
   const today = new Date().toLocaleDateString("en-GB", {
     day: "2-digit",
@@ -9,36 +10,37 @@ const employmentContractTemplate = (data = {}) => {
   <div 
     class="doc-container"
     style="
-      font-family: Georgia, 'Times New Roman', serif; 
+      font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif; 
       max-width: 1000px; 
       margin: auto; 
       padding: 50px 60px;
       line-height: 1.6; 
-      color: #1a1a1a;
+      color: #2c2418;
       background: #ffffff;
       box-sizing: border-box;
-      border: 1px solid #d4d4d4;
+      border: 1px solid #e0cfb5;
       box-shadow: 0 10px 30px rgba(0,0,0,0.05);
     "
   >
     <style>
       .section-title {
-        margin-top: 28px;
-        margin-bottom: 8px;
+        margin-top: 32px;
+        margin-bottom: 12px;
         font-size: 16px;
         font-weight: 700;
-        color: #1e3a5f;
-        border-bottom: 2px solid #1e3a5f;
-        padding-bottom: 5px;
+        color: #8b5a2b;
+        border-bottom: 1.5px solid #c4a57b;
+        padding-bottom: 6px;
+        letter-spacing: 0.5px;
       }
       .sub-section {
         margin-top: 18px;
         font-weight: 600;
         font-size: 15px;
-        color: #2c3e50;
+        color: #5c3d1a;
       }
       .text {
-        color: #2d2d2d;
+        color: #2c2418;
         font-size: 14px;
         margin-top: 8px;
         margin-bottom: 8px;
@@ -47,6 +49,7 @@ const employmentContractTemplate = (data = {}) => {
         font-weight: 700;
         display: inline-block;
         width: 28px;
+        color: #8b5a2b;
       }
       .doc-flex {
         display: flex;
@@ -59,19 +62,34 @@ const employmentContractTemplate = (data = {}) => {
         width: 45%;
       }
       .signature-line {
-        border-bottom: 1px solid #000;
+        border-bottom: 1px solid #2c2418;
         height: 50px;
         margin-top: 10px;
         margin-bottom: 5px;
       }
       .print-name {
         font-size: 12px;
-        color: #555;
+        color: #6b5a48;
         margin-top: 5px;
+        font-style: italic;
+      }
+      .disclaimer-box {
+        margin-top: 40px;
+        padding: 18px 22px;
+        background: #fefaf5;
+        border-left: 4px solid #b87c4a;
+        font-size: 12px;
+        color: #5c4b34;
+        font-family: inherit;
+        border-radius: 0 8px 8px 0;
+      }
+      .disclaimer-box strong {
+        color: #8b5a2b;
+        font-weight: 700;
       }
       @media (max-width: 768px) {
-        .doc-container { padding: 20px !important; }
-        .doc-container h1 { font-size: 22px !important; text-align: center !important; }
+        .doc-container { padding: 25px !important; }
+        .doc-container h1 { font-size: 24px !important; text-align: center !important; }
         .doc-flex { flex-direction: column !important; gap: 30px; }
         .doc-col { width: 100% !important; }
       }
@@ -79,16 +97,17 @@ const employmentContractTemplate = (data = {}) => {
 
     <!-- HEADER -->
     <div style="text-align:center; margin-bottom: 35px;">
-      <h1 style="font-size: 28px; margin-bottom: 5px; letter-spacing: 1px; color: #1e3a5f;">CONTRACT OF EMPLOYMENT</h1>
-      <div style="height: 2px; width: 80px; background: #1e3a5f; margin: 12px auto;"></div>
+      <h1 style="font-size: 32px; margin-bottom: 8px; letter-spacing: 2px; color: #5c3d1a; font-weight: 600;">EMPLOYMENT CONTRACT</h1>
+      <div style="height: 2px; width: 70px; background: #c4a57b; margin: 12px auto;"></div>
+      <p style="font-size: 13px; color: #8a7a64; margin-top: 8px;">Legally binding agreement</p>
     </div>
 
     <!-- DATE AND PARTIES -->
     <p style="font-size: 14px;">This Agreement is made on <strong>${today}</strong> between:</p>
     <p style="margin-left: 20px; font-size: 14px;"><strong>{{companyName}}</strong> ("the Company") with address at <strong>{{companyAddress}}</strong></p>
-    <p style="margin-left: 20px; font-size: 14px;"><strong>{{employeeName}}</strong> ("you") with address at <strong>{{employeeAddress}}</strong></p>
+    <p style="margin-left: 20px; font-size: 14px;"><strong>{{employeeName}}</strong> ("the Employee") with address at <strong>{{employeeAddress}}</strong></p>
 
-    <p style="margin-top: 20px; font-size: 13px; color: #555; font-style: italic;">
+    <p style="margin-top: 20px; font-size: 13px; color: #6b5a48; font-style: italic;">
       <strong>Important Note:</strong> This contract works alongside company policies ({{policyReference}}) which cover details like holidays, sickness, and bonuses. These are separate documents.<br>
       This agreement outlines the terms of your employment with the Company.
     </p>
@@ -159,12 +178,12 @@ const employmentContractTemplate = (data = {}) => {
     </ul>
 
     <!-- DISCLAIMER -->
-    <div style="margin-top: 40px; padding: 18px; background: #f9f9f9; border-left: 4px solid #cc0000; font-size: 12px; color: #555;">
-      <strong>Disclaimer:</strong> This document is intended as a sample employment contract template and should not be taken as legal advice. We recommend that you consult with a solicitor to ensure this contract meets your specific needs and complies with all relevant UK employment laws.
+    <div class="disclaimer-box">
+      <strong>⚠️ Disclaimer:</strong> This document is a sample employment contract template provided for informational purposes only and does not constitute legal advice. Employment laws vary by jurisdiction and are subject to change. You are strongly advised to consult with a qualified solicitor or legal professional to ensure that this contract complies with all applicable laws and meets your specific requirements. Neither the template provider nor the Company assumes any legal liability arising from the use of this document.
     </div>
 
     <!-- SIGNATURES -->
-    <div class="section-title" style="margin-top: 35px;">16. SIGNATURES</div>
+    <div class="section-title" style="margin-top: 35px;">16. EXECUTION OF AGREEMENT</div>
     <p class="text">IN WITNESS WHEREOF, the parties hereto have executed this Agreement as of the date first written above.</p>
 
     <div class="doc-flex">
@@ -175,7 +194,7 @@ const employmentContractTemplate = (data = {}) => {
         <div class="signature-line" style="margin-top: 15px;"></div>
         <p class="print-name">Print Name: <strong>{{companySignatory}}</strong></p>
         <div class="signature-line" style="margin-top: 15px;"></div>
-        <p class="print-name">Date: <strong>${today}</strong></p>
+        <p class="print-name">Title: <strong>{{companySignatoryTitle}}</strong></p>
       </div>
       <div class="doc-col">
         <p><strong>Employee</strong></p>
