@@ -10,9 +10,9 @@ const employmentContractTemplate = (data = {}) => {
     class="doc-container"
     style="
       font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif; 
-      max-width: 100%; 
-      margin: 0; 
-      padding: 50px 60px;
+      width: 100%;
+      margin: 0;
+      padding: 40px 50px;
       line-height: 1.6; 
       color: #2c2418;
       background: #ffffff;
@@ -20,28 +20,39 @@ const employmentContractTemplate = (data = {}) => {
     "
   >
     <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .doc-container {
+        width: 100%;
+        max-width: none;
+        overflow-x: visible;
+      }
       .section-title {
         margin-top: 32px;
         margin-bottom: 12px;
-        font-size: 16px;
+        font-size: 18px;
         font-weight: 700;
         color: #4a2c14;
-        border-bottom: 1.5px solid #b87c4a;
+        border-bottom: 2px solid #b87c4a;
         padding-bottom: 6px;
         letter-spacing: 0.5px;
-        width: fit-content;
+        width: 100%;
       }
       .sub-section {
         margin-top: 18px;
         font-weight: 600;
-        font-size: 15px;
+        font-size: 16px;
         color: #4a2c14;
       }
       .text {
         color: #2c2418;
-        font-size: 14px;
-        margin-top: 8px;
-        margin-bottom: 8px;
+        font-size: 15px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        line-height: 1.7;
       }
       .clause-number {
         font-weight: 700;
@@ -52,34 +63,39 @@ const employmentContractTemplate = (data = {}) => {
       .doc-flex {
         display: flex;
         justify-content: space-between;
-        gap: 50px;
-        margin-top: 40px;
-        margin-bottom: 30px;
+        gap: 60px;
+        margin-top: 45px;
+        margin-bottom: 35px;
+        flex-wrap: wrap;
       }
       .doc-col {
         width: 45%;
+        min-width: 200px;
       }
       .signature-line {
         border-bottom: 1px solid #2c2418;
-        height: 50px;
-        margin-top: 10px;
+        height: 55px;
+        margin-top: 12px;
         margin-bottom: 5px;
+        width: 100%;
       }
       .print-name {
-        font-size: 12px;
+        font-size: 13px;
         color: #6b5a48;
         margin-top: 5px;
         font-style: italic;
       }
       .disclaimer-box {
-        margin-top: 40px;
-        padding: 18px 22px;
+        margin-top: 45px;
+        margin-bottom: 30px;
+        padding: 20px 25px;
         background: #fefaf5;
-        border-left: 4px solid #b87c4a;
-        font-size: 12px;
+        border-left: 5px solid #b87c4a;
+        font-size: 13px;
         color: #5c4b34;
         font-family: inherit;
-        border-radius: 0 8px 8px 0;
+        border-radius: 0 10px 10px 0;
+        width: 100%;
       }
       .disclaimer-box strong {
         color: #4a2c14;
@@ -89,31 +105,91 @@ const employmentContractTemplate = (data = {}) => {
         border: none;
         height: 1px;
         background: #b87c4a;
-        margin: 20px 0;
+        margin: 25px 0;
+        width: 100%;
       }
-      @media (max-width: 768px) {
-        .doc-container { padding: 25px !important; }
-        .doc-container h1 { font-size: 28px !important; text-align: center !important; }
-        .doc-flex { flex-direction: column !important; gap: 30px; }
-        .doc-col { width: 100% !important; }
+      h1 {
+        font-size: 36px;
+        margin-bottom: 10px;
+        letter-spacing: 2px;
+        color: #4a2c14;
+        font-weight: 700;
+        word-break: keep-all;
+      }
+      p, li, div {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+      }
+      ul, ol {
+        padding-left: 30px;
+        margin: 10px 0;
+      }
+      li {
+        margin: 5px 0;
+      }
+      
+      /* Desktop/Laptop Styles */
+      @media (min-width: 1024px) {
+        .doc-container {
+          padding: 50px 70px;
+        }
+        .text {
+          font-size: 15px;
+        }
+        .section-title {
+          font-size: 18px;
+        }
+      }
+      
+      /* Tablet Styles */
+      @media (min-width: 768px) and (max-width: 1023px) {
+        .doc-container {
+          padding: 40px 50px;
+        }
+        .text {
+          font-size: 14px;
+        }
+        .section-title {
+          font-size: 17px;
+        }
+      }
+      
+      /* Mobile Styles */
+      @media (max-width: 767px) {
+        .doc-container {
+          padding: 25px 20px !important;
+        }
+        h1 {
+          font-size: 24px !important;
+          text-align: center !important;
+        }
+        .doc-flex {
+          flex-direction: column !important;
+          gap: 35px !important;
+        }
+        .doc-col {
+          width: 100% !important;
+        }
+        .section-title {
+          font-size: 16px !important;
+        }
+        .text {
+          font-size: 13px !important;
+        }
+        .disclaimer-box {
+          padding: 15px !important;
+          font-size: 11px !important;
+        }
       }
     </style>
-
-    <!-- HEADER - Single Title -->
-    <div style="text-align:center; margin-bottom: 35px;">
-      <h1 style="font-size: 32px; margin-bottom: 8px; letter-spacing: 2px; color: #4a2c14; font-weight: 700;">CONTRACT OF EMPLOYMENT</h1>
-      <div style="height: 2px; width: 70px; background: #b87c4a; margin: 12px auto;"></div>
-      <p style="font-size: 13px; color: #8a7a64; margin-top: 8px;">Legally binding agreement</p>
-    </div>
-
     <!-- DATE AND PARTIES -->
-    <p style="font-size: 14px;">This Agreement is made on <strong>${today}</strong> between:</p>
-    <p style="margin-left: 20px; font-size: 14px;"><strong>{{companyName}}</strong> ("the Company") with address at <strong>{{companyAddress}}</strong></p>
-    <p style="margin-left: 20px; font-size: 14px;"><strong>{{employeeName}}</strong> ("the Employee") with address at <strong>{{employeeAddress}}</strong></p>
+    <p style="font-size: 15px; margin-bottom: 8px;">This Agreement is made on <strong>${today}</strong> between:</p>
+    <p style="margin-left: 25px; font-size: 15px; margin-top: 5px;"><strong>{{companyName}}</strong> ("the Company") with address at <strong>{{companyAddress}}</strong></p>
+    <p style="margin-left: 25px; font-size: 15px; margin-top: 5px;"><strong>{{employeeName}}</strong> ("the Employee") with address at <strong>{{employeeAddress}}</strong></p>
 
     <hr />
 
-    <p style="margin-top: 20px; font-size: 13px; color: #6b5a48; font-style: italic;">
+    <p style="margin-top: 20px; font-size: 14px; color: #6b5a48; font-style: italic; margin-bottom: 20px;">
       <strong>Important Note:</strong> This contract works alongside company policies ({{policyReference}}) which cover details like holidays, sickness, and bonuses. These are separate documents.<br>
       This agreement outlines the terms of your employment with the Company.
     </p>
@@ -151,7 +227,7 @@ const employmentContractTemplate = (data = {}) => {
     <p class="text">The Company will review your performance annually. Performance reviews are entirely at the Company's discretion, and the frequency may vary. Positive reviews may be used for pay raises, but don't guarantee them.</p>
 
     <!-- SECTION 9 -->
-    <div class="section-title">9. PENSION & RETIREMENT</div>
+    <div class="section-title">9. PENSION &amp; RETIREMENT</div>
     <p class="text">{{pensionTerms}}</p>
 
     <!-- SECTION 10 -->
@@ -163,7 +239,7 @@ const employmentContractTemplate = (data = {}) => {
     <p class="text">The Company's holiday year runs from <strong>{{holidayYearStart}}</strong> to <strong>{{holidayYearEnd}}</strong>. Full-time staff get <strong>{{holidayDays}}</strong> paid holidays per year, including public and bank holidays (explained in clause 10.2 below). Part-time staff receive a pro-rated amount of holiday entitlement.</p>
 
     <!-- SECTION 12 -->
-    <div class="section-title">12. PUBLIC & BANK HOLIDAYS</div>
+    <div class="section-title">12. PUBLIC &amp; BANK HOLIDAYS</div>
     <p class="text">The Company requires you to use some of your holiday entitlement (up to 8 days per year) for public and bank holidays that fall on your normal working days. Employees who work on public and bank holidays won't be required to use additional holiday time (subject to clause 10.3).</p>
 
     <!-- SECTION 13 -->
@@ -177,7 +253,7 @@ const employmentContractTemplate = (data = {}) => {
     <!-- SECTION 15 -->
     <div class="section-title">15. FURTHER DETAILS</div>
     <p class="text">There are no terms applying to this Agreement which relate to the following:</p>
-    <ul style="margin-top: 0; margin-bottom: 10px;">
+    <ul style="margin-top: 5px; margin-bottom: 15px;">
       <li class="text">The period for which the employment is intended to continue or the date when it is to end;</li>
       <li class="text">Any collective agreements which directly affect the terms and conditions of employment;</li>
       <li class="text">Work outside the United Kingdom.</li>
@@ -190,16 +266,16 @@ const employmentContractTemplate = (data = {}) => {
 
     <!-- SIGNATURES - ONLY SIGNATURE OPTIONS -->
     <div class="section-title" style="margin-top: 35px;">16. EXECUTION OF AGREEMENT</div>
-    <p class="text">IN WITNESS WHEREOF, the parties hereto have executed this Agreement as of the date first written above.</p>
+    <p class="text" style="margin-bottom: 25px;">IN WITNESS WHEREOF, the parties hereto have executed this Agreement as of the date first written above.</p>
 
     <div class="doc-flex">
       <div class="doc-col">
-        <p><strong>For and on behalf of the Company</strong></p>
+        <p style="font-weight: 600; margin-bottom: 8px;"><strong>For and on behalf of the Company</strong></p>
         <div class="signature-line"></div>
         <p class="print-name">Signature</p>
       </div>
       <div class="doc-col">
-        <p><strong>Employee</strong></p>
+        <p style="font-weight: 600; margin-bottom: 8px;"><strong>Employee</strong></p>
         <div class="signature-line"></div>
         <p class="print-name">Signature</p>
       </div>
