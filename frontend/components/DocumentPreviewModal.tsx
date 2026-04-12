@@ -39,7 +39,7 @@ export default function DocumentPreviewModal({
 
     const html2pdf = (await import("html2pdf.js")).default;
 
-    // ✅ Clone to avoid messing with live UI
+    // Clone to avoid messing with live UI
     const clone = element.cloneNode(true) as HTMLElement;
 
     // Remove unwanted UI elements if any exist
@@ -55,22 +55,26 @@ export default function DocumentPreviewModal({
       clone.querySelectorAll(selector).forEach((el) => el.remove());
     });
 
-    // Force clean PDF styling
+    // Force clean PDF styling for single page
     clone.style.background = "#ffffff";
     clone.style.color = "#000000";
-    clone.style.padding = "40px";
+    clone.style.padding = "20px";
+    clone.style.fontSize = "12px";
+    clone.style.lineHeight = "1.4";
+    clone.style.maxHeight = "277mm"; // A4 page height
+    clone.style.overflow = "hidden";
 
     const opt = {
-      margin: [20, 15, 20, 15] as [number, number, number, number], // Mutable tuple
+      margin: [5, 5, 5, 5] as [number, number, number, number], // Very small margins
       filename: `${templateName
         .replace(/\s+/g, "_")
         .toLowerCase()}_document.pdf`,
       image: {
         type: "jpeg" as const,
-        quality: 1,
+        quality: 0.95,
       },
       html2canvas: {
-        scale: 3, // 🔥 sharper PDF
+        scale: 2, // Balanced for single page
         useCORS: true,
         backgroundColor: "#ffffff",
         scrollX: 0,
@@ -82,8 +86,7 @@ export default function DocumentPreviewModal({
         orientation: "portrait" as const,
       },
       pagebreak: {
-        mode: ["css", "legacy"] as ["css", "legacy"], // Explicit tuple
-        avoid: ["h1", "h2", ".avoid-break"] as string[],
+        mode: "avoid-all" as any, // Force everything on one page
       },
     };
 
@@ -110,42 +113,83 @@ export default function DocumentPreviewModal({
       <div className="flex justify-center pt-20 pb-32 px-2 lg:px-6">
         <div
           id="print-area"
-          className="bg-[#fffdf9] w-full max-w-[1100px] min-h-[1150px] shadow-xl border border-[#e8dccb]"
+          className="bg-white w-full max-w-[900px] shadow-xl border border-gray-200"
+          style={{ pageBreakInside: "avoid", pageBreakAfter: "avoid" }}
         >
-          <div className="px-6 lg:px-20 py-10 lg:py-20">
+          <div className="px-8 py-8">
             {/* HEADER */}
-            <div className="border-b border-[#d6c7b0] pb-8 mb-12 text-center">
-              <h1 className="text-3xl lg:text-4xl font-semibold tracking-widest font-serif text-[#3e2f1c]">
-                DOCUMENT
+            <div className="border-b-2 border-gray-300 pb-4 mb-6 text-center">
+              <h1 className="text-2xl font-bold tracking-wider text-gray-800 uppercase">
+                EMPLOYMENT CONTRACT
               </h1>
-              <p className="text-sm text-[#8a7a64] mt-3 tracking-wide">
-                Legal Agreement Document
+              <p className="text-xs text-gray-500 mt-2 tracking-wide">
+                Formal Legal Agreement Document
               </p>
             </div>
 
-            {/* CONTENT */}
+            {/* CONTENT - Compact for single page */}
             <div
-              className="text-[15px] lg:text-[16px] text-[#2f2a24] font-serif text-justify"
-              style={{ lineHeight: "2" }}
+              className="text-gray-700"
+              style={{
+                fontSize: "11px",
+                lineHeight: "1.5",
+                fontFamily: "serif",
+                wordWrap: "break-word",
+                overflowWrap: "break-word",
+              }}
               dangerouslySetInnerHTML={{ __html: document }}
             />
 
-            {/* IMAGE SAFETY STYLES */}
-            <style jsx>{`
-              img {
-                max-width: 180px;
-                height: auto;
-                margin-top: 20px;
-                border: 1px solid #ddd;
-                padding: 4px;
-                display: inline-block;
-              }
+            {/* Signature line */}
+            <div className="mt-8 pt-4 border-t border-gray-300 text-right">
+              <p className="text-xs text-gray-500 mt-4">
+                Executed and agreed by the parties
+              </p>
+            </div>
 
-              .logo-grid {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 15px;
-                margin-top: 40px;
+            {/* PDF-specific styles */}
+            <style>{`
+              #print-area, #print-area * {
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+                white-space: normal !important;
+                page-break-inside: avoid !important;
+                page-break-after: avoid !important;
+                break-inside: avoid !important;
+              }
+              
+              #print-area p, #print-area div, #print-area li {
+                margin-bottom: 6px;
+                text-align: left;
+              }
+              
+              #print-area ul, #print-area ol {
+                margin-top: 4px;
+                margin-bottom: 8px;
+                padding-left: 20px;
+              }
+              
+              #print-area h1 {
+                font-size: 18px !important;
+                margin-bottom: 8px !important;
+              }
+              
+              #print-area h2 {
+                font-size: 16px !important;
+                margin-bottom: 6px !important;
+              }
+              
+              #print-area h3 {
+                font-size: 14px !important;
+                margin-bottom: 4px !important;
+              }
+              
+              img {
+                max-width: 120px;
+                height: auto;
+                margin: 10px 0;
+                border: 1px solid #ddd;
+                padding: 2px;
               }
             `}</style>
           </div>
