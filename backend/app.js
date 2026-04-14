@@ -5,6 +5,7 @@ import cors from "cors";
 
 import authRoutes from "./routes/authRoutes.js";
 import contractRoutes from "./routes/contractRoutes.js";
+import agreementRoutes from "./routes/agreementRoutes.js";
 
 dotenv.config();
 
@@ -19,14 +20,13 @@ app.use(
   })
 );
 
-// ❌ REMOVE app.options COMPLETELY
-
 // ================= MIDDLEWARE =================
 app.use(express.json());
 
 // ================= ROUTES =================
 app.use("/api/auth", authRoutes);
 app.use("/api/contracts", contractRoutes);
+app.use("/api/agreements", agreementRoutes);
 
 // ================= HEALTH CHECK =================
 app.get("/", (req, res) => {

@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, useRef, Suspense } from "react";
 import { generateDocument, fetchQuestions } from "@/modules/api/contracts";
 import DocumentPreviewModal from "@/components/DocumentPreviewModal";
+import { saveAgreement, getAgreement, autoSaveDraft } from "@/lib/agreementService";
 
 type Question = {
   name: string;
@@ -32,6 +33,7 @@ function AIChatPage() {
   const [input, setInput] = useState("");
   const [document, setDocument] = useState("");
   const [loadingDoc, setLoadingDoc] = useState(false);
+  const [agreementId, setAgreementId] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const currentQ = questions[currentIndex];
@@ -87,6 +89,19 @@ function AIChatPage() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // ================= AUTO-SAVE DRAFT =================
+  useEffect(() => {
+    if (Object.keys(answers).length > 0 && templateName) {
+      autoSaveDraft({
+        templateName,
+        title: `${templateName} - Draft`,
+        content: document || "Draft in progress...",
+        formData: answers,
+        status: 'draft'
+      });
+    }
+  }, [answers, document, templateName]);
 
   // ================= HANDLERS =================
   const addMessage = (role: "ai" | "user", content: string) => {

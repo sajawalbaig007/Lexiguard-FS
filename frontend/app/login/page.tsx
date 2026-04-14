@@ -59,8 +59,12 @@ const LoginPage: React.FC = () => {
       setLoading(true);
       setErrorMessage("");
 
+      const API_URL = process.env.NODE_ENV === 'development' 
+        ? "http://localhost:5000/api/auth/login"
+        : "https://lexiguard-fs.onrender.com/api/auth/login";
+
       const res = await axios.post(
-        "https://lexiguard-fs.onrender.com/api/auth/login",
+        API_URL,
         {
           login: login.trim(),
           password: password.trim(),
@@ -119,7 +123,11 @@ const LoginPage: React.FC = () => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      await axios.post("https://lexiguard-fs.onrender.com/api/auth/google", {
+      const GOOGLE_API_URL = process.env.NODE_ENV === 'development' 
+        ? "http://localhost:5000/api/auth/google"
+        : "https://lexiguard-fs.onrender.com/api/auth/google";
+
+      await axios.post(GOOGLE_API_URL, {
         fullName: user.displayName,
         email: user.email,
         googleId: user.uid,

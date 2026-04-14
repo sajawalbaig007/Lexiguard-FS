@@ -1,10 +1,14 @@
 "use client";
 
+import { saveAgreement } from "../lib/agreementService";
+
 type Props = {
   document: string;
   templateName: string;
   onClose: () => void;
   hideActions?: boolean;
+  agreementId?: string;
+  formData?: any;
 };
 
 export default function DocumentPreviewModal({
@@ -12,29 +16,26 @@ export default function DocumentPreviewModal({
   templateName,
   onClose,
   hideActions = false,
+  agreementId,
+  formData = {},
 }: Props) {
   // Save document
   const saveDocument = async () => {
     try {
-      const response = await fetch("https://lexiguard-fs.onrender.com/api/contracts/save-document", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          templateName,
-          content: document,
-        }),
+      const title = `${templateName} - ${new Date().toLocaleDateString()}`;
+      
+      await saveAgreement({
+        templateName,
+        title,
+        content: document,
+        formData,
+        status: 'completed'
       });
 
-      if (response.ok) {
-        alert("Document saved successfully!");
-      } else {
-        alert("Failed to save document.");
-      }
+      alert("Document saved successfully!");
     } catch (error) {
       console.error("Error saving document:", error);
-      alert("An error occurred while saving the document.");
+      alert("Failed to save document. Please try again.");
     }
   };
 
@@ -49,12 +50,18 @@ export default function DocumentPreviewModal({
       margin: 0,
       filename: `${templateName}.pdf`,
       image: { type: "jpeg" as const, quality: 1 },
-      html2canvas: { scale: 2 },
+      html2canvas: { 
+        scale: 2,
+        useCORS: true,
+        allowTaint: true
+      },
       jsPDF: {
         unit: "pt",
         format: "a4",
         orientation: "portrait" as const,
+        compress: true
       },
+      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
     };
 
     html2pdf().set(opt).from(element).save();
@@ -81,23 +88,13 @@ export default function DocumentPreviewModal({
       <div className="flex justify-center pt-20 pb-32 px-4">
         <div
           id="print-area"
-          className="print-document bg-[#fffdf9] w-[95%] lg:w-[850px] min-h-[1150px] shadow-2xl border border-[#e8dccb] px-6 lg:px-24 py-10 lg:py-20"
+          className="print-document w-[95%] lg:w-[850px] min-h-[1150px] px-6 lg:px-24 py-10 lg:py-20"
+          style={{ boxShadow: 'none', border: 'none' }}
         >
-
-          {/* Header */}
-          <div className="border-b border-[#d6c7b0] pb-8 mb-12 text-center">
-            <h1 className="text-3xl lg:text-4xl font-semibold tracking-widest font-serif text-[#3e2f1c]">
-              DOCUMENT
-            </h1>
-            <p className="text-sm text-[#8a7a64] mt-3 tracking-wide">
-              Legal Agreement Document
-            </p>
-          </div>
 
           {/* Content */}
           <div
-            className="text-[15px] lg:text-[16px] text-[#2f2a24] font-serif text-justify"
-            style={{ lineHeight: "2" }}
+            className="document-content"
             dangerouslySetInnerHTML={{ __html: document }}
           />
         </div>
