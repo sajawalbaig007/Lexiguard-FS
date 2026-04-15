@@ -1,593 +1,195 @@
  const contractorTemplate = (data = {}) => {
+  const today = new Date().toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
 
   const template = `
-
-  <div style="
-
-      font-family: 'Georgia', 'Times New Roman', serif; 
-
-      line-height: 1.6; 
-
-      color: #2c3e50; 
-
-      background: #ffffff; 
-
-      border: 1px solid #d4d4d4; 
-
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-
-      box-sizing: border-box;
-
-      max-width: 1200px;
-
+  <div class="doc-container" style="
+      font-family: Inter, system-ui, -apple-system, sans-serif;
       width: 100%;
-
-      margin: 0 auto;
-
-      page-break-inside: avoid;
-
-    " class="doc-container">
-
-
+      line-height: 1.8;
+      padding: 40px 50px;
+      color: #111827;
+      background: #ffffff;
+    ">
 
     <style>
-
-      @media (max-width: 768px) {
-
-        .doc-container {
-
-          padding: 8px !important; /* removed all padding on mobile */
-
-          padding: 8px !important; /* ✅ removed all padding on mobile */
-
-        }
-
-        .doc-container h1 {
-
-          font-size: 22px !important;
-
-          text-align: center !important;
-
-        }
-
-        .doc-container h2 {
-
-          font-size: 16px !important;
-
-        }
-
-        .doc-container p {
-
-          font-size: 14px !important;
-
-        }
-
-        .doc-flex {
-
-          flex-direction: column !important;
-
-          gap: 30px;
-
-        }
-
-        .doc-col {
-
-          width: 100% !important;
-
-        }
-
+      .section-title {
+        margin-top: 32px;
+        font-size: 16px;
+        font-weight: 600;
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 6px;
       }
 
+      .text {
+        color: #374151;
+        font-size: 14px;
+        margin-top: 10px;
+      }
+
+      .doc-flex {
+        display: flex;
+        justify-content: space-between;
+        gap: 40px;
+        margin-top: 40px;
+      }
+
+      .doc-col {
+        width: 45%;
+      }
+
+      @media (max-width: 768px) {
+        .doc-container h1 {
+          font-size: 20px !important;
+        }
+        .section-title {
+          font-size: 15px !important;
+        }
+        .text {
+          font-size: 13px !important;
+        }
+        .doc-flex {
+          flex-direction: column !important;
+        }
+        .doc-col {
+          width: 100% !important;
+        }
+      }
     </style>
 
-
-
-    <div>
-
-
-
     <!-- HEADER -->
-
-    <div style="text-align:center; margin-bottom:30px;">
-
-      <h1 style="
-
-        font-size: 24px; 
-
-        font-weight: 600; 
-
-        margin: 0 0 10px 0;
-
-        color: #2c3e50;
-
-      ">
-
-        Independent Contractor Agreement
-
+    <div style="text-align:center; margin-bottom:40px;">
+      <h1 style="font-size:26px;font-weight:600;margin-bottom:8px;">
+        INDEPENDENT CONTRACTOR AGREEMENT
       </h1>
-
-      <p style="margin:0; font-size:14px; color: #5a6c7d;">
-
-        Effective Date: <strong>{{date}}</strong>
-
+      <p style="color:#6b7280;font-size:13px;">
+        This Agreement is made on <strong>${today}</strong>
       </p>
-
+      <p style="color:#6b7280;font-size:12px; margin-top:6px;">
+        This Agreement is intended to create legally binding obligations in accordance with the laws of England and Wales.
+      </p>
     </div>
-
-
 
     <!-- INTRO -->
-
-    <p>
-
-      This Independent Contractor Agreement ("Agreement") is entered into on 
-
-      <strong>{{date}}</strong> by and between:
-
+    <p class="text">
+      This Independent Contractor Agreement ("Agreement") is entered into between 
+      <strong>{{clientName}}</strong>, of {{clientAddress}} ("Client"), 
+      and <strong>{{contractorName}}</strong>, of {{contractorAddress}} ("Contractor").
     </p>
 
-    <p>
-
-      <strong>{{clientName}}</strong>, having its principal place of business at 
-
-      {{clientAddress}} (hereinafter referred to as the "Client"), and
-
-      <strong>{{contractorName}}</strong>, having its principal place of business at 
-
-      {{contractorAddress}} (hereinafter referred to as the "Contractor").
-
+    <p class="text">
+      The parties hereby agree as follows, intending to be legally bound and acknowledging that they have had the opportunity to obtain independent legal advice prior to entering into this Agreement.
     </p>
 
-
-
-    <p>
-
-      The Client and Contractor may collectively be referred to as the "Parties"
-
-      and individually as a "Party".
-
+    <!-- 1 -->
+    <h2 class="section-title">1. Scope of Work</h2>
+    <p class="text">
+      The Contractor shall provide the following services ("Services") with reasonable skill, care, and diligence in accordance with generally accepted industry standards:
+      <br /><br />
+      {{servicesSummary}}
+      <br /><br />
+      Any variation to the Services must be agreed in writing by both parties.
     </p>
 
-
-
-    <!-- SECTION -->
-
-    <h2 style="
-
-      margin-top:30px; 
-
-      margin-bottom:15px;
-
-      font-size: 18px; 
-
-      font-weight: 600;
-
-      color: #2c3e50;
-
-    ">
-
-      1. Engagement and Scope of Services
-
-    </h2>
-
-    <p>
-
-      The Client hereby engages the Contractor to perform professional services,
-
-      and the Contractor agrees to perform such services in accordance with the
-
-      terms of this Agreement.
-
+    <!-- 2 -->
+    <h2 class="section-title">2. Term</h2>
+    <p class="text">
+      This Agreement shall commence on <strong>{{startDate}}</strong> and shall continue until 
+      <strong>{{endDate}}</strong>, unless terminated earlier in accordance with its terms.
+      <br /><br />
+      The parties may agree in writing to extend the duration of this Agreement.
     </p>
 
-    <p>
-
-      Scope of Services:
-
-    </p>
-
-    <p style="margin-left:20px;"><em>{{servicesSummary}}</em></p>
-
-    <p>
-
-      The Contractor shall exercise a high standard of professional skill, care,
-
-      and diligence consistent with industry best practices.
-
-    </p>
-
-
-
-    <!-- PAYMENT -->
-
-    <h2 style="
-
-      margin-top:30px; 
-
-      margin-bottom:15px;
-
-      font-size: 18px; 
-
-      font-weight: 600;
-
-      color: #2c3e50;
-
-    ">
-
-      2. Fees and Payment Terms
-
-    </h2>
-
-    <p>
-
-      In consideration for the Services, the Client agrees to pay the Contractor
-
-      a total fee of <strong>{{paymentAmount}}</strong>.
-
-    </p>
-
-    <p>
-
+    <!-- 3 -->
+    <h2 class="section-title">3. Fees and Payment</h2>
+    <p class="text">
+      In consideration for the Services, the Client shall pay the Contractor the sum of <strong>{{paymentAmount}}</strong>.
+      <br /><br />
       Payment shall be made in accordance with the following terms:
-
-      <strong>{{paymentTerms}}</strong>.
-
+      <br /><br />
+      {{paymentTerms}}
+      <br /><br />
+      The Contractor shall be responsible for all taxes, national insurance contributions, and any other statutory obligations arising from payments made under this Agreement.
     </p>
 
-    <p>
-
-      Any late payments may be subject to interest in accordance with applicable
-
-      laws and standard commercial practices.
-
+    <!-- 4 -->
+    <h2 class="section-title">4. Status of Contractor</h2>
+    <p class="text">
+      The Contractor is engaged as an independent contractor. Nothing in this Agreement shall render the Contractor an employee, worker, agent, or partner of the Client.
+      <br /><br />
+      The Contractor shall have full control over the manner in which the Services are performed.
     </p>
 
-
-
-    <!-- TERM -->
-
-    <h2 style="
-
-      margin-top:30px; 
-
-      margin-bottom:15px;
-
-      font-size: 18px; 
-
-      font-weight: 600;
-
-      color: #2c3e50;
-
-    ">
-
-      3. Term and Duration
-
-    </h2>
-
-    <p>
-
-      This Agreement shall commence on <strong>{{date}}</strong> and shall remain
-
-      in effect for a period of <strong>{{duration}}</strong>, unless earlier
-
-      terminated in accordance with this Agreement.
-
+    <!-- 5 -->
+    <h2 class="section-title">5. Confidentiality</h2>
+    <p class="text">
+      The Contractor shall keep confidential all information of a confidential nature obtained from the Client and shall not disclose such information without prior written consent.
+      <br /><br />
+      This obligation shall survive termination of this Agreement.
     </p>
 
-
-
-    <!-- TERMINATION -->
-
-    <h2 style="
-
-      margin-top:30px; 
-
-      margin-bottom:15px;
-
-      font-size: 18px; 
-
-      font-weight: 600;
-
-      color: #2c3e50;
-
-    ">
-
-      4. Termination
-
-    </h2>
-
-    <p>
-
-      Either Party may terminate this Agreement by providing written notice
-
-      to the other Party.
-
+    <!-- 6 -->
+    <h2 class="section-title">6. Intellectual Property</h2>
+    <p class="text">
+      All intellectual property rights in any work produced under this Agreement shall vest in the Client upon full payment.
+      <br /><br />
+      The Contractor agrees to assign such rights and execute any necessary documents to give effect to this clause.
     </p>
 
-    <p>
-
-      Immediate termination may occur in the event of a material breach that
-
-      remains uncured within a reasonable time.
-
+    <!-- 7 -->
+    <h2 class="section-title">7. Termination</h2>
+    <p class="text">
+      Either party may terminate this Agreement by giving reasonable written notice.
+      <br /><br />
+      Upon termination, the Contractor shall be entitled to payment for all work completed up to the termination date.
     </p>
 
-    <p>
-
-      Upon termination, the Contractor shall cease all work and deliver any
-
-      completed materials to the Client.
-
+    <!-- 8 -->
+    <h2 class="section-title">8. Liability</h2>
+    <p class="text">
+      Nothing in this Agreement shall limit or exclude liability for death or personal injury caused by negligence.
+      <br /><br />
+      Subject to the above, the Contractor’s total liability shall not exceed the total fees paid under this Agreement.
     </p>
 
-
-
-    <!-- STATUS -->
-
-    <h2 style="
-
-      margin-top:30px; 
-
-      margin-bottom:15px;
-
-      font-size: 18px; 
-
-      font-weight: 600;
-
-      color: #2c3e50;
-
-    ">
-
-      5. Independent Contractor Status
-
-    </h2>
-
-    <p>
-
-      The Contractor is engaged as an independent contractor and not as an
-
-      employee, partner, or agent of the Client.
-
+    <!-- 9 -->
+    <h2 class="section-title">9. Governing Law</h2>
+    <p class="text">
+      This Agreement shall be governed by and construed in accordance with the laws of {{governingLaw}}.
+      <br /><br />
+      The parties submit to the exclusive jurisdiction of the courts of England and Wales.
     </p>
 
-    <p>
-
-      The Contractor retains full control over the manner and means of
-
-      performing the Services and shall be solely responsible for all taxes,
-
-      insurance, and statutory obligations.
-
+    <!-- 10 -->
+    <h2 class="section-title">10. General</h2>
+    <p class="text">
+      This Agreement constitutes the entire agreement between the parties and supersedes any prior agreements or understandings.
+      <br /><br />
+      If any provision is held to be invalid, the remaining provisions shall remain in full force and effect.
     </p>
-
-
-
-    <!-- CONFIDENTIALITY -->
-
-    <h2 style="
-
-      margin-top:30px; 
-
-      margin-bottom:15px;
-
-      font-size: 18px; 
-
-      font-weight: 600;
-
-      color: #2c3e50;
-
-    ">
-
-      6. Confidentiality
-
-    </h2>
-
-    <p>
-
-      The Contractor agrees to maintain strict confidentiality regarding all
-
-      proprietary and confidential information obtained from the Client.
-
-    </p>
-
-    <p>
-
-      This obligation shall survive the termination of this Agreement.
-
-    </p>
-
-
-
-    <!-- IP -->
-
-    <h2 style="
-
-      margin-top:30px; 
-
-      margin-bottom:15px;
-
-      font-size: 18px; 
-
-      font-weight: 600;
-
-      color: #2c3e50;
-
-    ">
-
-      7. Intellectual Property
-
-    </h2>
-
-    <p>
-
-      All work product, materials, and intellectual property developed under
-
-      this Agreement shall become the sole property of the Client upon full
-
-      payment, unless otherwise agreed in writing.
-
-    </p>
-
-
-
-    <!-- LIABILITY -->
-
-    <h2 style="
-
-      margin-top:30px; 
-
-      margin-bottom:15px;
-
-      font-size: 18px; 
-
-      font-weight: 600;
-
-      color: #2c3e50;
-
-    ">
-
-      8. Limitation of Liability
-
-    </h2>
-
-    <p>
-
-      The Contractor shall perform the Services with reasonable care and skill.
-
-      Neither Party shall be liable for indirect, incidental, or consequential
-
-      damages arising out of this Agreement.
-
-    </p>
-
-
-
-    <!-- LAW -->
-
-    <h2 style="
-
-      margin-top:30px; 
-
-      margin-bottom:15px;
-
-      font-size: 18px; 
-
-      font-weight: 600;
-
-      color: #2c3e50;
-
-    ">
-
-      9. Governing Law
-
-    </h2>
-
-    <p>
-
-      This Agreement shall be governed by and construed in accordance with
-
-      the laws of <strong>{{jurisdiction}}</strong>.
-
-    </p>
-
-
-
-    <!-- ENTIRE -->
-
-    <h2 style="
-
-      margin-top:30px; 
-
-      margin-bottom:15px;
-
-      font-size: 18px; 
-
-      font-weight: 600;
-
-      color: #2c3e50;
-
-    ">
-
-      10. Entire Agreement
-
-    </h2>
-
-    <p>
-
-      This Agreement constitutes the entire understanding between the Parties
-
-      and supersedes all prior agreements, negotiations, or representations.
-
-    </p>
-
-
 
     <!-- SIGNATURES -->
+    <h2 class="section-title">Signatures</h2>
 
-    <h2 style="
-
-      margin-top:40px; 
-
-      margin-bottom:20px;
-
-      font-size: 18px; 
-
-      font-weight: 600;
-
-      color: #2c3e50;
-
-    ">
-
-      Signatures
-
-    </h2>
-
-
-
-    <div style="display:flex;justify-content:space-between;margin-top:30px;">
-
-      <div style="width:45%;">
-
-        <p style="margin-bottom:20px;"><strong>Client</strong></p>
-
-        <div style="height:40px;"></div>
-
-        <p style="margin-top:10px; font-size:14px; color: #5a6c7d;">{{clientName}}</p>
-
+    <div class="doc-flex">
+      <div class="doc-col">
+        <p><strong>Client</strong></p>
+        <div style="border-bottom:1px solid #111;height:30px;margin-top:20px;"></div>
       </div>
 
-
-
-      <div style="width:45%;">
-
-        <p style="margin-bottom:20px;"><strong>Contractor</strong></p>
-
-        <div style="height:40px;"></div>
-
-        <p style="margin-top:10px; font-size:14px; color: #5a6c7d;">{{contractorName}}</p>
-
+      <div class="doc-col">
+        <p><strong>Contractor</strong></p>
+        <div style="border-bottom:1px solid #111;height:30px;margin-top:20px;"></div>
       </div>
-
-    </div>
-
-
-
-    <p style="text-align:right;margin-top:30px; font-size:14px; color: #5a6c7d;">Date: {{date}}</p>
-
-
-
     </div>
 
   </div>
-
   `;
 
-
-
   return template.replace(/{{(.*?)}}/g, (_, key) => data[key.trim()] ?? "");
-
 };
-
-
 
 export default contractorTemplate;

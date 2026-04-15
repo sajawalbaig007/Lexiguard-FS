@@ -1,36 +1,62 @@
- const leaseTemplate = (data = {}) => {
+const leaseTemplate = (data = {}) => {
+  const today = new Date().toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+
   const template = `
-  <div 
-    class="doc-container"
-    style="
-      font-family: Georgia, 'Times New Roman', serif; 
-      max-width: 800px; 
-      margin: auto; 
-      padding: 40px; 
-      line-height: 1.7; 
-      color: #222;
+  <div class="doc-container" style="
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+      width: 100%;
+      line-height: 1.7;
+      padding: 40px 50px;
+      color: #111827;
+      background: #ffffff;
       box-sizing: border-box;
-    "
-  >
+    ">
 
     <style>
+      .section-title {
+        margin-top: 32px;
+        font-size: 16px;
+        font-weight: 600;
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 6px;
+      }
+
+      .text {
+        color: #374151;
+        font-size: 14px;
+        margin-top: 10px;
+      }
+
+      .doc-flex {
+        display: flex;
+        justify-content: space-between;
+        gap: 40px;
+        margin-top: 40px;
+      }
+
+      .doc-col {
+        width: 45%;
+      }
+
       @media (max-width: 768px) {
         .doc-container {
-          padding: 8px !important; /* ✅ remove padding on mobile */
+          padding: 12px !important;
         }
         .doc-container h1 {
-          font-size: 22px !important;
-          text-align: center !important;
+          font-size: 20px !important;
         }
-        .doc-container h3 {
-          font-size: 16px !important;
+        .section-title {
+          font-size: 15px !important;
         }
-        .doc-container p {
-          font-size: 14px !important;
+        .text {
+          font-size: 13px !important;
         }
         .doc-flex {
           flex-direction: column !important;
-          gap: 30px;
         }
         .doc-col {
           width: 100% !important;
@@ -38,99 +64,96 @@
       }
     </style>
 
-    <h1 style="text-align: center; font-size: 28px;">
-      LEASE AGREEMENT
-    </h1>
+    <!-- HEADER -->
+    <div style="text-align:center; margin-bottom:40px;">
+      <h1 style="font-size:26px;font-weight:600;margin-bottom:8px;">
+        LEASE AGREEMENT
+      </h1>
+      <p style="color:#6b7280;font-size:13px;">
+        Date of Agreement: <strong>${today}</strong>
+      </p>
+      <p style="color:#6b7280;font-size:12px; margin-top:6px;">
+        This Lease Agreement is a legally binding contract between the parties named below.
+      </p>
+    </div>
 
-    <p style="text-align: center;">Date: {{date}}</p>
-
-    <h3>Parties</h3>
-    <p>
-      This Lease Agreement is made between <strong>{{landlordName}}</strong> (the "Landlord") 
-      and <strong>{{tenantName}}</strong> (the "Tenant").
+    <!-- 1. Parties -->
+    <h2 class="section-title">1. Parties</h2>
+    <p class="text">
+      This Agreement is made between <strong>{{landlordName}}</strong> ("Landlord") 
+      and <strong>{{tenantName}}</strong> ("Tenant").
     </p>
 
-    <h3>1. Property</h3>
-    <p>
-      The Landlord hereby leases to the Tenant the property located at 
-      <strong>{{propertyAddress}}</strong> (the "Premises").
+    <!-- 2. Property -->
+    <h2 class="section-title">2. Property</h2>
+    <p class="text">
+      Property Address: <strong>{{propertyAddress}}</strong>
     </p>
 
-    <h3>2. Purpose</h3>
-    <p>{{leasePurpose}}</p>
-
-    <h3>3. Term</h3>
-    <p>
-      This Agreement shall commence on {{date}} and continue for {{duration}},
-      unless terminated earlier in accordance with this Agreement.
+    <!-- 3. Term -->
+    <h2 class="section-title">3. Term</h2>
+    <p class="text">
+      Duration: <strong>{{duration}}</strong>
     </p>
 
-    <h3>4. Rent</h3>
-    <p>
-      The Tenant agrees to pay rent of <strong>£ {{rentAmount}}</strong>.
-      Payment shall be made in accordance with standard rental practices.
+    <!-- 4. Rent -->
+    <h2 class="section-title">4. Rent</h2>
+    <p class="text">
+      Monthly Rent: <strong>£{{rentAmount}}</strong>
     </p>
 
-    <h3>5. Security Deposit</h3>
-    <p>
-      A security deposit of <strong>£ {{depositAmount}}</strong> shall be paid
-      and may be withheld for damages beyond normal wear and tear.
+    <!-- 5. Deposit -->
+    <h2 class="section-title">5. Security Deposit</h2>
+    <p class="text">
+      Deposit Amount: <strong>£{{depositAmount}}</strong>
     </p>
 
-    <h3>6. Utilities and Expenses</h3>
-    <p>
-      The Tenant shall be responsible for utilities and routine maintenance
-      unless otherwise agreed in writing.
+    <!-- 6. Use -->
+    <h2 class="section-title">6. Use of Property</h2>
+    <p class="text">
+      Purpose: <strong>{{leasePurpose}}</strong>
     </p>
 
-    <h3>7. Maintenance</h3>
-    <p>
-      The Tenant shall maintain the Premises in good condition.
-      The Landlord remains responsible for structural repairs.
+    <!-- 7. Utilities -->
+    <h2 class="section-title">7. Utilities</h2>
+    <p class="text">
+      Tenant is responsible for all utility bills unless agreed otherwise.
     </p>
 
-    <h3>8. Use of Property</h3>
-    <p>
-      The Premises shall not be used for unlawful purposes.
-      Subleasing requires prior written consent from the Landlord.
+    <!-- 8. Maintenance -->
+    <h2 class="section-title">8. Maintenance</h2>
+    <p class="text">
+      Tenant must maintain property. Landlord handles structural repairs.
     </p>
 
-    <h3>9. Termination</h3>
-    <p>
-      Either party may terminate this Agreement with reasonable written notice,
-      subject to applicable laws and agreed conditions.
+    <!-- 9. Termination -->
+    <h2 class="section-title">9. Termination</h2>
+    <p class="text">
+      Either party may terminate with proper notice.
     </p>
 
-    <h3>10. Special Clauses</h3>
-    <p>{{specialClauses}}</p>
-
-    <h3>11. Governing Law</h3>
-    <p>
-      This Agreement shall be governed by the laws of {{jurisdiction}}.
+    <!-- 10. Governing Law -->
+    <h2 class="section-title">10. Governing Law</h2>
+    <p class="text">
+      Governed by laws of <strong>{{governingLaw}}</strong>
     </p>
 
-    <h3>12. Entire Agreement</h3>
-    <p>
-      This document constitutes the entire agreement between the parties.
-    </p>
+    <!-- SIGNATURES -->
+    <h2 class="section-title">Signatures</h2>
 
-    <h3>Signatures</h3>
-
-    <div class="doc-flex" style="display: flex; justify-content: space-between; margin-top: 40px;">
+    <div class="doc-flex">
       <div class="doc-col">
         <p><strong>Landlord</strong></p>
-        <div style="border-bottom:1px solid #000;height:40px;"></div>
-        <p>{{landlordName}}</p>
+        <div style="border-bottom:1px solid #111;height:30px;margin-top:20px;"></div>
+        <p class="text">{{landlordName}}</p>
       </div>
 
       <div class="doc-col">
         <p><strong>Tenant</strong></p>
-        <div style="border-bottom:1px solid #000;height:40px;"></div>
-        <p>{{tenantName}}</p>
+        <div style="border-bottom:1px solid #111;height:30px;margin-top:20px;"></div>
+        <p class="text">{{tenantName}}</p>
       </div>
     </div>
-
-    <p style="margin-top: 40px;">Date: {{date}}</p>
 
   </div>
   `;

@@ -1,20 +1,28 @@
- import documentTemplates from "../data/documentTemplates";
+import documentTemplates from "./manualGenerateDocument";
 
-export default function generateDocument(template: string, formData: any) {
-  let templateString = (documentTemplates as any)[template];
+// ---------------- TYPES ----------------
+type TemplateMap = Record<string, string>;
+type FormData = Record<string, unknown>;
+
+// 👇 FIX: explicitly tell TS this is a template object
+const templates = documentTemplates as unknown as TemplateMap;
+
+export default function generateDocument(
+  template: string,
+  formData: FormData
+) {
+  let templateString = templates[template];
 
   if (!templateString) {
     return "Template not found.";
   }
 
-  // Replace {{variables}} with form data
   Object.keys(formData).forEach((key) => {
-    const value = formData[key] || "";
+    const value = String(formData[key] ?? "");
     const regex = new RegExp(`{{${key}}}`, "g");
     templateString = templateString.replace(regex, value);
   });
 
-  // ================= PROFESSIONAL DOCUMENT WRAPPER =================
   return `
     <div style="
       max-width: 650px;
@@ -31,7 +39,6 @@ export default function generateDocument(template: string, formData: any) {
 
 // ================= FORMAT FUNCTION =================
 function formatDocument(content: string) {
-  // Split by line breaks to structure paragraphs
   const lines = content.split("\n").filter((line) => line.trim() !== "");
 
   return lines
@@ -75,7 +82,7 @@ function formatDocument(content: string) {
             justify-content: space-between;
           ">
             <div>
-               <br/>
+              <br/>
               ${trimmed}
             </div>
           </div>

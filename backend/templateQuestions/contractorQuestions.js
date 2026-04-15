@@ -1,20 +1,19 @@
-const contractorQuestions = [
-  { name: "date", question: "What is the agreement date?" },
-
+ const contractorQuestions = [
   { name: "clientName", question: "What is the Client's full name or company name?" },
-  { name: "clientAddress", question: "What is the Client's address?" },
+  { name: "clientAddress", question: "What is the Client's registered address?" },
 
   { name: "contractorName", question: "What is the Contractor's full name or company name?" },
   { name: "contractorAddress", question: "What is the Contractor's address?" },
 
-  { name: "servicesSummary", question: "Briefly describe the services the Contractor will provide." },
+  { name: "servicesSummary", question: "Describe the services the Contractor will provide in detail." },
 
-  { name: "paymentAmount", question: "What is the total payment amount?" },
-  { name: "paymentTerms", question: "What are the payment terms? (e.g., monthly, upfront, milestones)" },
+  { name: "startDate", question: "What is the start date of the agreement?" },
+  { name: "endDate", question: "What is the end date of the agreement?" },
 
-  { name: "duration", question: "What is the duration of the contract?" },
+  { name: "paymentAmount", question: "What is the total payment amount (e.g., £1000)?" },
+  { name: "paymentTerms", question: "What are the payment terms? (e.g., upfront, monthly, milestones)" },
 
-  { name: "jurisdiction", question: "Which country's/state's law will govern the agreement?" },
+  { name: "governingLaw", question: "Which law will govern this agreement? (e.g., England and Wales)" },
 ];
 
 export default contractorQuestions;

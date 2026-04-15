@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import { useState } from "react";
 import TemplatePreviewModal from "./TemplatePreviewModal";
@@ -15,6 +15,27 @@ type Template = {
 
 const templates: Record<Category, Template[]> = {
   Popular: [
+        {
+      id: "employment_contract",
+      title: "Employment Contract",
+      emoji: "💼",
+      desc: "Create an employment contract outlining roles, salary, and terms of employment.",
+      image: "/templates/employment.png",
+    },
+    {
+      id: "nda",
+      title: "Non-Disclosure Agreement",
+      emoji: "🤝",
+      desc: "Non-disclosure agreement template.",
+      image: "/templates/nda.png",
+    },
+    {
+      id: "uk_service_agreement",
+      title: "UK Service Agreement",
+      emoji: "🇬🇧",
+      desc: "Service agreement tailored for UK-based businesses and clients.",
+      image: "/templates/uk-service.png",
+    },
     {
       id: "contractor_agreement",
       title: "Independent Contractor Agreement",
@@ -23,18 +44,26 @@ const templates: Record<Category, Template[]> = {
       image: "/templates/contractor.png",
     },
     {
+      id: "loan_agreement",
+      title: "Loan Agreement",
+      emoji: "💰",
+      desc: "Document the terms of a loan between a lender and borrower.",
+      image: "/templates/loan.png",
+    },
+    {
+      id: "separation_agreement",
+      title: "Separation Agreement",
+      emoji: "📑",
+      desc: "Outline terms when two parties agree to separate responsibilities or relationship.",
+      image: "/templates/separation.png",
+    },
+
+    {
       id: "lease_agreement",
       title: "Lease Agreement",
       emoji: "🏠",
       desc: "Create a lease agreement to clearly outline rent terms, rules, and responsibilities for landlords and tenants.",
       image: "/images/rental.jpg",
-    },
-    {
-      id: "nda",
-      title: "Non-Disclosure Agreement",
-      emoji: "🤝",
-      desc: "Non-disclosure agreement template.",
-      image: "/templates/nda.png",
     },
     {
       id: "room_rental",
@@ -159,11 +188,9 @@ export default function TemplatesModal({ onClose }: { onClose: () => void }) {
 
   return (
     <>
-      {/* Templates Modal */}
       <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-9999">
         <div className="bg-white w-full h-full md:w-[80vw] md:h-[90vh] md:rounded-xl shadow-lg flex flex-col md:flex-row relative text-gray-900">
           
-          {/* Close Button */}
           <button
             onClick={onClose}
             className="absolute top-3 right-4 text-gray-600 hover:text-gray-900 text-2xl md:text-xl font-bold z-10"
@@ -171,7 +198,6 @@ export default function TemplatesModal({ onClose }: { onClose: () => void }) {
             ×
           </button>
 
-          {/* Sidebar */}
           <div className="md:w-65 border-b md:border-b-0 md:border-r border-gray-300 p-3 md:p-4">
             <input
               placeholder="Search Documents"
@@ -197,7 +223,6 @@ export default function TemplatesModal({ onClose }: { onClose: () => void }) {
             </div>
           </div>
 
-          {/* Content */}
           <div className="flex-1 p-4 md:p-8 overflow-y-auto">
             <h1 className="text-lg md:text-2xl font-semibold mb-4 md:mb-6 text-gray-900">
               {category} Templates
@@ -213,6 +238,7 @@ export default function TemplatesModal({ onClose }: { onClose: () => void }) {
                   <div className="w-12 h-12 md:w-25 md:h-12 flex items-center justify-center rounded-lg bg-[#B5A491]/20 text-xl md:text-2xl group-hover:scale-110 transition">
                     {item.emoji}
                   </div>
+
                   <div>
                     <h2 className="font-semibold text-gray-900 text-sm md:text-base group-hover:text-[#B5A491] transition">
                       {item.title}
@@ -228,10 +254,9 @@ export default function TemplatesModal({ onClose }: { onClose: () => void }) {
         </div>
       </div>
 
-      {/* Preview Modal */}
       {selectedTemplate && (
         <TemplatePreviewModal
-          id={selectedTemplate.id} // ✅ CRITICAL FIX
+          id={selectedTemplate.id}
           title={selectedTemplate.title}
           description={selectedTemplate.desc}
           image={selectedTemplate.image}

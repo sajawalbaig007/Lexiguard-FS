@@ -5,20 +5,22 @@ import cors from "cors";
 
 import authRoutes from "./routes/authRoutes.js";
 import contractRoutes from "./routes/contractRoutes.js";
-import agreementRoutes from "./routes/agreementRoutes.js";
 
 dotenv.config();
 
 const app = express();
 
-// ================= CORS ================= ✅ CLEAN FIX
+// ================= CORS ================= ✅ FIXED
 app.use(
   cors({
-    origin: "*", // allow all for now (dev)
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type"],
   })
 );
+
+// ❌ REMOVE THIS (CAUSES CRASH)
+// app.options("*", cors());
 
 // ================= MIDDLEWARE =================
 app.use(express.json());
@@ -26,7 +28,6 @@ app.use(express.json());
 // ================= ROUTES =================
 app.use("/api/auth", authRoutes);
 app.use("/api/contracts", contractRoutes);
-app.use("/api/agreements", agreementRoutes);
 
 // ================= HEALTH CHECK =================
 app.get("/", (req, res) => {

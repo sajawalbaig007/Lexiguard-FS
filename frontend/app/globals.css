@@ -356,6 +356,59 @@ body {
   animation: fadeIn 0.2s ease-out;
 }
 }
+.page-break {
+  break-before: page;
+  page-break-before: always;
+}
 
 
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease-out;
+}
+
+
+/* Print styles for PDF export */
+@media print {
+  body {
+    margin: 0;
+    padding: 0;
+    background: white;
+  }
+  
+  .print-document {
+    margin: 0;
+    padding: 0.5in;
+    background: white !important;
+    box-shadow: none !important;
+  }
+  
+  /* Keep signatures together */
+  .signature-wrapper {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  
+  /* Avoid breaking headings */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+  
+  /* Avoid breaking paragraphs */
+  p {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}
