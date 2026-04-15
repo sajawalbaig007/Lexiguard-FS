@@ -1,4 +1,6 @@
- const API_BASE = "https://lexiguard-fs.onrender.com/api/contracts";
+ const API_BASE = process.env.NODE_ENV === 'development' 
+  ? "http://localhost:5000/api/contracts" 
+  : "https://lexiguard-fs.onrender.com/api/contracts";
 
 // ✅ force TypeScript to treat this as a module
 export {};

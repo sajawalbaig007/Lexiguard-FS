@@ -1,0 +1,11 @@
+"use client";
+
+import { AdminAuthProvider } from "@/components/AdminAuth";
+
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <AdminAuthProvider>{children}</AdminAuthProvider>;
+}
