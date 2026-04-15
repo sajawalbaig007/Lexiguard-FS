@@ -1,84 +1,43 @@
- "use client";
+"use client";
 import { useEffect, useState } from "react";
 import { RotateCcw, Trash2 } from "lucide-react";
 
-const API_BASE = "https://lexiguard-fs.onrender.com/api/contracts";
-
 type DocumentType = {
-  _id: string;
+  id: string;
   title: string;
   time: string;
-  templateName?: string;
-};
-
-// ✅ Added API response type (only fix)
-type ApiDocument = {
-  _id: string;
-  templateName?: string;
-  deletedAt?: string;
-  createdAt?: string;
 };
 
 export default function BinPage() {
-  const [binDocs, setBinDocs] = useState<DocumentType[]>([]);
-
-  // ================= LOAD BIN DOCUMENTS =================
-  const loadBinDocuments = async () => {
-    try {
-      const res = await fetch(`${API_BASE}/bin`);
-      if (!res.ok) throw new Error("Failed to fetch bin documents");
-
-      const data: ApiDocument[] = await res.json(); // ✅ FIXED
-
-      const formatted = data.map((doc) => ({
-        _id: doc._id,
-        title: doc.templateName?.toUpperCase() || "DOCUMENT",
-        time: new Date(doc.deletedAt || doc.createdAt || "").toLocaleString(),
-        templateName: doc.templateName,
-      }));
-
-      setBinDocs(formatted);
-    } catch (error) {
-      console.error("Error loading bin:", error);
+  const [binDocs, setBinDocs] = useState<DocumentType[]>(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("deletedDocuments");
+      return stored ? JSON.parse(stored) : [];
     }
-  };
+    return [];
+  });
 
   useEffect(() => {
-    loadBinDocuments();
-  }, []);
+    localStorage.setItem("deletedDocuments", JSON.stringify(binDocs));
+  }, [binDocs]);
 
-  // ================= RESTORE DOCUMENT =================
-  const restoreDoc = async (doc: DocumentType) => {
-    const confirmRestore = confirm(`Restore "${doc.title}"?`);
-    if (!confirmRestore) return;
+  const restoreDoc = (doc: DocumentType) => {
+    const updatedBin = binDocs.filter((d) => d.id !== doc.id);
+    setBinDocs(updatedBin);
 
-    try {
-      await fetch(`${API_BASE}/restore/${doc._id}`, {
-        method: "PATCH",
-      });
+    const recentDocs = JSON.parse(
+      localStorage.getItem("recentDocuments") || "[]"
+    );
 
-      // 🔥 instant UI update
-      setBinDocs((prev) => prev.filter((d) => d._id !== doc._id));
-    } catch (error) {
-      console.error("Restore error:", error);
-    }
+    localStorage.setItem(
+      "recentDocuments",
+      JSON.stringify([...recentDocs, doc])
+    );
   };
 
-  // ================= PERMANENT DELETE =================
-  const deleteForever = async (doc: DocumentType) => {
-    const confirmDelete = confirm(`Delete "${doc.title}" permanently?`);
-    if (!confirmDelete) return;
-
-    try {
-      await fetch(`${API_BASE}/bin/${doc._id}`, {
-        method: "DELETE",
-      });
-
-      // 🔥 instant UI update
-      setBinDocs((prev) => prev.filter((d) => d._id !== doc._id));
-    } catch (error) {
-      console.error("Permanent delete error:", error);
-    }
+  const deleteForever = (doc: DocumentType) => {
+    const updatedBin = binDocs.filter((d) => d.id !== doc.id);
+    setBinDocs(updatedBin);
   };
 
   return (
@@ -98,7 +57,7 @@ export default function BinPage() {
         <div className="space-y-2 md:space-y-4">
           {binDocs.map((doc) => (
             <div
-              key={doc._id}
+              key={doc.id}
               className="bg-white p-3 md:p-5 md:rounded-xl border flex justify-between items-center hover:shadow-sm transition"
             >
               {/* Left Side */}
@@ -124,16 +83,16 @@ export default function BinPage() {
                   onClick={() => restoreDoc(doc)}
                   className="flex items-center justify-center md:gap-2 px-2 md:px-4 py-1.5 md:py-2 text-xs md:text-sm bg-[#463826] text-white rounded-md hover:opacity-90 transition"
                 >
-                  <RotateCcw className="w-4 h-4" />
+                  <RotateCcw className="w-4 h-4 md:w-4 md:h-4" />
                   <span className="hidden md:inline">Restore</span>
                 </button>
 
-                {/* Delete Forever */}
+                {/* Delete */}
                 <button
                   onClick={() => deleteForever(doc)}
                   className="flex items-center justify-center md:gap-2 px-2 md:px-4 py-1.5 md:py-2 text-xs md:text-sm bg-red-500 text-white rounded-md hover:bg-red-600 transition"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-4 h-4 md:w-4 md:h-4" />
                   <span className="hidden md:inline">Delete</span>
                 </button>
               </div>
