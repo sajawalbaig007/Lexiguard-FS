@@ -9,7 +9,6 @@ import {
   Trash2,
 } from "lucide-react";
 import PricingPlans from "@/components/PricingModal";
-import AuthMiddleware from "@/components/AuthMiddleware";
 
 // ---------------- TYPES ----------------
 type DocumentType = "doc" | "esign" | "notary";
@@ -37,7 +36,7 @@ const getLocalStorageData = (key: string): Document[] => {
 };
 
 // ---------------- COMPONENT ----------------
-function DashboardPage() {
+export default function DashboardPage() {
   const data: Record<Exclude<TabKey, "all">, Document[]> = {
     documents: [],
     esignatures: [],
@@ -250,14 +249,3 @@ function DashboardPage() {
     </div>
   );
 }
-
-// Wrap with AuthMiddleware
-function DashboardWithAuth() {
-  return (
-    <AuthMiddleware>
-      <DashboardPage />
-    </AuthMiddleware>
-  );
-}
-
-export default DashboardWithAuth;
