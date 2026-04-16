@@ -1,11 +1,8 @@
 import React from 'react'
-import AuthMiddleware from "@/components/AuthMiddleware";
 
 const page = () => {
   return (
-    <AuthMiddleware>
-      <div>Lets Fix Your Setting</div>
-    </AuthMiddleware>
+    <div>Lets Fix Your Setting</div>
   )
 }
 
